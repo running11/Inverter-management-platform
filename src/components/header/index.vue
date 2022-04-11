@@ -12,7 +12,7 @@
         <label>admin</label>
       </div>
       <select-language></select-language>
-      <i class="iconfont icon-tuichudenglu"></i>
+      <i class="iconfont icon-tuichudenglu" @click="logout"></i>
     </div>
   </el-header>
 </template>
@@ -20,13 +20,31 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import SelectLanguage from "@/components/selectLanguage/index.vue";
+// import service from "@/utils/request";
+import { Mutation } from "vuex-class";
 
 @Component({
   components: {
     SelectLanguage,
   },
 })
-export default class Header extends Vue {}
+export default class Header extends Vue {
+  @Mutation clearTokenValue: any;
+
+  logout(): void{
+    this.$router.push("/login");
+    this.clearTokenValue();
+    // service
+    //   .post("/api/logout")
+    //   .then((res) => {
+    //     console.log(res);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+    // service.get("/api/getInfo")
+  }
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

@@ -1,7 +1,12 @@
 <template>
   <div class="login-wrapper">
     <div class="login-main">
-      <el-form class="login-form" ref="loginForm" :model="loginForm" :rules="loginRules">
+      <el-form
+        class="login-form"
+        ref="loginForm"
+        :model="loginForm"
+        :rules="loginRules"
+      >
         <div class="title-container">
           <h3 class="title">光储云平台</h3>
         </div>
@@ -31,10 +36,17 @@
             v-model="loginForm.code"
             placeholder="请输入验证码"
             name="code"
+            @keyup.enter.native="handleLogin"
           />
-          <img :src="codeImgUrl" alt="验证码" @click="getCode"/>
+          <img :src="codeImgUrl" alt="验证码" @click="getCode" />
         </el-form-item>
-        <el-button class="login-btn" :loading="loading" type="primary" @click.native.prevent="handleLogin">登录</el-button>
+        <el-button
+          class="login-btn"
+          :loading="loading"
+          type="primary"
+          @click.native.prevent="handleLogin"
+          >登录</el-button
+        >
       </el-form>
     </div>
   </div>
@@ -42,137 +54,145 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import service from "@/utils/request";
-import { ElForm } from 'element-ui/types/form';
+import { ElForm } from "element-ui/types/form";
 import { Mutation } from "vuex-class";
-
 interface ILoginForm {
   username: string;
   password: string;
   code: string;
 }
-
-const validateUsername = (rule: any, value:string, callback: any) => {
+const validateUsername = (rule: any, value: string, callback: any) => {
   if (!value) {
-    callback(new Error("请输入正确的用户名"))
+    callback(new Error("请输入正确的用户名"));
   } else {
-    callback()
+    callback();
   }
-}
+};
 const validatePassword = (rule: any, value: string, callback: any) => {
   if (!value) {
-    callback(new Error("密码不能为空"))
+    callback(new Error("密码不能为空"));
   } else {
-    callback()
+    callback();
   }
-}
+};
 const validateCode = (rule: any, value: string, callback: any) => {
   if (!value) {
-    callback(new Error("验证码不能为空"))
+    callback(new Error("验证码不能为空"));
   } else {
-    callback()
+    callback();
   }
-}
-
+};
 @Component({
-  name: "login"
+  name: "login",
 })
 export default class Login extends Vue {
   @Mutation updateTokenValue: any;
-
-  private loginForm:ILoginForm = {
+  private loginForm: ILoginForm = {
     username: "",
     password: "",
-    code: ""
-  }
-  private loginRules:any = {
-    username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-    password: [{ required: true, trigger: 'blur', validator: validatePassword }],
-    code: [{ required: true, trigger: 'blur', validator: validateCode }]
-  }
+    code: "",
+  };
+  private loginRules: any = {
+    username: [
+      { required: true, trigger: "blur", validator: validateUsername },
+    ],
+    password: [
+      { required: true, trigger: "blur", validator: validatePassword },
+    ],
+    code: [{ required: true, trigger: "blur", validator: validateCode }],
+  };
   private loading = false;
   private codeImgUrl = "";
   private uuid = "";
-
   created() {
     this.getCode();
   }
   // 获取验证码
-  getCode(): void{
-    service.get("/api/captchaImage").then(res => {
-      if(res && res.data.code === 200){
-        this.codeImgUrl = `data:image/png;base64,${res.data.data.img}`;
-        this.uuid = res.data.data.uuid;
-      }
-    }).catch(err => {
-      console.log(err);
-    })
+  getCode(): void {
+    service
+      .get("/api/captchaImage")
+      .then((res) => {
+        if (res && res.data.code === 200) {
+          this.codeImgUrl = `data:image/png;base64,${res.data.data.img}`;
+          this.uuid = res.data.data.uuid;
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
-
-  handleLogin(): void{
+  handleLogin(): void {
     (this.$refs["loginForm"] as ElForm).validate((valid: boolean) => {
-      if(valid){
+      if (valid) {
         const paramsData = {
           username: this.loginForm.username,
           password: this.loginForm.password,
           code: this.loginForm.code,
-          uuid: this.uuid
-        }
+          uuid: this.uuid,
+        };
+        this.loading = true;
         service({
           method: "post",
           url: "/api/login",
-          data: paramsData
-        }).then(res => {
-          if(res && res.data.code === 200){
-            console.log("11", res.data)
-            this.updateTokenValue(res.data.data);
-            this.$router.push("/home");
-          }
-        }).catch(err => {
-          console.log(err);
+          data: paramsData,
         })
+          .then((res) => {
+            if (res && res.data.code === 200) {
+              console.log("11", res.data);
+              this.updateTokenValue(res.data.data);
+              this.$router.push("/home");
+              this.loading = false;
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            this.loading = false;
+          });
       }
-    })
+    });
   }
 }
 </script>
 <style lang="scss" scoped>
-.login-wrapper{
+.login-wrapper {
   min-height: 100%;
   width: 100%;
   background-color: #2d3a4b;
   overflow: hidden;
   display: flex;
   justify-content: center;
-  align-items:center;
+  align-items: center;
   .login-main {
     position: relative;
     width: 400px;
     max-width: 100%;
     overflow: hidden;
-    .login-form{
+    .login-form {
       box-sizing: border-box;
       width: 100%;
       background-color: $white;
       padding: 20px 30px;
       border-radius: 4px;
     }
-    .username{
-      ::v-deep .el-input__inner{
-        background: url("./../../assets/images/icon_user.png") 7px center no-repeat;
+    .username {
+      ::v-deep .el-input__inner {
+        background: url("./../../assets/images/icon_user.png") 7px center
+          no-repeat;
         background-size: 20px;
         padding: 0 15px 0 35px;
       }
     }
-    .password{
-      ::v-deep .el-input__inner{
-        background: url("./../../assets/images/icon_password.png") 7px center no-repeat;
+    .password {
+      ::v-deep .el-input__inner {
+        background: url("./../../assets/images/icon_password.png") 7px center
+          no-repeat;
         background-size: 20px;
         padding: 0 15px 0 35px;
       }
     }
-    .code-form-item{
+    .code-form-item {
       position: relative;
-      img{
+      img {
         position: absolute;
         width: 80px;
         height: 39px;
@@ -181,27 +201,23 @@ export default class Login extends Vue {
         cursor: pointer;
       }
     }
-    .login-btn{
+    .login-btn {
       width: 100%;
       margin-bottom: 20px;
     }
   }
-
   .tips {
     font-size: 14px;
     color: #fff;
     margin-bottom: 10px;
-
     span {
       &:first-of-type {
         margin-right: 16px;
       }
     }
   }
-
   .title-container {
     position: relative;
-
     .title {
       font-size: 20px;
       color: $main-color;
@@ -219,7 +235,6 @@ export default class Login extends Vue {
     cursor: pointer;
     user-select: none;
   }
-
   .thirdparty-button {
     position: absolute;
     right: 0;

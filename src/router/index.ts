@@ -338,4 +338,6 @@ const router = new VueRouter({
   routes,
 });
 
+console.log(routes, 'routes');
+
 export default router;

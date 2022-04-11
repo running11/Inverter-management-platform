@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import router from '@/router';
 import myMessage from '@/utils/myMessage';
+import store from "@/store";
 
 const toLogin = () => {
   router.replace({
@@ -37,10 +38,9 @@ const service = axios.create({
 service.interceptors.request.use(
   (config: AxiosRequestConfig): AxiosRequestConfig => {
     // // 判断是否存在token，如果存在的话，则每个http header都加上token
-    // const jwtToken = getLocalStorage('JWT_TOKEN')
-    // if (jwtToken) {
-    config.headers!.Authorization = '';
-    // }
+    if (store.getters.getTokenValue) {
+      config!.headers!.Authorization = store.getters.getTokenValue;
+    }
     return config;
   },
   (error: any) => {

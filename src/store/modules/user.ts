@@ -1,4 +1,4 @@
-import { getToken, setToken } from "@/utils/auth";
+import { getToken, setToken, clearToken } from "@/utils/auth";
 
 interface IState {
   token: string;
@@ -17,6 +17,9 @@ const mutations = {
     setToken(data);
     state.token = data;
   },
+  clearTokenValue() {
+    clearToken();
+  }
 };
 
 export default { state, getters, mutations };
