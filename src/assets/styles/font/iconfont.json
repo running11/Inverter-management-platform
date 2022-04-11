@@ -1,0 +1,65 @@
+{
+  "id": "3000290",
+  "name": "光储云平台",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "2559431",
+      "name": "用户",
+      "font_class": "yonghu",
+      "unicode": "e6b3",
+      "unicode_decimal": 59059
+    },
+    {
+      "icon_id": "15015462",
+      "name": "项目",
+      "font_class": "xiangmu",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "21837000",
+      "name": "选项选中状态",
+      "font_class": "bianzu",
+      "unicode": "e67c",
+      "unicode_decimal": 59004
+    },
+    {
+      "icon_id": "8112198",
+      "name": "数据分析",
+      "font_class": "shujufenxi1",
+      "unicode": "e706",
+      "unicode_decimal": 59142
+    },
+    {
+      "icon_id": "21429760",
+      "name": "设备型号",
+      "font_class": "shebeixinghao",
+      "unicode": "e647",
+      "unicode_decimal": 58951
+    },
+    {
+      "icon_id": "18183952",
+      "name": "退出登录",
+      "font_class": "tuichudenglu",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
+      "icon_id": "1285157",
+      "name": "tab主页",
+      "font_class": "tabzhuye",
+      "unicode": "e677",
+      "unicode_decimal": 58999
+    },
+    {
+      "icon_id": "25180757",
+      "name": "侧边栏_设备中心",
+      "font_class": "cebianlan_shebeizhongxin",
+      "unicode": "e6b5",
+      "unicode_decimal": 59061
+    }
+  ]
+}

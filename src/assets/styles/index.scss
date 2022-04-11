@@ -1,0 +1,38 @@
+@import "./normalize.css";
+@import "./variable.scss";
+@import "./font/iconfont.css";
+@import "./animation.scss";
+
+body {
+  height: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+}
+
+#app, html{
+  height: 100%;
+}
+
+.pagination-box .el-pager li{
+  padding: 0 6px;
+  height: 34px;
+  line-height: 34px;
+}
+.pagination-box .el-pagination button, 
+.pagination-box .el-pagination span:not([class*=suffix]){
+  height: 34px;
+  line-height: 34px;
+}
+.pagination-box .el-pagination.is-background .btn-next,
+.pagination-box  .el-pagination.is-background .btn-prev,
+.pagination-box .el-pagination.is-background .el-pager li{
+  min-width: 36px;
+}
+.el-button{
+  padding: 10px 18px;
+}
+.table-box .el-button{
+  padding: 8px 15px;
+}

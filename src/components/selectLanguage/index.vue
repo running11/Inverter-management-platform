@@ -1,0 +1,76 @@
+<template>
+  <div class="language-wrapper">
+    <el-select v-model="locale" placeholder="请选择" @change="changeLanguage">
+      <el-option
+        v-for="item in languageList"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value"
+      >
+      </el-option>
+    </el-select>
+  </div>
+</template>
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import { Getter, Mutation } from "vuex-class";
+
+interface ILanguage {
+  value: string;
+  label: string;
+}
+
+@Component
+export default class SelectLanguage extends Vue {
+  @Getter getLanguageValue: any;
+  @Mutation updateLanguageValue: any;
+
+  locale = "";
+  languageList: ILanguage[] = [
+    {
+      value: "zh-CN",
+      label: "简体中文",
+    },
+    {
+      value: "zh-TW",
+      label: "繁体中文",
+    },
+    {
+      value: "en-US",
+      label: "English",
+    },
+  ];
+
+  created() {
+    this.locale = this.getLanguageValue || "zh-CN";
+  }
+
+  changeLanguage(value: string): void {
+    this.updateLanguageValue(value);
+    this.$i18n.locale = value;
+  }
+}
+</script>
+<style lang="scss" scoped>
+.language-wrapper {
+  width: 110px;
+  margin-right: 15px;
+  /deep/.el-select,
+  /deep/.el-input {
+    height: $header-height;
+  }
+  /deep/.el-input__inner {
+    height: $header-height;
+    line-height: $header-height;
+    background-color: $main-color;
+    border: none;
+    color: $white;
+    font-size: 15px;
+  }
+  /deep/.el-select .el-input .el-select__caret {
+    font-size: 16px;
+    color: $white;
+    line-height: $header-height;
+  }
+}
+</style>
