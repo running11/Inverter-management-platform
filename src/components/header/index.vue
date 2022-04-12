@@ -32,8 +32,8 @@ export default class Header extends Vue {
   @Mutation clearTokenValue: any;
 
   logout(): void{
-    this.$router.push("/login");
     this.clearTokenValue();
+    this.$router.push("/login");
     // service
     //   .post("/api/logout")
     //   .then((res) => {
@@ -42,7 +42,6 @@ export default class Header extends Vue {
     //   .catch((err) => {
     //     console.log(err);
     //   });
-    // service.get("/api/getInfo")
   }
 }
 </script>

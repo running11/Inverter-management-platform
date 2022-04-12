@@ -1,6 +1,6 @@
 <template>
   <div class="e-table-wrapper table-box">
-    <el-table empty-text="暂无数据" :data="tableData">
+    <el-table empty-text="暂无数据" :data="tableData" v-loading="loading">
       <el-table-column
         v-for="(item, index) in tableCloumns"
         :key="index"
@@ -54,6 +54,7 @@ var exSlot = {
   },
 })
 export default class ETable extends Vue {
+  @Prop(Boolean) loading!: false;
   @Prop(Array) tableCloumns!: ITheadColums;
   @Prop(Array) tableData!: ITableList;
 

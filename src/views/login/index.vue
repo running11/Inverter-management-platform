@@ -142,6 +142,7 @@ export default class Login extends Vue {
               this.updateTokenValue(res.data.data);
               this.$router.push("/home");
               this.loading = false;
+              service.get("/api/getInfo")
             }
           })
           .catch((err) => {

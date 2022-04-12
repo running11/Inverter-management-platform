@@ -90,20 +90,20 @@
           ></popover-column>
         </div>
       </div>
-      <e-table :tableCloumns="theadSelectedColumns" :tableData="list"></e-table>
-      <!-- <table-custom :theadColumns="theadSelectedColumns" :tableList="list">
-        <template slot="status" slot-scope="scope">
-          <i :class="['iconfont icon-bianzu', { online: scope.value }]"></i>
-        </template>
-        <template slot="specialOperation">
-          <el-button type="primary" plain @click="toProjectDetails">
-            详情
-          </el-button>
-        </template>
-      </table-custom> -->
+      <e-table
+        :loading="listLoading"
+        :tableCloumns="theadSelectedColumns"
+        :tableData="list"
+      ></e-table>
       <div class="pagination-box">
-        <el-pagination background layout="prev, pager, next" :total="100">
-        </el-pagination>
+        <el-pagination
+          background
+          layout="prev, pager, next, total"
+          :page-size="pageSize"
+          :current-page="page"
+          :total="total"
+          @current-change="handleCurrentChange"
+        />
       </div>
     </div>
 
@@ -117,6 +117,7 @@ import PopoverColumn from "@/components/popoverColumn/index.vue";
 import ETable from "@/components/eTable/index.vue";
 import HomeDialog from "@/views/home/components/dialog.vue";
 import { ITheadColums, ITableList } from "@/utils/interface";
+import service from "@/utils/request";
 
 @Component({
   components: {
@@ -127,7 +128,11 @@ import { ITheadColums, ITableList } from "@/utils/interface";
   },
 })
 export default class Home extends Vue {
-  dialogTitle = "新增项目";
+  private dialogTitle = "新增项目";
+  private listLoading = false;
+  private total = 0;
+  private page = 1;
+  private pageSize = 10;
   theadColumns: ITheadColums[] = [
     {
       text: "状态",
@@ -214,21 +219,20 @@ export default class Home extends Vue {
       text: "操作",
       field: "specialOperation",
       slot: true,
+      width: 120,
       disabled: true,
       render: (h: any, params: any) => {
-        return h(
-          "el-button",
-          {
-            class: "el-button--primary is-plain",
-            on: {
-              click: () => {
-                // console.log(`点击了`, params);
-                this.toProjectDetails();
-              },
+        return h("div", {}, [h("el-button", {
+          class: "el-button--primary is-plain",
+          on: {
+            click: () => {
+              console.log(`点击了`, params);
+              this.toProjectDetails();
             },
           },
-          `详情`
-        );
+        }, "详情"), h("el-button", {
+          class: "el-button--danger is-plain"
+        }, "删除")]);
       },
     },
   ];
@@ -298,61 +302,92 @@ export default class Home extends Vue {
       text: "操作",
       field: "specialOperation",
       slot: true,
+      width: 180,
       disabled: true,
       render: (h: any, params: any) => {
-        return h(
-          "el-button",
-          {
-            class: "el-button--primary is-plain",
-            on: {
-              click: () => {
-                this.toProjectDetails();
-              },
+        return h("div", {}, [h("el-button", {
+          class: "el-button--primary is-plain",
+          on: {
+            click: () => {
+              // console.log(`点击了`, params);
+              this.toProjectDetails();
             },
           },
-          `详情`
-        );
+        }, "详情"), h("el-button", {
+          class: "el-button--danger is-plain",
+          on: {
+            click: () => {
+              // console.log(`点击了`, params);
+              this.del(params);
+            },
+          },
+        }, "删除")]);
       },
     },
   ];
-  list: ITableList[] = [
-    {
-      status: true,
-      projectName: "松江储能",
-      PVInstalledCapacity: 1111,
-      EMSInstalledCapacity: 11,
-      EMSInstalledEnergy: 111,
-      dayIncome: 300,
-      dayPowerGeneration: 111,
-      dayPowerCharge: 111,
-      dayPowerDisCharge: 222,
-      SOC: 10,
-      accumulatedIncome: 100320,
-      cumulativeElectricity: 4444,
-      cumulativeCharge: 455,
-      cumulativeDischarge: 454,
-    },
-    {
-      status: false,
-      projectName: "松江储能",
-      PVInstalledCapacity: 1111,
-      EMSInstalledCapacity: 111,
-      EMSInstalledEnergy: 111,
-      dayIncome: 400,
-      dayPowerGeneration: 111,
-      dayPowerCharge: 111,
-      dayPowerDisCharge: 222,
-      SOC: 10,
-      accumulatedIncome: 100320,
-      cumulativeElectricity: 4444,
-      cumulativeCharge: 455,
-      cumulativeDischarge: 454,
-    },
-  ];
+  private list: ITableList[] = [];
 
+  created(): void {
+    this.fetchData();
+  }
+
+  fetchData(): void {
+    const paramsData = {
+      PageNum: 1,
+      PageSize: 10,
+      Sort: "",
+      SortType: "descending", // "ascending" "descending"
+    };
+    this.listLoading = true;
+    service({
+      method: "get",
+      url: "/api/business/EmsProject/homelist",
+      params: paramsData,
+    })
+      .then((res) => {
+        if (res && res.data.code === 200) {
+          console.log("11", res.data);
+          this.list = res.data.data.result || [];
+          this.total = res.data.data.totalNum || 0;
+        }
+        this.listLoading = false;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  handleCurrentChange(val: number): void {
+    this.page = val;
+    this.fetchData();
+  }
+  del(params: any): void{
+    console.log(`删除`, params);
+    this.$confirm("此操作将永久删除该用户, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        service({
+          method: "delete",
+          url: `/api/business/EmsProject/${params.row.projectId}`,
+        }).then((res) => {
+          if (res && res.data.code === 200) {
+            this.$message({
+              message: "删除成功",
+              center: true,
+              type: "success"
+            });
+            this.fetchData();
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      });
+  }
   getCheckedColumns(list: Array<ITheadColums>) {
     this.theadSelectedColumns = list;
-    console.log(this.theadSelectedColumns, 1111111);
+    console.log(this.theadSelectedColumns);
   }
   toProjectDetails(): void {
     const { href } = this.$router.resolve({
@@ -361,7 +396,7 @@ export default class Home extends Vue {
     });
     window.open(href, "_blank");
   }
-  showDialog(): void{
+  showDialog(): void {
     (this.$refs.homeDialog as any).showDialog();
   }
 }
