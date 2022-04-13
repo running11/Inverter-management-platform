@@ -166,54 +166,54 @@ export default class Home extends Vue {
     },
     {
       text: "光伏装机容量(kW)",
-      field: "PVInstalledCapacity",
+      field: "pvCapacity",
       sortable: true,
     },
     {
       text: "储能装机容量(kW)",
-      field: "EMSInstalledCapacity",
+      field: "batteryCapacity",
       sortable: true,
     },
     {
       text: "储能装机能量(kWh)",
-      field: "EMSInstalledEnergy",
+      field: "batteryEnergy",
     },
     {
       text: "当日收益(万元)",
-      field: "dayIncome",
+      field: "dailyIncome",
       sortable: true,
     },
     {
       text: "当日发电电量(kWh)",
-      field: "dayPowerGeneration",
+      field: "dailyGeneration",
     },
     {
       text: "当日充电电量(kWh)",
-      field: "dayPowerCharge",
+      field: "dailyCharge",
     },
     {
       text: "当日放电电量(kWh)",
-      field: "dayPowerDisCharge",
+      field: "dailyDischarge",
     },
     {
       text: "电池SOC(%)",
-      field: "SOC",
+      field: "batterySoc",
     },
     {
       text: "累计收益",
-      field: "accumulatedIncome",
+      field: "totalIncome",
     },
     {
       text: "累计发电电量(MWh)",
-      field: "cumulativeElectricity",
+      field: "totalGeneration",
     },
     {
       text: "累计充电电量(MWh)",
-      field: "cumulativeCharge",
+      field: "totalCharge",
     },
     {
       text: "累计放电电量(MWh)",
-      field: "cumulativeDischarge",
+      field: "totalDischarge",
     },
     {
       text: "操作",
@@ -226,8 +226,8 @@ export default class Home extends Vue {
           class: "el-button--primary is-plain",
           on: {
             click: () => {
-              console.log(`点击了`, params);
-              this.toProjectDetails();
+              // console.log(`点击了`, params);
+              this.toProjectDetails(params);
             },
           },
         }, "详情"), h("el-button", {
@@ -269,34 +269,34 @@ export default class Home extends Vue {
     },
     {
       text: "光伏装机容量(kW)",
-      field: "PVInstalledCapacity",
+      field: "pvCapacity",
       sortable: true,
     },
     {
       text: "储能装机容量(kW)",
-      field: "EMSInstalledCapacity",
+      field: "batteryCapacity",
       sortable: true,
     },
     {
       text: "储能装机能量(kWh)",
-      field: "EMSInstalledEnergy",
+      field: "batteryEnergy",
     },
     {
       text: "当日收益(万元)",
-      field: "dayIncome",
+      field: "dailyIncome",
       sortable: true,
     },
     {
       text: "当日发电电量(kWh)",
-      field: "dayPowerGeneration",
+      field: "dailyGeneration",
     },
     {
       text: "当日充电电量(kWh)",
-      field: "dayPowerCharge",
+      field: "dailyCharge",
     },
     {
       text: "当日放电电量(kWh)",
-      field: "dayPowerDisCharge",
+      field: "dailyDischarge",
     },
     {
       text: "操作",
@@ -310,7 +310,7 @@ export default class Home extends Vue {
           on: {
             click: () => {
               // console.log(`点击了`, params);
-              this.toProjectDetails();
+              this.toProjectDetails(params);
             },
           },
         }, "详情"), h("el-button", {
@@ -335,7 +335,7 @@ export default class Home extends Vue {
     const paramsData = {
       PageNum: 1,
       PageSize: 10,
-      Sort: "",
+      Sort: "pvCapacity, batteryCapacity",
       SortType: "descending", // "ascending" "descending"
     };
     this.listLoading = true;
@@ -389,10 +389,10 @@ export default class Home extends Vue {
     this.theadSelectedColumns = list;
     console.log(this.theadSelectedColumns);
   }
-  toProjectDetails(): void {
+  toProjectDetails(params: any): void {
     const { href } = this.$router.resolve({
       path: "/projectDetails",
-      query: { id: "22" },
+      query: { id: params.row.projectId},
     });
     window.open(href, "_blank");
   }

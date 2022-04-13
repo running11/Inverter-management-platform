@@ -7,7 +7,7 @@
     :before-close="close"
   >
     <slot />
-    <span slot="footer" class="dialog-footer">
+    <span v-if="btns" slot="footer" class="dialog-footer">
       <el-button @click="close">取 消</el-button>
       <el-button type="primary" @click="submit">确 定</el-button>
     </span>
@@ -18,6 +18,11 @@ import { Component, Prop, Watch, Vue } from "vue-property-decorator";
 
 @Component
 export default class NewDialog extends Vue {
+  /**
+   * dialog按钮 默认显示
+   */
+  @Prop({ type: Boolean, required: false, default: true })
+  btns?: any;
   /**
    * dialog宽度
    */
