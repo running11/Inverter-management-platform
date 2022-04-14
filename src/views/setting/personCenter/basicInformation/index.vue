@@ -80,6 +80,7 @@
         :http-request="handelUpload"
         :before-upload="beforeUpload"
       >
+         
         <el-button size="small" icon="el-icon-upload2">更换头像</el-button>
       </el-upload>
     </el-col>
@@ -117,7 +118,7 @@ export default class basicInformation extends Vue {
   };
   private postGroup = ""; //接口返回字段，暂时不知道怎么用
   private roles = []; //接口返回字段，暂时不知道怎么用
-  private imageUrl = require("@/assets/images/icon_electricity.png");
+  private imageUrl = "";
 
   mounted(): void {
     this.fetchData();
@@ -133,7 +134,7 @@ export default class basicInformation extends Vue {
     })
       .then((res) => {
         if (res && res.data.code === 200) {
-          console.log("88888", res.data.data);
+          console.log("7777", res.data.data);
           this.postGroup = res.data.data.postGroup;
           this.roles = res.data.data.roles;
           this.userInfo.userId = res.data.data.user.userId;
@@ -143,10 +144,7 @@ export default class basicInformation extends Vue {
           this.userInfo.remark = res.data.data.user.remark;
           this.userInfo.phonenumber = res.data.data.user.phonenumber;
           this.userInfo.sex = parseInt(res.data.data.user.sex);
-          this.imageUrl =
-            res.data.data.user.avatar == ""
-              ? require("@/assets/images/icon_electricity.png")
-              : res.data.data.user.avatar;
+          this.imageUrl = res.data.data.user.avatar 
         }
       })
       .catch((err) => {
@@ -206,6 +204,7 @@ export default class basicInformation extends Vue {
       reader.readAsDataURL(file);
       reader.onload = () => {
         this.imageUrl = reader.result;
+        alert( this.imageUrl)
       };
     }
   }
@@ -213,28 +212,24 @@ export default class basicInformation extends Vue {
   
     console.log("888", file);
     let fileData = new FormData();
-    // fileData.append("ContentType", file.file.type);
-    // fileData.append("ContentDisposition", file.file.type);
-    // const obj ={'Content-Type':'multipart/from-data'}
-    // // fileData.append("Headers", obj);
-    // fileData.append("Length", file.file.size);
-    // fileData.append("Name", file.file.name);
-    // fileData.append("FileName", file.filename);
-    console.log(fileData,"ooooo")
-    
-    // service({
-    //   method: "post",
-    //   url: "/api/system/user/profile/Avatar",
-    //   data: fileData,
-    // })
-    //   .then((res) => {
-    //     if (res && res.data.code === 200) {
-    //       console.log("11", res.data);
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    fileData.append("picture", file.file);
+    service({
+      method: "post",
+      url: "/api/system/user/profile/Avatar",
+      data: fileData,
+        headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    })
+      .then((res) => {
+        if (res && res.data.code === 200) {
+            console.log("11", res.data);
+            this.imageUrl= res.data
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 }
 </script>
@@ -251,36 +246,14 @@ export default class basicInformation extends Vue {
   .imgbox {
     width: 200px;
     height: 200px;
-    border-radius: 100px;
     overflow: hidden;
     margin-bottom: 10px;
     img {
       width: 200px;
       height: 200px;
+      
     }
   }
 }
-.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.avatar-uploader .el-upload:hover {
-  border-color: #409eff;
-}
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
-  text-align: center;
-}
-.avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
-}
+
 </style>
