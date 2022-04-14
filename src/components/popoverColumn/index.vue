@@ -153,11 +153,11 @@ export default class PopoverColumn extends Vue {
       padding-bottom: 40px;
       height: 240px;
     }
-    /deep/.el-scrollbar__wrap {
+    ::v-deep.el-scrollbar__wrap {
       overflow-y: scroll;
       overflow-x: hidden;
     }
-    /deep/.el-col-24 {
+    ::v-deep.el-col-24 {
       margin-top: 15px;
     }
   }
@@ -170,7 +170,7 @@ export default class PopoverColumn extends Vue {
     left: 0;
     bottom: 0;
     z-index: 99;
-    /deep/.el-button {
+    ::v-deep.el-button {
       padding: 7px 14px;
     }
   }

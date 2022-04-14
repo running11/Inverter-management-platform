@@ -29,6 +29,7 @@ interface ITab {
 export default class ProjectDetails extends Vue {
   private activeName = "";
   private title = "";
+  private projectId:any = "";
   tabList: ITab[] = [
     {
       label: "项目总览",
@@ -57,14 +58,14 @@ export default class ProjectDetails extends Vue {
   handleRoutes(): void {
     this.activeName = this.$route.name as string;
     this.title = this.$route.meta.title;
-    console.log(this.$route, 11);
-    this.$router.push({ name: this.$route.name });
+    this.projectId = this.$route.query.id; // projectId
+    this.$router.push({ name: this.$route.name, query: { id: this.projectId} });
   }
 
   handleClick(tab: ITab): void {
     this.activeName = tab.name;
     this.title = tab.label;
-    this.$router.push({ name: tab.name });
+    this.$router.push({ name: tab.name, query: { id: this.projectId} });
   }
 }
 </script>

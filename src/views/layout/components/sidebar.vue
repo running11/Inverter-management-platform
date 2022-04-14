@@ -131,7 +131,7 @@ export default class Sidebar extends Vue {
   box-shadow: 1px 0 5px #ccc;
   overflow-x: hidden;
   position: relative;
-  /deep/.el-menu {
+  ::v-deep.el-menu {
     border-right: none;
   }
   .fold-box {

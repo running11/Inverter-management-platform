@@ -166,7 +166,7 @@ export default class DeviceList extends Vue {
   margin: 20px 0;
   background: $white;
   padding: 15px 20px;
-  /deep/.el-form-item {
+  ::v-deep.el-form-item {
     margin-bottom: 0;
     margin-right: 20px;
   }
