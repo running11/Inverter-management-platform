@@ -77,16 +77,16 @@ export default class TreeTable extends Vue {
 </script>
 <style lang="scss" scoped>
 .tree-table {
-  /deep/.el-table thead {
+  ::v-deep.el-table thead {
     background-color: $theadTrBg;
   }
-  /deep/.el-table__row > td {
+  ::v-deep.el-table__row > td {
     border: none;
   }
-  /deep/.el-table::before {
+  ::v-deep.el-table::before {
     height: 0;
   }
-  /deep/.el-table .el-table__cell {
+  ::v-deep.el-table .el-table__cell {
     padding: 0;
     height: 44px;
     line-height: 44px;
@@ -94,10 +94,10 @@ export default class TreeTable extends Vue {
     color: $gray;
     text-align: center;
   }
-  /deep/.el-table tr:nth-child(even) {
+  ::v-deep.el-table tr:nth-child(even) {
     background: $tbodyTrBg;
   }
-  /deep/.el-table--enable-row-hover .el-table__body tr:hover > td {
+  ::v-deep.el-table--enable-row-hover .el-table__body tr:hover > td {
     background-color: $tbodyTrActiveBg;
   }
 }

@@ -127,7 +127,7 @@ export default class otherSetting extends Vue {
   .details-wrapper {
     background: $white;
     padding: 40px 20px;
-    /deep/ .avatar-uploader .el-upload {
+    ::v-deep .avatar-uploader .el-upload {
       border: 1px solid #d9d9d9;
       border-radius: 6px;
       cursor: pointer;

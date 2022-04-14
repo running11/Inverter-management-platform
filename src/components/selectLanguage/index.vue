@@ -55,11 +55,11 @@ export default class SelectLanguage extends Vue {
 .language-wrapper {
   width: 110px;
   margin-right: 15px;
-  /deep/.el-select,
-  /deep/.el-input {
+  ::v-deep.el-select,
+  ::v-deep.el-input {
     height: $header-height;
   }
-  /deep/.el-input__inner {
+  ::v-deep.el-input__inner {
     height: $header-height;
     line-height: $header-height;
     background-color: $main-color;
@@ -67,7 +67,7 @@ export default class SelectLanguage extends Vue {
     color: $white;
     font-size: 15px;
   }
-  /deep/.el-select .el-input .el-select__caret {
+  ::v-deep.el-select .el-input .el-select__caret {
     font-size: 16px;
     color: $white;
     line-height: $header-height;

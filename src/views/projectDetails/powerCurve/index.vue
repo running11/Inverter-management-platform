@@ -146,7 +146,7 @@ export default class PowerCurve extends Vue {
     .date-picker {
       display: inline-block;
       vertical-align: top;
-      /deep/.el-input__icon {
+      ::v-deep.el-input__icon {
         height: 40px;
       }
     }

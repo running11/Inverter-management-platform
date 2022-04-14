@@ -103,7 +103,7 @@ export default class myForm extends Vue {
 .form-box {
   padding: 20px;
   border-bottom: 1px solid $border-color;
-  /deep/ .el-form-item {
+  ::v-deep .el-form-item {
     margin-right: 5%;
   }
   .ml {

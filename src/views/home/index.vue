@@ -107,7 +107,7 @@
       </div>
     </div>
 
-    <home-dialog ref="homeDialog" :title="dialogTitle"></home-dialog>
+    <home-dialog ref="homeDialog" :title="dialogTitle" @fetchData="fetchData"></home-dialog>
   </div>
 </template>
 <script lang="ts">
@@ -219,7 +219,6 @@ export default class Home extends Vue {
       text: "操作",
       field: "specialOperation",
       slot: true,
-      width: 120,
       disabled: true,
       render: (h: any, params: any) => {
         return h("div", {}, [h("el-button", {
@@ -230,9 +229,7 @@ export default class Home extends Vue {
               this.toProjectDetails(params);
             },
           },
-        }, "详情"), h("el-button", {
-          class: "el-button--danger is-plain"
-        }, "删除")]);
+        }, "详情")]);
       },
     },
   ];
@@ -302,7 +299,6 @@ export default class Home extends Vue {
       text: "操作",
       field: "specialOperation",
       slot: true,
-      width: 180,
       disabled: true,
       render: (h: any, params: any) => {
         return h("div", {}, [h("el-button", {
@@ -313,15 +309,16 @@ export default class Home extends Vue {
               this.toProjectDetails(params);
             },
           },
-        }, "详情"), h("el-button", {
-          class: "el-button--danger is-plain",
-          on: {
-            click: () => {
-              // console.log(`点击了`, params);
-              this.del(params);
-            },
-          },
-        }, "删除")]);
+        }, "详情")]);
+        // h("el-button", {
+        //   class: "el-button--danger is-plain",
+        //   on: {
+        //     click: () => {
+        //       // console.log(`点击了`, params);
+        //       this.del(params);
+        //     },
+        //   },
+        // }, "删除")
       },
     },
   ];
@@ -336,7 +333,7 @@ export default class Home extends Vue {
       PageNum: 1,
       PageSize: 10,
       Sort: "pvCapacity, batteryCapacity",
-      SortType: "descending", // "ascending" "descending"
+      SortType: "ascending", // "ascending" "descending"
     };
     this.listLoading = true;
     service({
@@ -346,7 +343,7 @@ export default class Home extends Vue {
     })
       .then((res) => {
         if (res && res.data.code === 200) {
-          console.log("11", res.data);
+          // console.log("项目列表", res.data);
           this.list = res.data.data.result || [];
           this.total = res.data.data.totalNum || 0;
         }
@@ -403,7 +400,7 @@ export default class Home extends Vue {
 </script>
 <style lang="scss" scoped>
 .main-wrapper {
-  /deep/.el-row {
+  ::v-deep.el-row {
     margin-bottom: 20px;
     .grid-content {
       padding: 10px 5px;

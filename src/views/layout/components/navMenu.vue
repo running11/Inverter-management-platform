@@ -51,8 +51,8 @@ export default class NavMenu extends Vue {
   .iconfont {
     font-weight: bold;
   }
-  /deep/.el-menu-item,
-  /deep/.el-submenu__title {
+  ::v-deep.el-menu-item,
+  ::v-deep.el-submenu__title {
     font-size: 15px;
     text-indent: 0;
     padding: 0 15px !important;
@@ -63,8 +63,8 @@ export default class NavMenu extends Vue {
       margin-right: 5px;
     }
   }
-  /deep/.el-menu-item.is-active,
-  /deep/.el-submenu.is-active .el-submenu__title {
+  ::v-deep.el-menu-item.is-active,
+  ::v-deep.el-submenu.is-active .el-submenu__title {
     color: #409eff;
     .iconfont {
       color: #409eff;
@@ -73,8 +73,8 @@ export default class NavMenu extends Vue {
 }
 .el-menu--inline {
   .menu-wrapper {
-    /deep/.el-menu-item,
-    /deep/.el-submenu__title {
+    ::v-deep.el-menu-item,
+    ::v-deep.el-submenu__title {
       padding: 0 30px !important;
     }
   }

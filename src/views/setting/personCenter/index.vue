@@ -28,7 +28,7 @@ export default class PersonCenter extends Vue {}
 .tab-box {
   padding: 20px;
   background: $white;
-  /deep/ .el-tabs__item:focus.is-active.is-focus:not(:active) {
+  ::v-deep .el-tabs__item:focus.is-active.is-focus:not(:active) {
     -webkit-box-shadow: none;
     box-shadow: none;
   }

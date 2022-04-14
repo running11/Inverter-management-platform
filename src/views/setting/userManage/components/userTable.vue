@@ -193,7 +193,7 @@ export default class userTable extends Vue {
     padding: 0 0 20px;
     display: flex;
     justify-content: space-between;
-    /deep/.el-form-item {
+    ::v-deep.el-form-item {
       margin-right: 20px;
     }
     .toolbar-right {

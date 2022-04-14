@@ -65,10 +65,10 @@ export default class NewDialog extends Vue {
 }
 </script>
 <style lang="scss" scoped>
-/deep/.el-dialog {
+::v-deep.el-dialog {
   width: 28%;
 }
-/deep/.el-dialog__header {
+::v-deep.el-dialog__header {
   border-bottom: 1px solid #dcdfe6;
 }
 </style>

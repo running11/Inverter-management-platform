@@ -244,7 +244,7 @@ export default class electricityPrice extends Vue {
     background: $white;
     padding: 20px;
     position: relative;
-    /deep/ .el-tabs__item:focus.is-active.is-focus:not(:active) {
+    ::v-deep .el-tabs__item:focus.is-active.is-focus:not(:active) {
       -webkit-box-shadow: none;
       box-shadow: none;
     }
@@ -264,7 +264,7 @@ export default class electricityPrice extends Vue {
     .form-box {
       padding: 20px;
       border-bottom: 1px solid $border-color;
-      /deep/ .el-form-item {
+      ::v-deep .el-form-item {
         margin-right: 10%;
       }
     }

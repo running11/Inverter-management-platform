@@ -6,42 +6,43 @@
         <div class="img-box">
           <img src="@/assets/images/icon_electricity.png" alt="电站" />
         </div>
-        <div class="list">
+        <div class="list" v-if="project">
           <div class="item">
             <label>项目名称：</label>
-            <span>松江储能系统</span>
+            <span>{{project.projectName}}</span>
           </div>
           <div class="item">
             <label>项目地址：</label>
-            <span>上海市松江区思贤路xxx号</span>
+            <span>{{project.address}}</span>
           </div>
           <div class="item">
             <label>实时状态：</label>
-            <span>在线</span>
+            <i class="iconfont icon-bianzu online" v-if="project.status == '1'"></i>
+            <i class="iconfont icon-bianzu" v-else></i>
           </div>
           <div class="item">
             <label>投动时间：</label>
-            <span>2020-11-20</span>
+            <span>{{project.safeRunDate}}</span>
           </div>
           <div class="item">
             <label>经纬度：</label>
-            <span></span>
+            <span>{{project.longitude}}-{{project.latitude}}</span>
           </div>
           <div class="item">
             <label>时区：</label>
-            <span>东八区</span>
+            <span>{{project.zone}}</span>
           </div>
           <div class="item">
             <label>光伏装机容量(kW)：</label>
-            <span>1111</span>
+            <span>{{project.pvCapacity}}</span>
           </div>
           <div class="item">
             <label>储能装机容量(kW)：</label>
-            <span>1111</span>
+            <span>{{project.batteryCapacity}}</span>
           </div>
           <div class="item">
             <label>储能装机能量(kWh)：</label>
-            <span>21222</span>
+            <span>{{project.batteryEnergy}}</span>
           </div>
         </div>
       </div>
@@ -137,6 +138,7 @@ import { Component, Vue } from "vue-property-decorator";
 import PieChart from "@/components/pieChart/index.vue";
 import LineChart from "@/components/lineChart/index.vue";
 import { IPieChartData, ILineChartList } from "@/utils/interface";
+import service from "@/utils/request";
 
 @Component({
   components: {
@@ -145,6 +147,8 @@ import { IPieChartData, ILineChartList } from "@/utils/interface";
   },
 })
 export default class ProjectOverview extends Vue {
+  private projectId:any = "";
+  private project: any = null;
   alarmColors: Array<string> = [
     "#4A90E2",
     "#2DCCA9",
@@ -209,6 +213,25 @@ export default class ProjectOverview extends Vue {
       data: [40, 20, 35, 60, 55, 10, 30],
     },
   ];
+
+  created(): void{
+    this.getProjectDetails();
+  }
+
+  getProjectDetails(): void{
+    this.projectId = this.$route.query.id; // projectId
+    service({
+      method: "get",
+      url: `/api/business/EmsProject/${this.projectId}`,
+    }).then((res) => {
+      if (res && res.data.code === 200) {
+        this.project = res.data.data;
+        console.log(this.project, 11111111)
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
 }
 </script>
 <style lang="scss" scoped>
@@ -301,6 +324,16 @@ export default class ProjectOverview extends Vue {
       height: auto;
       // height: 270px;
     }
+  }
+  .iconfont{
+    display: inline-block;
+  }
+  .icon-bianzu {
+    font-size: 14px;
+    color: #cccccc;
+  }
+  .online {
+    color: #00cc00;
   }
 }
 </style>

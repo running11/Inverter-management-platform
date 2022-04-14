@@ -65,44 +65,52 @@ export default class ETable extends Vue {
 </script>
 <style lang="scss" scoped>
 .e-table-wrapper {
-  /deep/.el-table .el-table__header tr th {
+  ::v-deep.el-table__header .cell{
+    padding: 0 4px;
+    text-overflow: unset;
+    white-space: nowrap;
+  }
+  ::v-deep.el-table .cell{
+    padding: 0 4px;
+  }
+  ::v-deep.el-table .el-table__header tr th {
     background-color: #edeff2;
   }
-  /deep/.el-table th.el-table__cell > .cell {
+  ::v-deep.el-table th.el-table__cell > .cell {
     font-weight: normal;
     color: #000;
   }
-  /deep/.el-table td.el-table__cell,
-  /deep/.el-table th.el-table__cell.is-leaf {
+  ::v-deep.el-table td.el-table__cell,
+  ::v-deep.el-table th.el-table__cell.is-leaf {
     border-bottom: none;
   }
-  /deep/.el-table::before {
+  ::v-deep.el-table::before {
     height: 0;
   }
-  /deep/.el-table .el-table__cell {
+  ::v-deep.el-table .el-table__cell {
     padding: 6px 0;
   }
-  /deep/.el-table .el-table__row:nth-child(even) {
+  ::v-deep.el-table .el-table__row:nth-child(even) {
     background: $tbodyTrBg;
   }
-  /deep/.el-table tbody tr:hover > td {
+  ::v-deep.el-table tbody tr:hover > td {
     background: $tbodyTrActiveBg !important;
   }
-  /deep/.el-table .sort-caret {
+  ::v-deep.el-table .sort-caret {
     border: 8px solid transparent;
   }
-  /deep/.el-table .sort-caret.ascending {
+  ::v-deep.el-table .sort-caret.ascending {
     border-bottom-color: #c0c4cc;
     top: 0;
   }
-  /deep/.el-table .sort-caret.descending {
+  ::v-deep.el-table .sort-caret.descending {
     border-top-color: #c0c4cc;
     bottom: 0;
   }
-  /deep/.el-table .ascending .sort-caret.ascending {
+  ::v-deep.el-table .ascending .sort-caret.ascending {
     border-bottom-color: #409eff;
   }
-  /deep/.el-table .descending .sort-caret.descending {
+  ::v-deep.el-table .descending .sort-caret.descending {
     border-top-color: #409eff;
   }
 }
