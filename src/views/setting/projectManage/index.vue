@@ -4,11 +4,15 @@
     <div class="content-box">
       <div class="menu-box">
         <el-tree
-          ref="tree2"
-          :data="data2"
-          :props="defaultProps"
+          ref="tree"
           class="filter-tree"
-          default-expand-all
+          highlight-current
+          node-key="compyId"
+          :expand-on-click-node="false"
+          :data="companyList"
+          :props="defaultProps"
+          :default-checked-keys="treeCheckedKeys"
+          :default-expanded-keys="treeExpandedKeys"
           @node-click="handleNodeClick"
         />
       </div>
@@ -21,6 +25,9 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import projectTable from "./components/table.vue";
+import service from "@/utils/request";
+import TreeTable from "@/components/treeTable/index.vue";
+
 interface TreeData {
   id?: any;
   label?: string;
@@ -35,51 +42,54 @@ interface TreeData {
 })
 export default class projectManage extends Vue {
   timer = "";
-  companyId = -1;
-  private data2: TreeData[] = [
-    {
-      id: 1,
-      label: "公司 one 1",
-      children: [
-        {
-          id: 2,
-          label: "公司 two 1-1",
-          children: [
-            {
-              id: 3,
-              label: "公司 three 1-1-1",
-            },
-            {
-              id: 4,
-              label: "公司 three 1-1-2",
-            },
-          ],
-        },
-        {
-          id: 5,
-          label: "公司 two 1-2",
-          children: [
-            {
-              id: 6,
-              label: "公司 three 1-2-1",
-            },
-            {
-              id: 7,
-              label: "公司 three 1-2-2",
-            },
-          ],
-        },
-      ],
-    },
-  ];
+  companyId: any = "";
+  companyList:any = [];
+  treeExpandedKeys: string[] | number[] = [];
+  treeCheckedKeys: string[] | number[] = [];
   private defaultProps = {
     children: "children",
-    label: "label",
+    label: "compyName",
+    id: "compyId"
   };
+
+  created(): void{
+    this.getCompanyList();
+  }
+
+  getCompanyList(): void{
+    service({
+      method: "get",
+      url: "/api/business/EmsCompany/treeList",
+    })
+      .then((res) => {
+        if (res && res.data.code === 200) {
+          console.log(res.data, 111);
+          let list = res.data.data || [];
+          if(list.length > 0){
+            let arr:any = [];
+            arr.push(list[0].compyId, list[0].children[0].compyId);
+            this.treeExpandedKeys = arr; // 默认展开第一个
+            this.treeCheckedKeys = [list[0].compyId]; // 默认选中第一个
+            this.companyId = list[0].compyId;
+            this.$nextTick(() => {
+              (this.$refs["tree"] as any).setCheckedKeys(this.treeCheckedKeys);
+            })
+            console.log(this.treeExpandedKeys, "treeExpandedKeys", this.treeCheckedKeys);
+          }
+          this.companyList = list;
+          // console.log("公司列表", this.companyList);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
   handleNodeClick(data: any): void {
-    console.log(data.id);
-    this.companyId = data.id;
+    this.treeExpandedKeys = [data.parentId, data.compyId];
+    this.treeCheckedKeys = [data.compyId];
+    this.companyId = data.compyId;
     this.timer = new Date().getTime().toString();
+    console.log(this.treeExpandedKeys, this.treeCheckedKeys, '点击树型选项');
   }
 }
 </script>

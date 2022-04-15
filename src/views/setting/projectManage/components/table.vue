@@ -31,6 +31,12 @@
       :title="dialogType"
       :current-project="currentProject"
     ></project-dialog>
+    <!-- 跟首页的新增是公用的 -->
+    <home-dialog
+      ref="homeDialog"
+      :title="dialogTitle"
+    >
+    </home-dialog>
   </div>
 </template>
 <script lang="ts">
@@ -38,6 +44,8 @@ import { Component, Vue } from "vue-property-decorator";
 import { ITheadColums, ITableList } from "@/utils/interface";
 import TableCustom from "@/components/table/index.vue";
 import projectDialog from "./dialog.vue";
+import HomeDialog from "@/views/home/components/dialog.vue";
+
 interface IProject {
   projectName: string;
   companyName: string;
@@ -50,9 +58,11 @@ interface IProject {
   components: {
     TableCustom,
     projectDialog,
+    HomeDialog
   },
 })
 export default class projectTable extends Vue {
+  dialogTitle = "新增项目";
   currentProject: IProject | any = {};
   dialogType = "新增项目";
 
@@ -127,7 +137,8 @@ export default class projectTable extends Vue {
     };
     this.dialogType = obj[type];
     this.currentProject = {};
-    (this.$refs.projectDialog as any).showDialog();
+    // (this.$refs.projectDialog as any).showDialog();
+    (this.$refs.homeDialog as any).showDialog();
     type === "add" ? this.loadDailogData() : this.loadDailogData(row);
   }
   loadDailogData(row?: IProject): void {

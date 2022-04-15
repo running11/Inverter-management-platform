@@ -113,6 +113,7 @@
           <el-input
             placeholder="请输入经纬度"
             v-model="otherForm.longitudeAndLatitude"
+            @focus="innerVisible = true"
           />
         </el-form-item>
         <el-form-item label="电站时区" prop="zone">
@@ -143,6 +144,14 @@
         <el-button class="btn" type="primary" v-if="active == 1" @click="submitForm">提交</el-button>
       </div>
     </new-dialog>
+
+    <el-dialog
+      width="58%"
+      title="选择经纬度"
+      :visible.sync="innerVisible"
+      append-to-body>
+      <map-test></map-test>
+    </el-dialog>
   </div>
 </template>
 <script lang="ts">
@@ -151,6 +160,7 @@ import NewDialog from "@/components/newDialog/index.vue";
 import countryJSON from "@/utils/countryList";
 import service from "@/utils/request";
 import moment from 'moment';
+import MapTest from "@/components/map/index.vue";
 
 // interface IProject {
 //   compyId: 0,
@@ -173,11 +183,13 @@ import moment from 'moment';
 @Component({
   components: {
     NewDialog,
+    MapTest
   },
 })
 export default class HomeDialog extends Vue {
   @Prop(String) title!: string;
-  active = 1;
+  innerVisible = false;
+  active = 0;
   isShow = false;
 
   basicForm: any = {
@@ -238,7 +250,7 @@ export default class HomeDialog extends Vue {
     let formData = new FormData();
     formData.append("fileName", a.file.name);
     formData.append("fileDir", a.file);
-    formData.append("uploadType", 0);
+    formData.append("uploadType", "0");
     console.log(formData, 'formData');
     // const paramsData = {
     //   fileName: a.file.name,
@@ -309,10 +321,12 @@ export default class HomeDialog extends Vue {
   }
   closeDialog(): void {
     this.isShow = false;
-    (this.$refs["form"] as any).resetFields();
+    if(this.$refs["basicForm"]) (this.$refs["basicForm"] as any).resetFields();
+    if(this.$refs["otherForm"]) (this.$refs["otherForm"] as any).resetFields();
   }
   showDialog(): void {
     this.isShow = true;
+    this.active = 1; // 打开弹窗，默认选中第一步
   }
   submitForm(): void {
     // 提交
