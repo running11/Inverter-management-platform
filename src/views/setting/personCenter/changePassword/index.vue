@@ -63,11 +63,13 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { Form } from "element-ui";
+import service from "@/utils/request";
+
 @Component
 export default class changePassword extends Vue {
-  labelPosition = "top";
-  isHide = true;
-  passwordInfo = {
+ private labelPosition = "top";
+ private isHide = true;
+ private passwordInfo = {
     nowPassword: "",
     newPassword: "",
     checkPassword: "",
@@ -96,10 +98,31 @@ export default class changePassword extends Vue {
     (this.$refs.passForm as Form).validate((valid: boolean) => {
       if (valid) {
         alert(valid);
-      } else {
-        alert("error submit!!");
-        return false;
-      }
+      
+       const paramsData =  {
+         oldPassword : this.passwordInfo.nowPassword,
+         newPassword :this.passwordInfo.newPassword
+       };
+        
+         service({
+          method: "put",
+          url: "/api/system/user/profile/updatePwd",
+          params:paramsData,
+          
+        })
+          .then((res) => {
+            if (res && res.data.code === 200) {
+              console.log("7777", res.data);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } 
+      // else {
+      //   alert("error submit!!");
+      //   return false;
+      // }
     });
   }
   resetForm(): void {
