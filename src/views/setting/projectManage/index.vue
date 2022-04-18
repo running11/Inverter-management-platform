@@ -26,7 +26,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import projectTable from "./components/table.vue";
 import service from "@/utils/request";
-import TreeTable from "@/components/treeTable/index.vue";
+// import TreeTable from "@/components/treeTable/index.vue";
 
 interface TreeData {
   id?: any;
@@ -42,10 +42,14 @@ interface TreeData {
 })
 export default class projectManage extends Vue {
   timer = "";
+  currentCompany: any = null;
   companyId: any = "";
   companyList:any = [];
   treeExpandedKeys: string[] | number[] = [];
   treeCheckedKeys: string[] | number[] = [];
+  private total = 0;
+  private page = 1;
+  private pageSize = 10;
   private defaultProps = {
     children: "children",
     label: "compyName",
@@ -56,6 +60,7 @@ export default class projectManage extends Vue {
     this.getCompanyList();
   }
 
+  // 获取公司数据 tree
   getCompanyList(): void{
     service({
       method: "get",
@@ -69,11 +74,13 @@ export default class projectManage extends Vue {
             let arr:any = [];
             arr.push(list[0].compyId, list[0].children[0].compyId);
             this.treeExpandedKeys = arr; // 默认展开第一个
+            this.currentCompany = list[0];
             this.treeCheckedKeys = [list[0].compyId]; // 默认选中第一个
             this.companyId = list[0].compyId;
             this.$nextTick(() => {
               (this.$refs["tree"] as any).setCheckedKeys(this.treeCheckedKeys);
             })
+            this.getProjectList();
             console.log(this.treeExpandedKeys, "treeExpandedKeys", this.treeCheckedKeys);
           }
           this.companyList = list;
@@ -85,11 +92,39 @@ export default class projectManage extends Vue {
       });
   }
   handleNodeClick(data: any): void {
+    this.currentCompany = data;
     this.treeExpandedKeys = [data.parentId, data.compyId];
     this.treeCheckedKeys = [data.compyId];
     this.companyId = data.compyId;
     this.timer = new Date().getTime().toString();
     console.log(this.treeExpandedKeys, this.treeCheckedKeys, '点击树型选项');
+  }
+  // 获取项目list table
+  getProjectList(): void{
+    const paramsData = {
+      ProjectName: "",
+      CompyId: this.currentCompany.compyId,
+      PageNum: this.page,
+      PageSize: this.pageSize,
+      Sort: "",
+      SortType: "ascending"
+    }
+    service({
+      method: "get",
+      url: "/api/business/EmsProject/childlist",
+      params: paramsData,
+    })
+      .then((res) => {
+        if (res && res.data.code === 200) {
+          // console.log("项目列表", res.data);
+          // this.list = res.data.data.result || [];
+          // this.total = res.data.data.totalNum || 0;
+        }
+        // this.listLoading = false;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 }
 </script>

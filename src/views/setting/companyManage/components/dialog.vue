@@ -14,29 +14,35 @@
         :model="company"
         :rules="rules"
       >
-        <el-form-item label="公司名称" prop="companyName">
+        <el-form-item label="公司名称" prop="compyName">
           <el-input
-            v-model="company.companyName"
+            v-model="company.compyName"
             placeholder="请输入公司名称"
           />
         </el-form-item>
-        <el-form-item label="公司地址" prop="companyAddress">
+        <el-form-item label="公司地址" prop="address">
           <el-input
-            v-model="company.companyAddress"
+            v-model="company.address"
             placeholder="请输入公司地址"
           />
         </el-form-item>
-        <el-form-item label="联系方式" prop="phoneNumber">
+        <el-form-item label="联系人" prop="contactPerson">
           <el-input
             v-model="company.phoneNumber"
             placeholder="请输入联系方式"
           />
         </el-form-item>
-        <el-form-item label="公司描述" prop="companyDesc">
+        <el-form-item label="联系方式" prop="contactMethod">
+          <el-input
+            v-model="company.contactMethod"
+            placeholder="请输入联系方式"
+          />
+        </el-form-item>
+        <el-form-item label="公司描述" prop="compyDescription">
           <el-input
             type="textarea"
             :rows="3"
-            v-model="company.companyDesc"
+            v-model="company.compyDescription"
             placeholder="请输入公司描述"
           />
         </el-form-item>
@@ -47,12 +53,14 @@
 <script lang="ts">
 import { Component, Prop, Watch, Vue } from "vue-property-decorator";
 import NewDialog from "@/components/newDialog/index.vue";
+import service from "@/utils/request";
 
 interface ICompany {
   companyName: string;
-  companyAddress: string;
-  phoneNumber: string;
-  companyDesc: string;
+  address: string;
+  contactPerson: string;
+  contactMethod: string;
+  compyDescription: string;
   [propName: string]: any;
 }
 
@@ -68,14 +76,14 @@ export default class CompanyDialog extends Vue {
   company: ICompany = this.currentCompany;
 
   rules: any = {
-    companyName: [
+    compyName: [
       { required: true, message: "请输入公司名称", trigger: "blur" },
     ],
-    companyAddress: [
+    address: [
       { required: true, message: "请输入公司地址", trigger: "blur" },
     ],
-    phoneNumber: [
-      { required: true, message: "请输入联系方式", trigger: "blur" },
+    contactPerson: [
+      { required: false, message: "请输入联系方式", trigger: "blur" },
     ],
   };
 
@@ -94,6 +102,32 @@ export default class CompanyDialog extends Vue {
   submitForm(): void {
     (this.$refs["form"] as any).validate((valid: any) => {
       console.log(valid);
+      if(valid){
+        if(this.currentCompany.compyId != undefined){
+          console.log("修改");
+        }else{
+          console.log("新增");
+          service({
+          method: "post",
+          url: "/api/business/EmsCompany",
+          data: this.currentCompany,
+        })
+          .then((res) => {
+            if (res && res.data.code === 200) {
+              this.$message({
+                message: "添加成功",
+                center: true,
+                type: "success"
+              });
+              this.isShow = false;
+              this.$emit("fetchData");
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        }
+      }
     });
   }
 }
