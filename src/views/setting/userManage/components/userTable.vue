@@ -1,7 +1,7 @@
 <template>
   <div class="">
     <div class="table-wrapper">
-      <div class="search-box">
+      <!-- <div class="search-box">
         <el-form :inline="true" :model="form">
           <el-form-item label="用户名">
             <el-input v-model="form.name" placeholder="请输入用户名"></el-input>
@@ -22,7 +22,7 @@
         <div class="toolbar-right">
           <el-button type="primary" @click="showDialog('add')">新增</el-button>
         </div>
-      </div>
+      </div> -->
       <table-custom
         :theadColumns="theadColumns"
         :tableList="list"
@@ -54,6 +54,8 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { ITheadColums, ITableList } from "@/utils/interface";
 import TableCustom from "@/components/table/index.vue";
 import userDialog from "@/views/setting/userManage/components/dialog.vue";
+import service from "@/utils/request";
+
 interface IUser {
   userName: string;
   role: string;
@@ -128,6 +130,8 @@ export default class userTable extends Vue {
       status: "在职",
     },
   ];
+
+ 
   mounted(): void {
     this.$nextTick((): void => {
       (this.$refs.table as any).operationVisible = true;

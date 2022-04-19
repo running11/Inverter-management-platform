@@ -123,9 +123,7 @@ export default class basicInformation extends Vue {
   mounted(): void {
     this.fetchData();
   }
-  get headers() {
-    return { token: window.localStorage.getItem("token") };
-  }
+ 
   //获取用户信息
   fetchData(): void {
     service({
@@ -144,7 +142,7 @@ export default class basicInformation extends Vue {
           this.userInfo.remark = res.data.data.user.remark;
           this.userInfo.phonenumber = res.data.data.user.phonenumber;
           this.userInfo.sex = parseInt(res.data.data.user.sex);
-          this.imageUrl = res.data.data.user.avatar 
+          this.imageUrl = res.data.data.user.avatar
         }
       })
       .catch((err) => {
@@ -204,13 +202,11 @@ export default class basicInformation extends Vue {
       reader.readAsDataURL(file);
       reader.onload = () => {
         this.imageUrl = reader.result;
-        alert( this.imageUrl)
       };
     }
   }
   handelUpload(file: any) {
-  
-    console.log("888", file);
+    // console.log("888", file);
     let fileData = new FormData();
     fileData.append("picture", file.file);
     service({
@@ -223,8 +219,9 @@ export default class basicInformation extends Vue {
     })
       .then((res) => {
         if (res && res.data.code === 200) {
-            console.log("11", res.data);
-            this.imageUrl= res.data
+            console.log("imgURL", res.data);
+            // this.imageUrl= res.data
+            this.fetchData();
         }
       })
       .catch((err) => {
@@ -247,9 +244,14 @@ export default class basicInformation extends Vue {
     width: 200px;
     height: 200px;
     overflow: hidden;
+    border-radius: 50%;
     margin-bottom: 10px;
     img {
-      width: 200px;
+      position: relative;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+      margin:0 auto;
       height: 200px;
       
     }

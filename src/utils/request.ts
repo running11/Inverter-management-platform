@@ -97,5 +97,33 @@ service.interceptors.response.use(
     }
   }
 );
+export function get(url:any, params:any) {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(url, {
+        params: params
+      })
+      .then(res => {
+        resolve(res.data)
+      })
+      .catch(err => {
+        reject(err)
+      })
+  })
+}
 
+export function post(url:any, params:any) {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(url, {
+        params: params
+      })
+      .then(res => {
+        resolve(res.data)
+      })
+      .catch(err => {
+        reject(err)
+      })
+  })
+}
 export default service;
