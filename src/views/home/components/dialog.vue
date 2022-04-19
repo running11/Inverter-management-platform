@@ -84,19 +84,7 @@
         :rules="otherFormRules"
       >
         <el-form-item label="电站图片" prop="plantImage">
-          <el-upload
-            class="avatar-uploader"
-            action=""
-            :http-request="handleHttpRequest"
-            :show-file-list="false"
-          >
-            <img
-              v-if="otherForm.plantImage"
-              :src="otherForm.plantImage"
-              class="avatar"
-            />
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
+          <file-upload @getImageUrl="getImageUrl"></file-upload>
         </el-form-item>
         <el-form-item style="margin-top: -10px;" label="所在地区" prop="region">
           <el-select v-model="otherForm.region" placeholder="">
@@ -109,10 +97,10 @@
             </template>
           </el-select>
         </el-form-item>
-        <el-form-item label="经纬度" prop="longitudeAndLatitude">
+        <el-form-item label="经纬度">
           <el-input
             placeholder="请输入经纬度"
-            v-model="otherForm.longitudeAndLatitude"
+            v-model="computedLngAndLat"
             @focus="innerVisible = true"
           />
         </el-form-item>
@@ -149,8 +137,13 @@
       width="58%"
       title="选择经纬度"
       :visible.sync="innerVisible"
-      append-to-body>
-      <map-test></map-test>
+      append-to-body
+      :before-close="closeMap">
+      <map-test @getLngAndLat="getLngAndLat"></map-test>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="closeMap">取 消</el-button>
+        <el-button type="primary" @click="getFinLngAndLat">确 定</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -161,29 +154,13 @@ import countryJSON from "@/utils/countryList";
 import service from "@/utils/request";
 import moment from 'moment';
 import MapTest from "@/components/map/index.vue";
+import FileUpload from "@/components/fileUpload/index.vue";
 
-// interface IProject {
-//   compyId: 0,
-//   projectName: string; // 项目名称
-//   plantName: string; // 电站名称
-//   projectType?: string; // 项目类型
-//   address: string; // 地址
-//   contactPerson: string; // 联系人
-//   contactMethod: string; // 联系方式
-//   plantImage: string; // 电站图片
-//   region: string; // 国家或地区（存储编码）
-//   longitude?: number; // 经度
-//   latitude?: number; // 纬度
-//   gridConnectionDate: number | string; // 并网时间
-//   safeRunDate: string; // 安全运行开始时间
-//   status?: string; // 项目状态（0正常 1停用）
-//   zone: string; // 时区
-//   remark: string; // 备注
-// }
 @Component({
   components: {
     NewDialog,
-    MapTest
+    MapTest,
+    FileUpload
   },
 })
 export default class HomeDialog extends Vue {
@@ -205,13 +182,13 @@ export default class HomeDialog extends Vue {
   otherForm = {
     plantImage: "",
     region: "中国",
-    longitudeAndLatitude: "",
     longitude: 0,
     latitude: 0,
     zone: "",
     safeRunDate: "",
     remark: ""
   };
+  lngAndLat: string[] = [];
   basicFormRules: any = {
     compyName: [
       { required: true, message: "请选择所属公司", trigger: "blur" },
@@ -245,35 +222,29 @@ export default class HomeDialog extends Vue {
   isShowTree = false;
   companyList = [];
 
-  handleHttpRequest(a: any): void{
-    console.log(a, "图片");
-    let formData = new FormData();
-    formData.append("fileName", a.file.name);
-    formData.append("fileDir", a.file);
-    formData.append("uploadType", "0");
-    console.log(formData, 'formData');
-    // const paramsData = {
-    //   fileName: a.file.name,
-    //   fileDir: formData,
-    //   uploadType: 0
-    // }
-    service({
-      method: "post",
-      url: "/api/Common/UploadFile",
-      data: formData,
-      headers: {
-        "Content-Type": "multipart/form-data"
-      }
-    })
-      .then((res) => {
-        console.log(res, "上传图片成功与否");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  get computedLngAndLat() {
+    return this.lngAndLat.toString();
   }
+
   created(): void{
     this.getCompanyList();
+  }
+
+  closeMap(): void{
+    this.innerVisible = false;
+  }
+  getImageUrl(url: string){
+    // console.log(url, `父级收到的url`);
+    this.otherForm.plantImage = url;
+  }
+  getLngAndLat(payload: any): void{
+    console.log(payload.position, "获取经纬度");
+    this.lngAndLat = payload.position;
+    this.otherForm.longitude = payload.position[0];
+    this.otherForm.latitude = payload.position[1];
+  }
+  getFinLngAndLat(): void{
+    this.innerVisible = false;
   }
 
   changeSelectTree(): void{
@@ -326,7 +297,7 @@ export default class HomeDialog extends Vue {
   }
   showDialog(): void {
     this.isShow = true;
-    this.active = 1; // 打开弹窗，默认选中第一步
+    this.active = 0; // 打开弹窗，默认选中第一步
   }
   submitForm(): void {
     // 提交
@@ -385,29 +356,6 @@ export default class HomeDialog extends Vue {
 .form {
   padding: 10px 120px 0 80px;
   overflow: hidden;
-  ::v-deep .avatar-uploader .el-upload {
-    border: 1px solid #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409eff;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 100px;
-    height: 100px;
-    line-height: 100px;
-    text-align: center;
-  }
-  .avatar {
-    width: 100px;
-    height: 100px;
-    display: block;
-  }
 }
 .btn-box{
   padding-right: 60px;

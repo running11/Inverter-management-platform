@@ -7,10 +7,10 @@
       </div>
     </div>
     <tree-table
+      rowKey="compyId"
       :theadColumns="theadColumns"
       :tableList="list"
       :isOperate="true"
-      @getLoadList="getLoadList"
     >
       <template slot-scope="data">
         <i class="icon el-icon-edit" @click="showDialog('edit', data.row)"></i>
@@ -24,6 +24,7 @@
       ref="companyDialog"
       :title="companyDialogTitle"
       :current-company="currentCompany"
+      @fetchData="getList"
     ></company-dialog>
   </div>
 </template>
@@ -32,12 +33,14 @@ import { Component, Vue } from "vue-property-decorator";
 import TreeTable from "@/components/treeTable/index.vue";
 import CompanyDialog from "@/views/setting/companyManage/components/dialog.vue";
 import { ITheadColums, ITableList } from "@/utils/interface";
+import service from "@/utils/request";
 
 interface ICompany {
-  companyName: string;
-  companyAddress: string;
-  phoneNumber: string;
-  companyDesc: string;
+  compyName: string;
+  address: string;
+  contactPerson: string;
+  contactMethod: string;
+  compyDescription: string;
   [propName: string]: any;
 }
 
@@ -53,61 +56,48 @@ export default class CompanyManage extends Vue {
   theadColumns: ITheadColums[] = [
     {
       text: "公司名称",
-      field: "companyName",
+      field: "compyName",
     },
     {
       text: "公司地址",
-      field: "companyAddress",
+      field: "address",
+    },
+    {
+      text: "联系人",
+      field: "contactPerson",
     },
     {
       text: "联系方式",
-      field: "phoneNumber",
+      field: "contactMethod",
     },
     {
       text: "公司描述",
-      field: "companyDesc",
+      field: "compyDescription",
     },
   ];
-  list: ITableList = [
-    {
-      id: 1,
-      companyName: "松江电源",
-      companyAddress: "上海市松江区松江区",
-      phoneNumber: "18801964521",
-      companyDesc: "电源电源电源电源电源电源电源电源",
-      hasChildren: true,
-    },
-    {
-      id: 2,
-      companyName: "松江电源",
-      companyAddress: "上海市松江区松江区",
-      phoneNumber: "18801964521",
-      companyDesc: "电源电源电源电源电源电源电源电源",
-      hasChildren: true,
-    },
-    {
-      id: 3,
-      companyName: "松江电源",
-      companyAddress: "上海市松江区松江区",
-      phoneNumber: "18801964521",
-      companyDesc: "电源电源电源电源电源电源电源电源",
-    },
-    {
-      id: 4,
-      companyName: "松江电源",
-      companyAddress: "上海市松江区松江区",
-      phoneNumber: "18801964521",
-      companyDesc: "电源电源电源电源电源电源电源电源",
-    },
-    {
-      id: 5,
-      companyName: "松江电源",
-      companyAddress: "上海市松江区松江区",
-      phoneNumber: "18801964521",
-      companyDesc: "电源电源电源电源电源电源电源电源",
-    },
-  ];
+  list: ITableList = [];
 
+  created(): void{
+    this.getList();
+  }
+
+  getList(): void{
+     service({
+      method: "get",
+      url: "/api/business/EmsCompany/treeList",
+    })
+      .then((res) => {
+        if (res && res.data.code === 200) {
+          console.log(res.data, 111);
+          let list = res.data.data || [];
+          this.list = list;
+          console.log("公司列表", list);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
   toUserManage(): void {
     this.$router.push("/setting/userManage");
   }
@@ -115,28 +105,6 @@ export default class CompanyManage extends Vue {
     this.$router.push("/setting/projectManage");
   }
 
-  getLoadList(resolve: any): void {
-    let num: any = parseInt((Math.random() * 100).toString());
-    setTimeout(() => {
-      resolve([
-        {
-          id: Math.random(),
-          companyName: `松江电源${num}`,
-          companyAddress: "上海市松江区松江区",
-          phoneNumber: "18801964521",
-          companyDesc: "电源电源电源电源电源电源电源电源",
-          hasChildren: true,
-        },
-        {
-          id: Math.random(),
-          companyName: "松江电源12",
-          companyAddress: "上海市松江区松江区",
-          phoneNumber: "18801964521",
-          companyDesc: "电源电源电源电源电源电源电源电源",
-        },
-      ]);
-    }, 1000);
-  }
   handleDetele(row: ICompany): void {
     this.$confirm("此操作将永久删除该用户, 是否继续?", "提示", {
       confirmButtonText: "确定",
@@ -159,10 +127,23 @@ export default class CompanyManage extends Vue {
   }
   loadDailogData(row?: ICompany): void {
     let defaultData: ICompany = {
-      companyName: "",
-      companyAddress: "",
-      phoneNumber: "",
-      companyDesc: "",
+      compyId: undefined,
+      parentId: 0,
+      ancestors: "",
+      compyName: "",
+      compyDescription: "",
+      address: "",
+      contactPerson: "",
+      contactMethod: "",
+      orderNum: 0,
+      website: "",
+      status: "0",
+      recordNumber: "",
+      homeTitle: "",
+      homeLogo: "",
+      dashboardTitle: "",
+      dashboardLogo: "",
+      remark: ""
     };
     this.currentCompany = row || defaultData;
   }
