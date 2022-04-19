@@ -28,14 +28,14 @@
         </el-form-item>
         <el-form-item label="联系人" prop="contactPerson">
           <el-input
-            v-model="company.phoneNumber"
-            placeholder="请输入联系方式"
+            v-model="company.contactPerson"
+            placeholder="请输入联系人"
           />
         </el-form-item>
         <el-form-item label="联系方式" prop="contactMethod">
           <el-input
             v-model="company.contactMethod"
-            placeholder="请输入联系方式"
+            placeholder="请输入手机号或座机号或邮箱地址"
           />
         </el-form-item>
         <el-form-item label="公司描述" prop="compyDescription">
@@ -83,7 +83,7 @@ export default class CompanyDialog extends Vue {
       { required: true, message: "请输入公司地址", trigger: "blur" },
     ],
     contactPerson: [
-      { required: false, message: "请输入联系方式", trigger: "blur" },
+      { required: false, message: "请输入联系人", trigger: "blur" },
     ],
   };
 
@@ -105,22 +105,49 @@ export default class CompanyDialog extends Vue {
       if(valid){
         if(this.currentCompany.compyId != undefined){
           console.log("修改");
-        }else{
-          console.log("新增");
           service({
-          method: "post",
-          url: "/api/business/EmsCompany",
-          data: this.currentCompany,
-        })
+            method: "put",
+            url: "/api/business/EmsCompany",
+            data: this.currentCompany,
+          })
           .then((res) => {
             if (res && res.data.code === 200) {
               this.$message({
-                message: "添加成功",
-                center: true,
+                message: "修改成功",
                 type: "success"
               });
               this.isShow = false;
               this.$emit("fetchData");
+            }else{
+              this.$message({
+                message: res.data.msg,
+                type: "error"
+              });
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        }else{
+          console.log("新增");
+          service({
+            method: "post",
+            url: "/api/business/EmsCompany",
+            data: this.currentCompany,
+          })
+          .then((res) => {
+            if (res && res.data.code === 200) {
+              this.$message({
+                message: "添加成功",
+                type: "success"
+              });
+              this.isShow = false;
+              this.$emit("fetchData");
+            }else{
+              this.$message({
+                message: res.data.msg,
+                type: "error"
+              });
             }
           })
           .catch((err) => {

@@ -330,8 +330,8 @@ export default class Home extends Vue {
 
   fetchData(): void {
     const paramsData = {
-      PageNum: 1,
-      PageSize: 10,
+      PageNum: this.page,
+      PageSize: this.pageSize,
       Sort: "pvCapacity, batteryCapacity",
       SortType: "ascending", // "ascending" "descending"
     };
@@ -359,7 +359,7 @@ export default class Home extends Vue {
   }
   del(params: any): void{
     console.log(`删除`, params);
-    this.$confirm("此操作将永久删除该用户, 是否继续?", "提示", {
+    this.$confirm("此操作将永久删除, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"

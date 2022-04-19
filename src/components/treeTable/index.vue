@@ -1,17 +1,22 @@
 <template>
   <div class="tree-table">
     <el-table
+      ref="table"
       :header-cell-style="{
         background: '#EDEFF2',
         color: '#000',
         fontWeight: 'normal',
+        textAlign: 'left'
       }"
+      :cell-style="{textAlign: 'left'}"
       :data="tableList"
       style="width: 100%"
+      highlight-current-row
       :row-key="rowKey"
       lazy
       :load="load"
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+      @row-click="handleRowClick"
     >
       <el-table-column
         v-for="(item, i) in theadColumns"
@@ -45,8 +50,16 @@ export default class TreeTable extends Vue {
     return resolve;
   }
 
-  handleEdit(): void {
-    console.log(11);
+  @Emit("selectedRow")
+  handleRowClick(row: any){
+    return row;
+  }
+
+  clearSelectedRow(): void{ // 取消行选中
+    this.$nextTick(() => {
+      console.log((this.$refs.table as any), `cccc`);
+      // (this.$refs.table as any).clearSelection();
+    });
   }
 }
 </script>
@@ -55,25 +68,28 @@ export default class TreeTable extends Vue {
   ::v-deep.el-table thead {
     background-color: $theadTrBg;
   }
-  ::v-deep.el-table__row > td {
-    border: none;
-  }
-  ::v-deep.el-table::before {
-    height: 0;
-  }
-  ::v-deep.el-table .el-table__cell {
-    padding: 0;
-    height: 44px;
-    line-height: 44px;
-    font-size: 14px;
-    color: $gray;
-    text-align: center;
-  }
-  ::v-deep.el-table tr:nth-child(even) {
-    background: $tbodyTrBg;
-  }
-  ::v-deep.el-table--enable-row-hover .el-table__body tr:hover > td {
-    background-color: $tbodyTrActiveBg;
+  // ::v-deep.el-table__row > td {
+  //   border: none;
+  // }
+  // ::v-deep.el-table::before {
+  //   height: 0;
+  // }
+  // ::v-deep.el-table .el-table__cell {
+  //   padding: 0;
+  //   height: 44px;
+  //   line-height: 44px;
+  //   font-size: 14px;
+  //   color: $gray;
+  //   text-align: center;
+  // }
+  // ::v-deep.el-table tr:nth-child(even) {
+  //   background: $tbodyTrBg;
+  // }
+  // ::v-deep.el-table--enable-row-hover .el-table__body tr:hover > td {
+  //   background-color: $tbodyTrActiveBg;
+  // }
+  .el-table .current-row > td {
+    background: transparent !important;
   }
 }
 </style>
