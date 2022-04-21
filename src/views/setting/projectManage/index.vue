@@ -11,13 +11,13 @@
           :expand-on-click-node="false"
           :data="companyList"
           :props="defaultProps"
-          :default-checked-keys="treeCheckedKeys"
+          :current-node-key="currentCompanyId"
           :default-expanded-keys="treeExpandedKeys"
           @node-click="handleNodeClick"
         />
       </div>
       <div class="table-box">
-        <project-table :key="timer" :companyId="companyId"></project-table>
+        <project-table :companyId="currentCompanyId"></project-table>
       </div>
     </div>
   </div>
@@ -26,6 +26,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import projectTable from "./components/table.vue";
 import service from "@/utils/request";
+import { getParentId } from "@/utils";
 // import TreeTable from "@/components/treeTable/index.vue";
 
 interface TreeData {
@@ -41,12 +42,10 @@ interface TreeData {
   },
 })
 export default class projectManage extends Vue {
-  timer = "";
   currentCompany: any = null;
-  companyId: any = "";
   companyList:any = [];
   treeExpandedKeys: string[] | number[] = [];
-  treeCheckedKeys: string[] | number[] = [];
+  currentCompanyId: any = null;
   private total = 0;
   private page = 1;
   private pageSize = 10;
@@ -68,21 +67,29 @@ export default class projectManage extends Vue {
     })
       .then((res) => {
         if (res && res.data.code === 200) {
-          console.log(res.data, 111);
           let list = res.data.data || [];
-          if(list.length > 0){
-            let arr:any = [];
-            arr.push(list[0].compyId, list[0].children[0].compyId);
-            this.treeExpandedKeys = arr; // 默认展开第一个
-            this.currentCompany = list[0];
-            this.treeCheckedKeys = [list[0].compyId]; // 默认选中第一个
-            this.companyId = list[0].compyId;
+          let compyId = Number(this.$route.query.compyId) || null; // 从公司管理页面跳转过来，会带上compyId
+          if (!compyId) { // 如果url没有带compyId，那默认选中第一个
+            if(list.length > 0){
+              let arr:any = [list[0].compyId];
+              this.treeExpandedKeys = arr; 
+              this.currentCompany = list[0]; // 默认展开第一个
+              this.currentCompanyId = list[0].compyId; // 默认选中第一个
+              this.$nextTick(() => {
+                (this.$refs["tree"] as any).setCurrentKey(this.currentCompanyId);
+              })
+              // this.getProjectList();
+            }
+          }else{
+            this.currentCompanyId = compyId;
+            this.treeExpandedKeys = (getParentId(list, this.currentCompanyId));
             this.$nextTick(() => {
-              (this.$refs["tree"] as any).setCheckedKeys(this.treeCheckedKeys);
+              (this.$refs["tree"] as any).setCurrentKey(this.currentCompanyId);
             })
-            this.getProjectList();
-            console.log(this.treeExpandedKeys, "treeExpandedKeys", this.treeCheckedKeys);
           }
+
+          // console.log(this.treeExpandedKeys, this.currentCompanyId, "treeExpandedKeystreeCheckedKeys");
+          
           this.companyList = list;
           // console.log("公司列表", this.companyList);
         }
@@ -94,10 +101,8 @@ export default class projectManage extends Vue {
   handleNodeClick(data: any): void {
     this.currentCompany = data;
     this.treeExpandedKeys = [data.parentId, data.compyId];
-    this.treeCheckedKeys = [data.compyId];
-    this.companyId = data.compyId;
-    this.timer = new Date().getTime().toString();
-    console.log(this.treeExpandedKeys, this.treeCheckedKeys, '点击树型选项');
+    this.currentCompanyId = data.compyId;
+    // console.log(this.treeExpandedKeys, this.currentCompanyId, '点击树型选项');
   }
   // 获取项目list table
   getProjectList(): void{
@@ -140,11 +145,13 @@ export default class projectManage extends Vue {
   }
   .content-box {
     display: flex;
-
     .menu-box {
-      width: 260px;
+      min-width: 130px;
       box-sizing: border-box;
       padding: 20px 0;
+      ::v-deep.el-tree-node__content{
+        padding-right: 20px;
+      }
     }
     .table-box {
       flex: 1;

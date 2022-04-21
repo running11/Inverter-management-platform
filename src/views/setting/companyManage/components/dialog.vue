@@ -101,10 +101,9 @@ export default class CompanyDialog extends Vue {
   }
   submitForm(): void {
     (this.$refs["form"] as any).validate((valid: any) => {
-      console.log(valid);
       if(valid){
         if(this.currentCompany.compyId != undefined){
-          console.log("修改");
+          // console.log("修改");
           service({
             method: "put",
             url: "/api/business/EmsCompany",
@@ -129,7 +128,7 @@ export default class CompanyDialog extends Vue {
             console.log(err);
           });
         }else{
-          console.log("新增");
+          // console.log("新增");
           service({
             method: "post",
             url: "/api/business/EmsCompany",

@@ -6,9 +6,11 @@
         <el-button type="primary" @click="showDialog('add')">新增</el-button>
       </div>
     </div>
+    <!-- 当前选中的行，需要传进去，如果点了修改，再请求列表，选中的状态应该是原先的 -->
     <tree-table
       ref="tTable"
       rowKey="compyId"
+      :currentSelectedRow="currentSelectedRow"
       :theadColumns="theadColumns"
       :tableList="list"
       :isOperate="true"
@@ -18,7 +20,7 @@
         <i class="icon el-icon-edit" @click="showDialog('edit', data.row)"></i>
         <i class="icon el-icon-delete" @click="handleDetele(data.row)"></i>
         <i class="iconfont icon-yonghu" @click="toUserManage"></i>
-        <i class="iconfont icon-xiangmu" @click="toProjectManage"></i>
+        <i class="iconfont icon-xiangmu" @click="toProjectManage(data.row)"></i>
       </template>
     </tree-table>
 
@@ -81,36 +83,42 @@ export default class CompanyManage extends Vue {
   list: ITableList = [];
 
   mounted(): void{
-   this.$nextTick(() => {
-      this.handleClearSelectedRow();
-    })
+    document.addEventListener("click", this.handleClearSelectedRow);
   }
 
   created(): void{
     this.getList();
   }
 
-  handleClearSelectedRow(): void{
-    document.addEventListener("click", (event: any) => {
-      event.stopPropagation ? event.stopPropagation() : (event.cancelBubble = true);
-      const classList = event.target.classList.toString();
-      if(
-        classList.indexOf("el-t") > -1 ||
-        classList.indexOf("cell") > -1 ||
-        classList.indexOf("el-button") > -1 ||
-        classList.indexOf("icon") > -1 ||
-        classList.indexOf("el-dialog") > -1 ||
-        event.target.parentNode.classList.toString().indexOf("el-button") > -1 // 可能点的是取消 确定这两个按钮
-      ){
-        console.log("点击了table");
-      }else{
-        console.log("点击了table以外的");
-        console.log(this.$refs);
-        this.$nextTick(() => {
-          // (this.$refs.tTable as any).clearSelectedRow(); // 取消行选中
-        })
-      }
-    })
+  destroyed(): void{
+    document.removeEventListener("click", this.handleClearSelectedRow);
+  }
+
+  handleClearSelectedRow(event: any): void{
+    event.stopPropagation ? event.stopPropagation() : (event.cancelBubble = true);
+    const classList = event.target.classList.toString();
+    // console.log(classList, `classList`);
+    // 点击table 弹窗，都不需要做任何操作
+    if(
+      classList.indexOf("el-t") > -1 ||
+      classList.indexOf("cell") > -1 ||
+      classList.indexOf("el-button") > -1 ||
+      classList.indexOf("icon") > -1 ||
+      classList.indexOf("el-dialog") > -1 ||
+      classList.indexOf("el-form") > -1 ||
+      classList.indexOf("el-input") > -1 ||
+      classList.indexOf("el-textarea") >- 1 ||
+      event.target.parentNode.classList.toString().indexOf("el-button") > -1 // 可能点的是取消 确定这两个按钮
+    ){
+      // console.log("点击了table");
+    }else{
+      // console.log("点击了table以外的");
+      // 用户点了table以外的，默认取消选中
+      this.$nextTick(() => {
+        if(this.$refs.tTable as any) (this.$refs.tTable as any).clearSelectedRow();
+        this.currentSelectedRow = null;
+      })
+    }
   }
 
   getList(): void{
@@ -122,7 +130,12 @@ export default class CompanyManage extends Vue {
         if (res && res.data.code === 200) {
           let list = res.data.data || [];
           this.list = list;
-          // console.log("公司列表", list);
+          // console.log("公司列表", list, this.currentSelectedRow);
+          this.$nextTick(() => {
+            if(this.$refs.tTable as any && this.currentSelectedRow) {
+              (this.$refs.tTable as any).setSelectedRow(this.currentSelectedRow)
+            }
+          })
         }
       })
       .catch((err) => {
@@ -136,8 +149,9 @@ export default class CompanyManage extends Vue {
   toUserManage(): void {
     this.$router.push("/setting/userManage");
   }
-  toProjectManage(): void {
-    this.$router.push("/setting/projectManage");
+  toProjectManage(row: any): void {
+    this.$router.push({ name: "projectManage", query: { compyId: row.compyId} });
+    // this.$router.push("/setting/projectManage");
   }
 
   handleDetele(row: ICompany): void {
@@ -146,7 +160,6 @@ export default class CompanyManage extends Vue {
       cancelButtonText: "取消",
       type: "warning",
     }).then(() => {
-      // console.log(row, `删除`);
       service({
         method: "delete",
         url: `/api//business/EmsCompany/${row.compyId}`,
@@ -158,6 +171,7 @@ export default class CompanyManage extends Vue {
             type: "success"
           });
           this.getList();
+          this.currentSelectedRow = null;
         }
       })
       .catch((err) => {
@@ -174,7 +188,6 @@ export default class CompanyManage extends Vue {
     this.companyDialogTitle = obj[type];
     this.currentCompany = {};
     (this.$refs.companyDialog as any).showDialog();
-    console.log(row, `row`);
     type === "add" ? this.loadDailogData() : this.loadDailogData(row);
   }
   loadDailogData(row?: ICompany): void {

@@ -2,8 +2,10 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import router from '@/router';
 import myMessage from '@/utils/myMessage';
 import store from "@/store";
+import { clearToken } from "@/utils/auth";
 
 const toLogin = () => {
+  clearToken();
   router.replace({
     path: '/login',
     query: { redirect: router.currentRoute.fullPath }
@@ -50,13 +52,23 @@ service.interceptors.request.use(
 
 // http response 拦截器
 service.interceptors.response.use(
-  (response: AxiosResponse): Promise<any> => {
-    if (response.status === 200) {
+  (response: AxiosResponse) => {
+    // console.log(response, `rrrrrrrrrr`);
+    if (response.status === 200 && response.data.code === 200) {
       // myMessage.success(response.data.msg);
       return Promise.resolve(response);
     } else {
-      // return myMessage.error(response.data.msg);
-      return Promise.reject(response);
+      const {code, msg} = response.data;
+      console.log(code, msg, 111111);
+      if (code == 401) {
+        errorTip("登录状态已过期，请重新登录");
+        toLogin();
+      } else if (code == 0 || code == 1 || code == 110 || code == 101 || code == 403 || code == 500) {
+        errorTip(msg);
+        return Promise.reject(response);
+      }else{
+        return response.data;
+      }
     }
   },
   (error: any) => {
@@ -68,7 +80,7 @@ service.interceptors.response.use(
           break;
         case 401:
           toLogin();
-          errorTip("未授权，请重新登录");
+          errorTip("登录状态已过期，请重新登录");
           break;
         case 403:
           errorTip("拒绝访问");
