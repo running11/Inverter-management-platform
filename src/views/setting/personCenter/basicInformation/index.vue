@@ -118,7 +118,7 @@ export default class basicInformation extends Vue {
   };
   private postGroup = ""; //接口返回字段，暂时不知道怎么用
   private roles = []; //接口返回字段，暂时不知道怎么用
-  private imageUrl = "";
+  private imageUrl: any = "";
 
   mounted(): void {
     this.fetchData();
@@ -224,7 +224,7 @@ export default class basicInformation extends Vue {
       .then((res) => {
         if (res && res.data.code === 200) {
             console.log("11", res.data);
-            this.imageUrl= res.data
+            this.imageUrl= res.data || ''
         }
       })
       .catch((err) => {
