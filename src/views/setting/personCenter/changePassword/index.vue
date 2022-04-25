@@ -21,6 +21,7 @@
           <el-input
             v-model="passwordInfo.nowPassword"
             clearable
+            show-password
             autocomplete="off"
           ></el-input>
         </el-form-item>
@@ -35,6 +36,7 @@
           <el-input
             v-model="passwordInfo.newPassword"
             clearable
+            show-password
             autocomplete="off"
           ></el-input>
         </el-form-item>
@@ -49,6 +51,7 @@
           <el-input
             v-model="passwordInfo.checkPassword"
             clearable
+            show-password
             autocomplete="off"
           ></el-input>
         </el-form-item>

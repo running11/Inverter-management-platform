@@ -67,8 +67,11 @@
     <el-col :span="12" :offset="3">
       <div class="rightbox">
         <span>头像</span>
-        <div class="imgbox">
+        <div class="imgbox" v-if="imageUrl">
           <img :src="imageUrl" alt="" />
+        </div>
+         <div class="imgbox" v-else>
+          <img :src="defaultImageUrl" alt="" />
         </div>
       </div>
 
@@ -80,7 +83,6 @@
         :http-request="handelUpload"
         :before-upload="beforeUpload"
       >
-         
         <el-button size="small" icon="el-icon-upload2">更换头像</el-button>
       </el-upload>
     </el-col>
@@ -91,7 +93,6 @@ import { Component, Vue } from "vue-property-decorator";
 import { Form } from "element-ui";
 import { isvalidPhone } from "@/utils/validate";
 import service from "@/utils/request";
-
 interface user {
   // [key: string]: any;
   userId: number;
@@ -118,14 +119,13 @@ export default class basicInformation extends Vue {
   };
   private postGroup = ""; //接口返回字段，暂时不知道怎么用
   private roles = []; //接口返回字段，暂时不知道怎么用
-  private imageUrl: any = "";
+  private defaultImageUrl = require("@/assets/images/icon_electricity.png")
+  private imageUrl = "";
 
   mounted(): void {
     this.fetchData();
   }
-  get headers() {
-    return { token: window.localStorage.getItem("token") };
-  }
+
   //获取用户信息
   fetchData(): void {
     service({
@@ -144,7 +144,9 @@ export default class basicInformation extends Vue {
           this.userInfo.remark = res.data.data.user.remark;
           this.userInfo.phonenumber = res.data.data.user.phonenumber;
           this.userInfo.sex = parseInt(res.data.data.user.sex);
-          this.imageUrl = res.data.data.user.avatar 
+          this.imageUrl = res.data.data.user.avatar || this.defaultImageUrl
+           
+          
         }
       })
       .catch((err) => {
@@ -196,35 +198,35 @@ export default class basicInformation extends Vue {
   }
 
   // 上传预处理
-  beforeUpload(file: any) {
+  beforeUpload(file:any) {
     if (file.type.indexOf("image/") == -1) {
       alert("文件格式错误，请上传图片类型,如：JPG，PNG后缀的文件。");
     } else {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
-        this.imageUrl = reader.result;
-        alert( this.imageUrl)
+      //  console.log(typeof(reader.result))
+        this.imageUrl = reader.result as string;
+        
       };
     }
   }
   handelUpload(file: any) {
-  
-    console.log("888", file);
+    // console.log("888", file);
     let fileData = new FormData();
     fileData.append("picture", file.file);
     service({
       method: "post",
       url: "/api/system/user/profile/Avatar",
       data: fileData,
-        headers: {
-        "Content-Type": "multipart/form-data"
-      }
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     })
       .then((res) => {
         if (res && res.data.code === 200) {
-            console.log("11", res.data);
-            this.imageUrl= res.data || ''
+          console.log("imgURL", res.data);
+          this.fetchData();
         }
       })
       .catch((err) => {
@@ -247,13 +249,17 @@ export default class basicInformation extends Vue {
     width: 200px;
     height: 200px;
     overflow: hidden;
+    border-radius: 50%;
     margin-bottom: 10px;
     img {
-      width: 200px;
+      position: relative;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      margin: 0 auto;
       height: 200px;
-      
     }
+   
   }
 }
-
 </style>
