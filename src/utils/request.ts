@@ -8,7 +8,7 @@ const toLogin = () => {
   clearToken();
   router.replace({
     path: '/login',
-    query: { redirect: router.currentRoute.fullPath }
+    query: { redirect: router.currentRoute.name || '' }
   });
 }
 

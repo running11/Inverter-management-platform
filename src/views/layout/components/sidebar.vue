@@ -55,7 +55,7 @@ export default class Sidebar extends Vue {
   }
   @Watch("getRoutesList", {immediate: true, deep: true})
   handleRoutesList(val: any, oldVal: any){
-    let routesList: MenuItem[] = JSON.parse(JSON.stringify(val));
+    let routesList: MenuItem[] = val ? JSON.parse(JSON.stringify(val)) : '';
     let list = routesList[1].children || [];
     this.menusList = list;
     this.getActiveMenu();

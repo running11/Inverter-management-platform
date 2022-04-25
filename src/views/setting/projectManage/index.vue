@@ -78,7 +78,7 @@ export default class projectManage extends Vue {
               this.$nextTick(() => {
                 (this.$refs["tree"] as any).setCurrentKey(this.currentCompanyId);
               })
-              // this.getProjectList();
+              this.getProjectList();
             }
           }else{
             this.currentCompanyId = compyId;

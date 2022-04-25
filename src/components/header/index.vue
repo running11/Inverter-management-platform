@@ -20,7 +20,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import SelectLanguage from "@/components/selectLanguage/index.vue";
-// import service from "@/utils/request";
+import service from "@/utils/request";
 import { Mutation } from "vuex-class";
 
 @Component({
@@ -39,8 +39,6 @@ export default class Header extends Vue {
         redirect: this.$route.name || ''
       }
     });
-    // console.log(process.env.VUE_APP_ROUTER_PREFIX, `process.env.VUE_APP_ROUTER_PREFIX`);
-    // location.href = process.env.VUE_APP_ROUTER_PREFIX + "index";
     // service
     //   .post("/api/logout")
     //   .then((res) => {
