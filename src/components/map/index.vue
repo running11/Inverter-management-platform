@@ -75,6 +75,7 @@ export default class MapTest extends Vue {
     this.markets.push(market);
     this.map.add(market);
     this.map.setFitView();
+    this.map.setZoomAndCenter(14, this.markersPosition);
     return {position: this.markersPosition};
   }
   removeMarket(): void{

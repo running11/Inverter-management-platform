@@ -147,7 +147,7 @@ export default class Login extends Vue {
             if (res && res.data.code === 200) {
               // console.log("11", res.data);
               this.updateTokenValue(res.data.data);
-              this.$router.push({ name: this.redirect || "/" });
+              this.$router.push({ name: this.redirect || "/home" });
               this.loading = false;
               service.get("/api/getInfo")
             }
