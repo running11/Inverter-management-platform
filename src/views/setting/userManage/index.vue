@@ -88,7 +88,11 @@
         <div class="table-box">
           <div class="toolbar">
             <div class="toolbar-left">
-              <el-button type="info" plain icon="el-icon-upload2" @click="handleImport"
+              <el-button
+                type="info"
+                plain
+                icon="el-icon-upload2"
+                @click="handleImport"
                 >导入</el-button
               >
               <el-button
@@ -349,7 +353,11 @@
       </new-dialog>
     </div>
     <!-- 导入弹出框 -->
-    <upload-Dialog ref="uploadDialog" title="用户导入"  @fetchData="getList"></upload-Dialog>
+    <upload-Dialog
+      ref="uploadDialog"
+      title="用户导入"
+      @fetchData="getList"
+    ></upload-Dialog>
   </div>
 </template>
 <script lang="ts">
@@ -374,7 +382,7 @@ import {
   addUser,
   updateUser,
   exportUser,
-  download
+  download,
 } from "@/api/user/user";
 import { getDicts } from "@/api/dict/data";
 interface TreeData {
@@ -773,7 +781,7 @@ export default class userManage extends Vue {
         if (response && response.data.code == "200") {
           this.userList = response.data.data.result;
           this.total = response.data.data.totalNum;
-         // console.log(this.userList, "列表");
+          // console.log(this.userList, "列表");
         }
         this.listLoading = false;
       }
@@ -812,7 +820,7 @@ export default class userManage extends Vue {
     // console.log(this.queryParams);
     this.getList();
   }
- 
+
   // 表单重置
   reset() {
     this.form = {
@@ -839,12 +847,12 @@ export default class userManage extends Vue {
     console.log(this.queryParams);
     this.handleQuery();
   }
-  resetForm(refName: string){
+  resetForm(refName: string) {
     if (this.$refs[refName]) {
       (this.$refs[refName] as Form).resetFields();
     }
   }
-  
+
   //筛选表格的列
   getCheckedColumns(list: Array<ITheadColums>) {
     this.theadSelectedColumns = list;
@@ -864,12 +872,20 @@ export default class userManage extends Vue {
     })
       .then((res: any) => {
         console.log(res.value);
-        resetUserPwd(row.userId, res.value).then((response) => {
-          this.$message({
-            type: "success",
-            message: "密码修改成功",
+        if (res.value && res.value != "") {
+          resetUserPwd(row.userId, res.value).then((response) => {
+            if (response && response.data.code == "200")
+              this.$message({
+                type: "success",
+                message: "密码修改成功",
+              });
           });
-        });
+        } else {
+          this.$message({
+            type: "info",
+            message: "密码不能为空",
+          });
+        }
       })
       .catch(() => {
         this.$message({
@@ -964,7 +980,7 @@ export default class userManage extends Vue {
       type: "warning",
     })
       .then(function () {
-         row.status = row.status === "0" ? "1" : "0";
+        row.status = row.status === "0" ? "1" : "0";
         return changeUserStatus(row.userId, row.status);
       })
       .then(() => {
@@ -991,7 +1007,7 @@ export default class userManage extends Vue {
         console.log("导出");
         exportUser(queryParams).then((response: any) => {
           console.log(response);
-          if (response && response.data.code == 200) {
+          if (response && response.data.code == "200") {
             this.$message({
               type: "success",
               message: "导出成功",
@@ -1053,10 +1069,10 @@ export default class userManage extends Vue {
     console.log(e, JSON.stringify(this.form));
     this.$forceUpdate();
   }
- /** 导入按钮操作 */
-    handleImport() {
-     (this.$refs.uploadDialog as any).showDialog();
-    }
+  /** 导入按钮操作 */
+  handleImport() {
+    (this.$refs.uploadDialog as any).showDialog();
+  }
 }
 </script>
 <style lang="scss" scoped>
