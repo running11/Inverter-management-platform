@@ -1,120 +1,109 @@
 <template>
-  <div>
-    <new-dialog
-      :show="isShow"
-      :title="title"
-      :on-close="closeDialog"
-      :on-submit="submitForm"
-    >
-      <el-form
-        label-width="100px"
-        class="form"
-        ref="form"
-        v-if="userForm"
-        :model="userForm"
-        :rules="rules"
+  <!-- 用户导入对话框 -->
+  <new-dialog
+     width="460px"
+    :show="upload.open"
+    :title="upload.title"
+    :on-close="closeDialog"
+    :on-submit="submitFileForm"
+  >
+    <el-upload
+        name="file"
+        ref="upload"
+        :limit="1"
+        accept=".xlsx, .xls"
+        :headers="upload.headers"
+        :action="upload.url + '?updateSupport=' + upload.updateSupport"
+        :disabled="upload.isUploading"
+        :on-progress="handleFileUploadProgress"
+        :on-success="handleFileSuccess"
+        :auto-upload="false"
+        drag
       >
-        <el-form-item label="用户名" prop="userName">
-          <el-input
-            v-model="userForm.userName"
-            placeholder="请输入用户名"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="邮箱地址" prop="mail">
-          <el-input
-            v-model="userForm.mail"
-            placeholder="请输入邮件地址"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="手机号码" prop="phone">
-          <el-input
-            v-model="userForm.phone"
-            placeholder="请输入手机号"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="角色" prop="role">
-          <el-select v-model="userForm.role" placeholder="请选择角色">
-            <el-option label="普通用户" value="1"></el-option>
-            <el-option label="超级用户" value="2"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="所属公司" prop="companyName">
-          <el-select
-            v-model="userForm.companyName"
-            placeholder="请选择公司名称"
-          >
-            <el-option label="公司1-1" value="1"></el-option>
-            <el-option label="公司1-2" value="2"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="密码">
-          <el-input
-            v-model="userForm.mail"
-            autocomplete="off"
-            placeholder="请输入密码"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="确认密码">
-          <el-input
-            v-model="userForm.mail"
-            autocomplete="off"
-            placeholder="请确认密码"
-          ></el-input>
-        </el-form-item>
-      </el-form>
-    </new-dialog>
-  </div>
+    
+      <i class="el-icon-upload"></i>
+      <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+      <div class="el-upload__tip text-center" slot="tip">
+        <div class="el-upload__tip" slot="tip">
+          <el-checkbox v-model="upload.updateSupport" />
+          是否更新已经存在的用户数据
+        </div>
+        <span>仅允许导入xls、xlsx格式文件。</span>
+        <el-link
+          type="primary"
+          :underline="false"
+          style="font-size: 12px; vertical-align: baseline"
+          @click="importTemplate"
+          >下载模板</el-link
+        >
+      </div>
+    </el-upload>
+    <!-- <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitFileForm">确 定</el-button>
+        <el-button @click="upload.open = false">取 消</el-button>
+      </div> -->
+  </new-dialog>
 </template>
 <script lang="ts">
 import { Component, Prop, Watch, Vue } from "vue-property-decorator";
 import NewDialog from "@/components/newDialog/index.vue";
-interface user {
-  userName: string;
-  role: string;
-  companyName: string;
-  mail: string;
-  phone: string;
-  status: string;
-  [propName: string]: any;
-}
+import { getToken } from "@/utils/auth";
+import { download } from "@/api/user/user";
+import service from "@/utils/request";
 @Component({
   components: {
     NewDialog,
   },
 })
 export default class UserDialog extends Vue {
-  @Prop(String) title!: string;
-  @Prop(Object) currentUser!: user;
-  isShow = false;
-  userForm: user = this.currentUser;
-  rules: any = {
-    userName: [{ required: true, message: "请输入用户名称", trigger: "blur" }],
-    mail: [{ required: true, message: "请输入角色", trigger: "blur" }],
-    phone: [{ required: true, message: "请输入公司名称", trigger: "blur" }],
+  // 用户导入参数
+  upload = {
+    // 是否显示弹出层（用户导入）
+    open: false,
+    // 弹出层标题（用户导入）
+    title: "用户导入",
+    // 是否禁用上传
+    isUploading: false,
+    // 是否更新已经存在的用户数据
+    updateSupport: 0,
+    // 设置上传的请求头部
+    headers: { Authorization: "Bearer " + getToken() },
+    // 上传的地址 
+    url: "/api/system/user/importData",
   };
-  @Watch("currentUser", { immediate: true, deep: true })
-  getCurrentUser(newVal: any, oldVal: any) {
-    this.userForm = newVal;
+  /** 导入按钮操作 */
+  handleImport() {
+    this.upload.title = "用户导入";
+    this.upload.open = true;
   }
-  closeDialog(): void {
-    this.isShow = false;
-    (this.$refs["form"] as any).resetFields();
+  /** 下载模板操作 */
+  importTemplate() {
+    download("/system/user/importTemplate");
   }
-  showDialog(): void {
-    this.isShow = true;
+  // 文件上传中处理
+  handleFileUploadProgress(event: any, file: any, fileList: any) {
+    this.upload.isUploading = true;
   }
-  submitForm(): void {
-    (this.$refs["form"] as any).validate((valid: any) => {
-      console.log(valid);
-    });
+  // 文件上传成功处理
+  handleFileSuccess(response: any, file: any, fileList: any) {
+    this.upload.open = false;
+    this.upload.isUploading = false;
+    (this.$refs.upload as any).clearFiles();
+    this.$alert(response.msg, "导入结果", { dangerouslyUseHTMLString: true });
+    this.$emit("fetchData");
   }
+  // 提交上传文件
+  submitFileForm() {
+    (this.$refs.upload as any).submit();
+  }
+  showDialog() {
+    this.upload.open = true;
+  }
+  closeDialog() {
+    this.upload.open = false;
+  }
+ 
 }
 </script>
 <style lang="scss" scoped>
-.form {
-  padding-right: 30px;
-  .el-form-item:last-child {
-    margin-bottom: 0;
-  }
-}
 </style>

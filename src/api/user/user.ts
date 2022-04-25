@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import { praseStrZero } from "@/utils/ruoyi";
+import { praseStrZero } from "@/api/user/ruoyi";
 
 // 查询用户列表
 export function listUser(query:any) {
@@ -11,11 +11,13 @@ export function listUser(query:any) {
 }
 
 // 查询用户详细
-export function getUser(userId:any) {
-  return request({
-    url: '/api/system/user/' + praseStrZero(userId),
-    method: 'get'
-  })
+export function getUser(userId:any ) {
+    return request({
+      url: '/api/system/user/' + praseStrZero(userId),
+      method: 'get'
+    })
+  
+ 
 }
 
 // 新增用户
@@ -125,4 +127,19 @@ export function importTemplate() {
     method: 'get',
     responseType: 'blob'//1.首先设置responseType对象格式为 blob:
   })
+}
+// 根据参数键名查询参数值
+export function getConfigKey(configKey:any) {
+  return request({
+    url: '/system/config/configKey/' + configKey,
+    method: 'get'
+  })
+}
+//导出表格下载
+export function download(fileName:any) {
+  // window.location.href = baseURL + "/common/download?fileName=" + encodeURI(fileName) + "&delete=" + true;
+  // window.open(baseURL + "/common/download?fileName=" + encodeURI(fileName) + "&delete=" + true)
+  
+  window.open('http://47.103.108.152:8886' + fileName)
+  
 }

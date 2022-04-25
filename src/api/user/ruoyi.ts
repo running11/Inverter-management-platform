@@ -29,8 +29,8 @@ export function praseStrEmpty(str:any) {
 }
 export function praseStrZero(str:any) {
   if (!str || str == "undefined" || str == "null") {
-    console.log('zero')
     return 0;
   }
   return str;
 }
+

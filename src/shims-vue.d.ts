@@ -4,3 +4,4 @@ declare module "*.vue" {
 }
 declare module "echarts";
 declare module "nprogress";
+declare module "@riophae/vue-treeselect";
