@@ -2,11 +2,11 @@
   <div class="project-overview-wrapper">
     <el-row class="top-wrapper">
       <div class="title">基本情况</div>
-      <div class="content">
+      <div class="content" v-if="project">
         <div class="img-box">
-          <img src="@/assets/images/icon_electricity.png" alt="电站" />
+          <img :src="project.plantImage ? project.plantImage : require('@/assets/images/icon_electricity.png')" alt="电站" />
         </div>
-        <div class="list" v-if="project">
+        <div class="list">
           <div class="item">
             <label>项目名称：</label>
             <span>{{project.projectName}}</span>

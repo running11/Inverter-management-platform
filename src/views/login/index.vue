@@ -52,10 +52,11 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import service from "@/utils/request";
 import { ElForm } from "element-ui/types/form";
 import { Mutation } from "vuex-class";
+import { Route } from 'vue-router';
 interface ILoginForm {
   username: string;
   password: string;
@@ -104,9 +105,15 @@ export default class Login extends Vue {
   private loading = false;
   private codeImgUrl = "";
   private uuid = "";
+  private redirect:any =  undefined;
   created() {
     this.getCode();
   }
+  @Watch("$route", {immediate: true})
+  routechange(route: Route) {
+    this.redirect = route.query && route.query.redirect;
+  }
+
   // 获取验证码
   getCode(): void {
     service
@@ -138,9 +145,9 @@ export default class Login extends Vue {
         })
           .then((res) => {
             if (res && res.data.code === 200) {
-              console.log("11", res.data);
+              // console.log("11", res.data);
               this.updateTokenValue(res.data.data);
-              this.$router.push("/home");
+              this.$router.push({ name: this.redirect || "/" });
               this.loading = false;
               service.get("/api/getInfo")
             }

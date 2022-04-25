@@ -33,7 +33,14 @@ export default class Header extends Vue {
 
   logout(): void{
     this.clearTokenValue();
-    this.$router.push("/login");
+    this.$router.push({
+      path: "/login",
+      query: {
+        redirect: this.$route.name || ''
+      }
+    });
+    // console.log(process.env.VUE_APP_ROUTER_PREFIX, `process.env.VUE_APP_ROUTER_PREFIX`);
+    // location.href = process.env.VUE_APP_ROUTER_PREFIX + "index";
     // service
     //   .post("/api/logout")
     //   .then((res) => {

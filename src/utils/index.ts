@@ -49,3 +49,18 @@ export function deepClone<T>(origin: T, target?: Record<string, any> | T): T {
 
   return tar as T;
 }
+
+// 根据compyId获取该节点的所有父节点的对象
+export function getParentId(list: any, compyId: number|string) {
+  for (const i in list) {
+      if(list[i].compyId == compyId){
+      return [list[i].compyId];
+    }
+    if(list[i].children){
+      const node: any = getParentId(list[i].children, compyId);
+      if(node!==undefined){
+        return node.concat(list[i].compyId)
+      }
+    }
+  }        
+}
