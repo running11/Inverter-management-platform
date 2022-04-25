@@ -778,7 +778,7 @@ export default class userManage extends Vue {
     this.listLoading = true;
     listUser(addDateRange(this.queryParams, this.dateRange)).then(
       (response) => {
-        if (response && response.data.code == "200") {
+        if (response && response.data.code === 200) {
           this.userList = response.data.data.result;
           this.total = response.data.data.totalNum;
           // console.log(this.userList, "列表");
@@ -832,7 +832,7 @@ export default class userManage extends Vue {
       phonenumber: undefined,
       email: undefined,
       sex: undefined,
-      status: "0",
+      status: undefined,
       remark: undefined,
       postIds: [],
       roleIds: [],
@@ -869,23 +869,18 @@ export default class userManage extends Vue {
     this.$prompt("请输入新密码", "提示", {
       confirmButtonText: "确定",
       cancelButtonText: "取消",
+      inputPattern: /^\S{6,}$/,
+      inputErrorMessage: '密码不少于六位数'
     })
       .then((res: any) => {
         console.log(res.value);
-        if (res.value && res.value != "") {
           resetUserPwd(row.userId, res.value).then((response) => {
-            if (response && response.data.code == "200")
+            if (response && response.data.code === 200)
               this.$message({
                 type: "success",
                 message: "密码修改成功",
               });
           });
-        } else {
-          this.$message({
-            type: "info",
-            message: "密码不能为空",
-          });
-        }
       })
       .catch(() => {
         this.$message({
@@ -900,7 +895,7 @@ export default class userManage extends Vue {
     this.getTreeselect();
     getUser(0).then((response: any) => {
       console.log(response);
-      if (response && response.data.code == "200") {
+      if (response && response.data.code === 200) {
         this.postOptions = response.data.data.posts;
         this.roleOptions = response.data.data.roles;
         this.open = true;
@@ -916,7 +911,7 @@ export default class userManage extends Vue {
     this.getTreeselect();
     let userId = row.userId;
     getUser(userId).then((response) => {
-      if (response && response.data.code == "200") {
+      if (response && response.data.code === 200) {
         var data = response.data.data;
         this.form = {
           userId: data.user.userId,
@@ -953,16 +948,17 @@ export default class userManage extends Vue {
         type: "warning",
       }
     )
-      .then(function () {
-        return delUser(userId);
-      })
       .then(() => {
-        this.$message({
-          showClose: true,
-          message: "删除成功",
-          type: "success",
+        delUser(userId).then((res: any) => {
+          if (res && res.data.code === 200) {
+            this.$message({
+              showClose: true,
+              message: "删除成功",
+              type: "success",
+            });
+            this.getList();
+          }
         });
-        this.getList();
       })
       .catch(() => {
         this.$message({
@@ -979,20 +975,22 @@ export default class userManage extends Vue {
       cancelButtonText: "取消",
       type: "warning",
     })
-      .then(function () {
-        row.status = row.status === "0" ? "1" : "0";
-        return changeUserStatus(row.userId, row.status);
-      })
       .then(() => {
-        this.$message({
-          type: "success",
-          message: text + "成功",
+        row.status = row.status === "0" ? "1" : "0";
+        changeUserStatus(row.userId, row.status).then((res) => {
+          if (res && res.data.code === 200) {
+            this.$message({
+              type: "success",
+              message: text + "成功",
+            });
+            this.getList();
+          }
         });
-        this.getList();
       })
-      .catch(function () {
-        console.log(row.status);
-        // row.status = row.status === "0" ? "1" : "0";
+
+      .catch(()=> {
+          // console.log(row.status);
+      
       });
   }
   /** 导出按钮操作 */
@@ -1004,10 +1002,9 @@ export default class userManage extends Vue {
       type: "warning",
     })
       .then(() => {
-        console.log("导出");
         exportUser(queryParams).then((response: any) => {
           console.log(response);
-          if (response && response.data.code == "200") {
+          if (response && response.data.code === 200 ) {
             this.$message({
               type: "success",
               message: "导出成功",
@@ -1038,26 +1035,30 @@ export default class userManage extends Vue {
   submitForm() {
     (this.$refs["form"] as Form).validate((valid: any) => {
       if (valid) {
-        console.log(JSON.stringify(this.form), "提交添加用户4444");
+        // console.log(JSON.stringify(this.form), "提交添加用户");
 
         if (this.form.userId != undefined) {
           updateUser(this.form).then((response) => {
-            this.$message({
-              type: "success",
-              message: "修改成功",
-            });
-            this.open = false;
-            this.getList();
+            if (response && response.data.code === 200) {
+              this.$message({
+                type: "success",
+                message: "修改成功",
+              });
+              this.open = false;
+              this.getList();
+            }
           });
         } else {
           addUser(this.form).then((response) => {
-            this.$message({
-              type: "success",
-              message: "新增成功",
-            });
+            if (response && response.data.code === 200) {
+              this.$message({
+                type: "success",
+                message: "新增成功",
+              });
 
-            this.open = false;
-            this.getList();
+              this.open = false;
+              this.getList();
+            }
           });
         }
       }
