@@ -111,6 +111,7 @@ export default class Login extends Vue {
   }
   @Watch("$route", {immediate: true})
   routechange(route: Route) {
+    console.log(route, `login route`)
     this.redirect = route.query && route.query.redirect;
   }
 
@@ -145,9 +146,9 @@ export default class Login extends Vue {
         })
           .then((res) => {
             if (res && res.data.code === 200) {
-              // console.log("11", res.data);
+              console.log(this.redirect, `this.redirect`);
               this.updateTokenValue(res.data.data);
-              this.$router.push({ name: this.redirect || "/home" });
+              this.$router.push(this.redirect || "/home");
               this.loading = false;
               service.get("/api/getInfo")
             }

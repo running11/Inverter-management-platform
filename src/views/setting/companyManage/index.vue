@@ -239,7 +239,7 @@ export default class CompanyManage extends Vue {
     color: $main-color;
   }
   .el-icon-delete {
-    color: #ff4d4f;
+    color: $delete-color;
   }
 }
 </style>

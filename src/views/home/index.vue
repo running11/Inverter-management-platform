@@ -310,15 +310,6 @@ export default class Home extends Vue {
             },
           },
         }, "详情")]);
-        // h("el-button", {
-        //   class: "el-button--danger is-plain",
-        //   on: {
-        //     click: () => {
-        //       // console.log(`点击了`, params);
-        //       this.del(params);
-        //     },
-        //   },
-        // }, "删除")
       },
     },
   ];
@@ -400,6 +391,7 @@ export default class Home extends Vue {
 </script>
 <style lang="scss" scoped>
 .main-wrapper {
+  min-width: 900px;
   ::v-deep.el-row {
     margin-bottom: 20px;
     .grid-content {

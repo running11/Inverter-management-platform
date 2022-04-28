@@ -87,9 +87,6 @@ export default class ETable extends Vue {
   ::v-deep.el-table::before {
     height: 0;
   }
-  ::v-deep.el-table .el-table__cell {
-    padding: 6px 0;
-  }
   ::v-deep.el-table .el-table__row:nth-child(even) {
     background: $tbodyTrBg;
   }

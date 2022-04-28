@@ -25,38 +25,65 @@
         <el-form-item>
           <el-button type="primary">查询</el-button>
         </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="showDialog('add')">新增</el-button>
+        </el-form-item>
       </el-form>
     </div>
     <div class="table-wrapper">
-      <table-custom :theadColumns="theadColumns" :tableList="list">
-        <template slot="status" slot-scope="scope">
-          <i :class="['iconfont icon-bianzu', { online: scope.value }]"></i>
-        </template>
-        <template slot="police" slot-scope="scope">
-          <i :class="['iconfont icon-bianzu', { online: scope.value }]"></i>
-        </template>
-        <template slot="specialOperation">
-          <el-button type="primary" plain>详情</el-button>
-        </template>
-      </table-custom>
+      <e-table
+        :tableCloumns="theadColumns"
+        :tableData="list"
+      ></e-table>
       <div class="pagination-box">
-        <el-pagination background layout="prev, pager, next" :total="100">
-        </el-pagination>
+        <el-pagination
+          background
+          layout="prev, pager, next, total"
+          :page-size="pageSize"
+          :current-page="page"
+          :total="total"
+          @current-change="handleCurrentChange"
+        />
       </div>
     </div>
+
+    <device-dialog
+      ref="deviceDialog"
+      :title="deviceDialogTitle"
+      :current-device="currentDevice"
+    ></device-dialog>
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { IOption, ITheadColums, ITableList } from "@/utils/interface";
-import TableCustom from "@/components/table/index.vue";
+import ETable from "@/components/eTable/index.vue";
+import DeviceDialog from "@/views/projectDetails/deviceList/components/dialog.vue";
+import service from "@/utils/request";
+import moment from 'moment';
+
+interface IDevice {
+  devName: string;
+  devSn: string;
+  devAddress: string;
+  devType: undefined | number | string;
+  devModel: string;
+  [propName: string]: any;
+}
 
 @Component({
   components: {
-    TableCustom,
+    ETable,
+    DeviceDialog
   },
 })
 export default class DeviceList extends Vue {
+  private projectId:any = "";
+  private total = 0;
+  private page = 1;
+  private pageSize = 10;
+  deviceDialogTitle = '';
+  currentDevice: any = null;
   form: any = {
     deviceType: "",
     deviceName: "",
@@ -74,91 +101,148 @@ export default class DeviceList extends Vue {
   ];
   theadColumns: ITheadColums[] = [
     {
-      text: "通信状态",
-      field: "status",
-      slot: true,
+      text: "设备名称",
+      field: "devName",
     },
     {
-      text: "设备名称",
-      field: "deviceName",
+      text: "设备sn",
+      field: "devSn",
+    },
+    {
+      text: "设备地址",
+      field: "devAddress",
     },
     {
       text: "设备类型",
-      field: "deviceType",
-    },
-    {
-      text: "软件版本号",
-      field: "softwareVersion",
+      field: "devType",
     },
     {
       text: "设备型号",
-      field: "deviceModel",
+      field: "devModel",
     },
     {
       text: "生产厂家",
-      field: "manufacturer",
+      field: "company",
     },
     {
-      text: "SN",
-      field: "SN",
+      text: "品牌",
+      field: "brand",
     },
     {
-      text: "所属网关",
-      field: "gateway",
-    },
-    {
-      text: "分组",
-      field: "group",
-    },
-    {
-      text: "报警",
-      field: "police",
+      text: "安装时间",
+      field: "installTime",
       slot: true,
+      render: (h: any, params: any) => {
+        if(params.row.installTime.toString().length > 10) {
+          return h('div', moment(params.row.installTime).format("YYYY-MM-DD"))
+        }else{
+          return h('div', '')
+        }
+      }
+    },
+    {
+      text: "网关sn",
+      field: "gatewaySn",
+    },
+    {
+      text: "设备分组",
+      field: "devGroup",
     },
     {
       text: "操作",
       field: "specialOperation",
       slot: true,
+      render: (h: any, params: any) => {
+        return h("div", {}, [h("i", {
+          class: "icon el-icon-edit",
+          on: {
+            click: () => {
+              // console.log(`点击了`, params);
+            },
+          },
+        }), h("i", {
+          class: "icon el-icon-delete",
+          on: {
+            click: () => {
+              // console.log(`点击了`, params);
+            },
+          },
+        })]);
+      },
     },
   ];
-  list: ITableList[] = [
-    {
-      status: true,
-      deviceName: "设备xxx",
-      deviceType: "网关",
-      softwareVersion: "V1.0.0",
-      deviceModel: "设备型号",
-      manufacturer: "正泰",
-      SN: "SN",
-      gateway: "网关",
-      group: "组",
-      police: true,
-    },
-    {
-      status: false,
-      deviceName: "设备xxx",
-      deviceType: "网关",
-      softwareVersion: "V1.0.0",
-      deviceModel: "设备型号",
-      manufacturer: "正泰",
-      SN: "SN",
-      gateway: "网关",
-      group: "组",
-      police: true,
-    },
-    {
-      status: false,
-      deviceName: "设备xxx",
-      deviceType: "网关",
-      softwareVersion: "V1.0.0",
-      deviceModel: "设备型号",
-      manufacturer: "正泰",
-      SN: "SN",
-      gateway: "网关",
-      group: "组",
-      police: true,
-    },
-  ];
+  list: ITableList[] = [];
+
+  created(): void{
+    this.projectId = this.$route.query.id; // projectId
+    this.fetchData();
+  }
+
+  fetchData(): void{
+    const paramsData = {
+      DevId: 1,
+      ProjectId: this.projectId || 1,
+      DevName: this.form.deviceName,
+      DevSn: this.form.SNNumber,
+      DevAddress: "",
+      DevType: "",
+      DevModel: "",
+      Company: "",
+      Brand: "",
+      InstallTime: "",
+      GatewaySn: "",
+      DevGroup: "",
+      PageNum: this.page,
+      PageSize: this.pageSize,
+      Sort: "",
+      SortType: "ascending"
+    };
+    service({
+      method: "get",
+      url: "/api/business/EmsDevice/list",
+      params: paramsData,
+    })
+      .then((res) => {
+        if (res && res.data.code === 200) {
+          this.list = res.data.data.result || [];
+          this.total = res.data.data.totalNum || 0;
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  handleCurrentChange(val: number): void {
+    this.page = val;
+    this.fetchData();
+  }
+  showDialog(type: string, row: IDevice): void {
+    let obj: any = {
+      add: "新增设备",
+      edit: "修改设备",
+    };
+    this.deviceDialogTitle = obj[type];
+    this.currentDevice = {};
+    (this.$refs.deviceDialog as any).showDialog();
+    type === "add" ? this.loadDailogData() : this.loadDailogData(row);
+  }
+  loadDailogData(row?: IDevice): void {
+    let defaultData: IDevice = {
+      devId: undefined,
+      projectId: Number(this.projectId),
+      devName: "",
+      devSn: "",
+      devAddress: "",
+      devType: undefined,
+      devModel: "",
+      company: "",
+      brand: "",
+      installTime: undefined,
+      gatewaySn: "",
+      devGroup: ""
+    };
+    this.currentDevice = row || defaultData;
+  }
 }
 </script>
 <style lang="scss" scoped>
