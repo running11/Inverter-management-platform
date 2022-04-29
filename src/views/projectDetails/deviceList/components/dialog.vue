@@ -168,6 +168,7 @@ export default class DeviceDialog extends Vue {
 	closeDialog(): void {
     this.isShow = false;
     (this.$refs["form"] as any).resetFields();
+    this.$emit("fetchData");
   }
   showDialog(): void {
     this.isShow = true;
@@ -180,9 +181,31 @@ export default class DeviceDialog extends Vue {
       if(valid){
 				console.log("11");
 				if(this.currentDevice.devId != undefined){
-					console.log("修改");
+          this.device.installTime = moment(this.device.installTime).valueOf();
+          service({
+            method: "put",
+            url: "/api/business/EmsDevice",
+            data: this.device,
+          })
+          .then((res) => {
+            if (res && res.data.code === 200) {
+              this.$message({
+                message: "修改成功",
+                type: "success"
+              });
+              this.isShow = false;
+              this.$emit("fetchData");
+            }else{
+              this.$message({
+                message: res.data.msg,
+                type: "error"
+              });
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
 				}else{
-					console.log("新增", this.device);
 					this.device.installTime = moment(this.device.installTime).valueOf();
 					service({
             method: "post",

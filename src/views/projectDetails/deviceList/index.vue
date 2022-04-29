@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="search-wrapper">
-      <el-form :inline="true" :model="form">
+      <el-form :inline="true" :model="form" ref="searchForm">
         <el-form-item label="设备类型">
           <el-select v-model="form.deviceType" placeholder="请选择">
             <el-option
@@ -23,12 +23,11 @@
           <el-input v-model="form.SNNumber" placeholder="请输入SN号"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">查询</el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="showDialog('add')">新增</el-button>
+          <el-button type="primary" icon="el-icon-search" size="mini">搜索</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetForm">重置</el-button>
         </el-form-item>
       </el-form>
+      <el-button class="add-btn" type="primary" @click="showDialog('add')">新增</el-button>
     </div>
     <div class="table-wrapper">
       <e-table
@@ -51,6 +50,7 @@
       ref="deviceDialog"
       :title="deviceDialogTitle"
       :current-device="currentDevice"
+      @fetchData="fetchData"
     ></device-dialog>
   </div>
 </template>
@@ -61,6 +61,7 @@ import ETable from "@/components/eTable/index.vue";
 import DeviceDialog from "@/views/projectDetails/deviceList/components/dialog.vue";
 import service from "@/utils/request";
 import moment from 'moment';
+import { Form } from "element-ui";
 
 interface IDevice {
   devName: string;
@@ -157,14 +158,15 @@ export default class DeviceList extends Vue {
           class: "icon el-icon-edit",
           on: {
             click: () => {
-              // console.log(`点击了`, params);
+              this.showDialog('edit', params.row);
             },
           },
         }), h("i", {
           class: "icon el-icon-delete",
           on: {
             click: () => {
-              // console.log(`点击了`, params);
+              console.log(params, `pppppp`)
+              this.handleDetele(params.row);
             },
           },
         })]);
@@ -216,6 +218,16 @@ export default class DeviceList extends Vue {
     this.page = val;
     this.fetchData();
   }
+  resetForm(): void{
+    this.form = {
+      deviceType: "",
+      deviceName: "",
+      SNNumber: "",
+    };
+    if (this.$refs['searchForm']) {
+      (this.$refs['searchForm'] as Form).resetFields();
+    }
+  }
   showDialog(type: string, row: IDevice): void {
     let obj: any = {
       add: "新增设备",
@@ -243,10 +255,37 @@ export default class DeviceList extends Vue {
     };
     this.currentDevice = row || defaultData;
   }
+  handleDetele(row: any): void{
+    console.log(row, `rrrr`)
+    this.$confirm("此操作将永久删除, 是否继续?", "提示", {
+      confirmButtonText: "确定",
+      cancelButtonText: "取消",
+      type: "warning",
+    }).then(() => {
+      service({
+        method: "delete",
+        url: `/api//business/EmsDevice/${row.devId}`,
+      }).then((res) => {
+        if (res && res.data.code === 200) {
+          this.$message({
+            message: "删除成功",
+            center: true,
+            type: "success"
+          });
+          this.fetchData();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    });
+  }
 }
 </script>
 <style lang="scss" scoped>
 .search-wrapper {
+  display: flex;
+  justify-content: space-between;
   margin: 20px 0;
   background: $white;
   padding: 15px 20px;

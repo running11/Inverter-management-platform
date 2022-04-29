@@ -162,7 +162,7 @@ export default class CompanyManage extends Vue {
     }).then(() => {
       service({
         method: "delete",
-        url: `/api//business/EmsCompany/${row.compyId}`,
+        url: `/api/business/EmsCompany/${row.compyId}`,
       }).then((res) => {
         if (res && res.data.code === 200) {
           this.$message({

@@ -146,7 +146,7 @@ export default class Login extends Vue {
         })
           .then((res) => {
             if (res && res.data.code === 200) {
-              console.log(this.redirect, `this.redirect`);
+              // console.log(this.redirect, `this.redirect`);
               this.updateTokenValue(res.data.data);
               this.$router.push(this.redirect || "/home");
               this.loading = false;
