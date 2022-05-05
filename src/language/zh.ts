@@ -1,11 +1,50 @@
 module.exports = {
   menus: {
     home: "首页",
+    projectDetails: "项目详情",
+    projectOverview: "项目总览",
+    projectView: "项目视图",
+    deviceList: "设备列表",
+    powerCurve: "功率曲线",
     equipmentCenter: "设备中心",
     EMS: "EMS",
-    inverter: "逆变器"
+    inverter: "逆变器",
+    PCS: "PCS",
+    battery: "电池",
+    airConditioning: "空调",
+    UPS: "UPS",
+    electricityMeter: "电表",
+    EmsDetails: "EMS详情",
+    inverterDetails: "逆变器详情",
+    PcsDetails: "PCS详情",
+    batteryDetails: "电池详情",
+    UPSDetails: "UPS详情",
+    airConditionDetails: "空调详情",
+    electricityMeterDetails: "电表详情",
+    dataAnalysis: "数据分析",
+    setting: "设置",
+    companyManage: "公司管理",
+    userManage: "用户管理",
+    personCenter: "个人中心",
+    projectManage: "项目管理",
+    deviceManage: "设备管理",
+    projectConfig: "项目配置",
+    accessEquipment: "接入设备",
+    stringCapacity: "组串容量设置",
+    electricityPrice: "电价设置",
+    otherSetting: "其他"
   },
   header: {
     title: "光储设备管理系统",
   },
+  homePage: {
+    dayPowerGeneration: "当日发电量",
+    cumulativePowerGeneration: "累计发电量",
+    dayChargeQuantity: "当日充电电量",
+    dayDischargeCapacity: "当日放电电量",
+    accumulatedChargeCapacity: "累计充电电量",
+    accumulatedDischargeCapacity: "累计放电电量",
+    dayIncome: "当日收益",
+    cumulativeIncome: "累计收益"
+  }
 };

@@ -21,7 +21,7 @@ export const routes: Array<RouteConfig> = [
         name: "home",
         component: () => import("@/views/home/index.vue"),
         meta: {
-          title: "首页",
+          title: "menus.home", // 首页
           icon: "icon-tabzhuye",
         },
       },
@@ -31,7 +31,7 @@ export const routes: Array<RouteConfig> = [
         component: () => import("@/views/projectDetails/index.vue"),
         redirect: "/projectDetails/projectOverview",
         meta: {
-          title: "项目详情",
+          title: "menus.projectDetails", // 项目详情
           hidden: true,
         },
         children: [
@@ -41,7 +41,7 @@ export const routes: Array<RouteConfig> = [
             component: () =>
               import("@/views/projectDetails/projectOverview/index.vue"),
             meta: {
-              title: "项目总览",
+              title: "menus.projectOverview", // 项目总览
             },
           },
           {
@@ -50,7 +50,7 @@ export const routes: Array<RouteConfig> = [
             component: () =>
               import("@/views/projectDetails/projectView/index.vue"),
             meta: {
-              title: "项目视图",
+              title: "menus.projectView", // 项目视图
             },
           },
           {
@@ -59,7 +59,7 @@ export const routes: Array<RouteConfig> = [
             component: () =>
               import("@/views/projectDetails/deviceList/index.vue"),
             meta: {
-              title: "设备列表",
+              title: "menus.deviceList", // 设备列表
             },
           },
           {
@@ -68,7 +68,7 @@ export const routes: Array<RouteConfig> = [
             component: () =>
               import("@/views/projectDetails/powerCurve/index.vue"),
             meta: {
-              title: "功率曲线",
+              title: "menus.powerCurve", // 功率曲线
             },
           },
         ],
@@ -79,7 +79,7 @@ export const routes: Array<RouteConfig> = [
         name: "deviceCenter",
         component: () => import("@/views/deviceCenter/index.vue"),
         meta: {
-          title: "设备中心",
+          title: "menus.equipmentCenter", // 设备中心
           icon: "icon-shebeixinghao",
         },
 
@@ -89,7 +89,7 @@ export const routes: Array<RouteConfig> = [
             name: "EMS",
             component: () => import("@/views/deviceCenter/EMS/index.vue"),
             meta: {
-              title: "EMS",
+              title: "menus.EMS", // EMS
             },
           },
 
@@ -98,7 +98,7 @@ export const routes: Array<RouteConfig> = [
             name: "inverter",
             component: () => import("@/views/deviceCenter/inverter/index.vue"),
             meta: {
-              title: "逆变器",
+              title: "menus.inverter", // 逆变器
             },
           },
           {
@@ -106,7 +106,7 @@ export const routes: Array<RouteConfig> = [
             name: "PCS",
             component: () => import("@/views/deviceCenter/PCS/index.vue"),
             meta: {
-              title: "PCS",
+              title: "menus.PCS", // PCS
             },
           },
           {
@@ -114,7 +114,7 @@ export const routes: Array<RouteConfig> = [
             name: "battery",
             component: () => import("@/views/deviceCenter/battery/index.vue"),
             meta: {
-              title: "电池",
+              title: "menus.battery", // 电池
             },
           },
           {
@@ -123,7 +123,7 @@ export const routes: Array<RouteConfig> = [
             component: () =>
               import("@/views/deviceCenter/airConditioning/index.vue"),
             meta: {
-              title: "空调",
+              title: "menus.airConditioning", // 空调
             },
           },
           {
@@ -131,7 +131,7 @@ export const routes: Array<RouteConfig> = [
             name: "UPS",
             component: () => import("@/views/deviceCenter/UPS/index.vue"),
             meta: {
-              title: "UPS",
+              title: "menus.UPS", // UPS
             },
           },
           {
@@ -140,7 +140,7 @@ export const routes: Array<RouteConfig> = [
             component: () =>
               import("@/views/deviceCenter/electricityMeter/index.vue"),
             meta: {
-              title: "电表",
+              title: "menus.electricityMeter", // 电表
             },
           },
           {
@@ -148,7 +148,7 @@ export const routes: Array<RouteConfig> = [
             name: "EmsDetails",
             component: () => import("@/views/deviceDetails/EMS/index.vue"),
             meta: {
-              title: "EMS详情",
+              title: "menus.EmsDetails", // EMS详情
               hidden: true,
             },
           },
@@ -157,7 +157,7 @@ export const routes: Array<RouteConfig> = [
             name: "inverterDetails",
             component: () => import("@/views/deviceDetails/inverter/index.vue"),
             meta: {
-              title: "逆变器详情",
+              title: "menus.inverterDetails", // 逆变器详情
               hidden: true,
             },
           },
@@ -166,7 +166,7 @@ export const routes: Array<RouteConfig> = [
             name: "PcsDetails",
             component: () => import("@/views/deviceDetails/PCS/index.vue"),
             meta: {
-              title: "PCS详情",
+              title: "menus.PcsDetails", // PCS详情
               hidden: true,
             },
           },
@@ -175,7 +175,7 @@ export const routes: Array<RouteConfig> = [
             name: "batteryDetails",
             component: () => import("@/views/deviceDetails/battery/index.vue"),
             meta: {
-              title: "电池详情",
+              title: "menus.batteryDetails", // 电池详情
               hidden: true,
             },
           },
@@ -184,7 +184,7 @@ export const routes: Array<RouteConfig> = [
             name: "UPSDetails",
             component: () => import("@/views/deviceDetails/UPS/index.vue"),
             meta: {
-              title: "UPS详情",
+              title: "menus.UPSDetails", // UPS详情
               hidden: true,
             },
           },
@@ -194,7 +194,7 @@ export const routes: Array<RouteConfig> = [
             component: () =>
               import("@/views/deviceDetails/airConditioning/index.vue"),
             meta: {
-              title: "空调详情",
+              title: "menus.airConditionDetails", // 空调详情
               hidden: true,
             },
           },
@@ -204,7 +204,7 @@ export const routes: Array<RouteConfig> = [
             component: () =>
               import("@/views/deviceDetails/electricityMeter/index.vue"),
             meta: {
-              title: "电表详情",
+              title: "menus.electricityMeterDetails", // 电表详情
               hidden: true,
             },
           },
@@ -216,7 +216,7 @@ export const routes: Array<RouteConfig> = [
         name: "dataAnalysis",
         component: () => import("@/views/dataAnalysis/index.vue"),
         meta: {
-          title: "数据分析",
+          title: "menus.dataAnalysis", // 数据分析
           icon: "icon-shujufenxi1",
           hidden: true,
         },
@@ -226,7 +226,7 @@ export const routes: Array<RouteConfig> = [
         name: "setting",
         component: () => import("@/views/setting/index.vue"),
         meta: {
-          title: "设置",
+          title: "menus.setting", // 设置
           icon: "icon-cebianlan_shebeizhongxin",
         },
         children: [
@@ -235,7 +235,7 @@ export const routes: Array<RouteConfig> = [
             name: "companyManage",
             component: () => import("@/views/setting/companyManage/index.vue"),
             meta: {
-              title: "公司管理",
+              title: "menus.companyManage", // 公司管理
             },
           },
           {
@@ -243,7 +243,7 @@ export const routes: Array<RouteConfig> = [
             name: "userManage",
             component: () => import("@/views/setting/userManage/index.vue"),
             meta: {
-              title: "用户管理",
+              title: "menus.userManage", // 用户管理
             },
           },
           {
@@ -251,7 +251,7 @@ export const routes: Array<RouteConfig> = [
             name: "personCenter",
             component: () => import("@/views/setting/personCenter/index.vue"),
             meta: {
-              title: "个人中心",
+              title: "menus.personCenter", // 个人中心
             },
           },
           {
@@ -259,7 +259,7 @@ export const routes: Array<RouteConfig> = [
             name: "projectManage",
             component: () => import("@/views/setting/projectManage/index.vue"),
             meta: {
-              title: "项目管理",
+              title: "menus.projectManage", // 项目管理
             },
           },
 
@@ -268,7 +268,7 @@ export const routes: Array<RouteConfig> = [
             name: "deviceManage",
             component: () => import("@/views/setting/deviceManage/index.vue"),
             meta: {
-              title: "设备管理",
+              title: "menus.deviceManage", // 设备管理
             },
           },
         ],
@@ -279,7 +279,7 @@ export const routes: Array<RouteConfig> = [
         component: () => import("@/views/setting/projectConfig/index.vue"),
         redirect: "/projectConfig/accessEquipment",
         meta: {
-          title: "项目配置",
+          title: "menus.projectConfig", // 项目配置
           hidden: true,
         },
         children: [
@@ -289,7 +289,7 @@ export const routes: Array<RouteConfig> = [
             component: () =>
               import("@/views/setting/projectConfig/accessEquipment/index.vue"),
             meta: {
-              title: "接入设备",
+              title: "menus.accessEquipment", // 接入设备
             },
           },
           {
@@ -298,7 +298,7 @@ export const routes: Array<RouteConfig> = [
             component: () =>
               import("@/views/setting/projectConfig/stringCapacity/index.vue"),
             meta: {
-              title: "组串容量设置",
+              title: "menus.stringCapacity", // 组串容量设置
             },
           },
           {
@@ -309,7 +309,7 @@ export const routes: Array<RouteConfig> = [
                 "@/views/setting/projectConfig/electricityPrice/index.vue"
               ),
             meta: {
-              title: "电价设置",
+              title: "menus.electricityPrice", // 电价设置
             },
           },
           {
@@ -318,7 +318,7 @@ export const routes: Array<RouteConfig> = [
             component: () =>
               import("@/views/setting/projectConfig/otherSetting/index.vue"),
             meta: {
-              title: "其他",
+              title: "menus.otherSetting", // 其他
             },
           },
         ],

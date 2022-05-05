@@ -1,6 +1,6 @@
 <template>
   <div class="language-wrapper">
-    <el-select v-model="locale" placeholder="请选择" @change="changeLanguage">
+    <el-select class="select" v-model="locale" placeholder="请选择" @change="changeLanguage">
       <el-option
         v-for="item in languageList"
         :key="item.value"
@@ -39,6 +39,10 @@ export default class SelectLanguage extends Vue {
       value: "en-US",
       label: "English",
     },
+    {
+      value: 'ja-JP',
+      label: '日本語'
+    }
   ];
 
   created() {
@@ -60,17 +64,17 @@ export default class SelectLanguage extends Vue {
     height: $header-height;
   }
   ::v-deep.el-input__inner {
+    background: $main-color url('~@/assets/images/icon_map.png') 0 center no-repeat;
+    background-size: 20px;
+    padding-left: 22px;
     height: $header-height;
     line-height: $header-height;
-    background-color: $main-color;
     border: none;
     color: $white;
     font-size: 15px;
   }
   ::v-deep.el-select .el-input .el-select__caret {
-    font-size: 16px;
-    color: $white;
-    line-height: $header-height;
+    display: none;
   }
 }
 </style>

@@ -236,7 +236,7 @@ export default class DeviceList extends Vue {
     this.deviceDialogTitle = obj[type];
     this.currentDevice = {};
     (this.$refs.deviceDialog as any).showDialog();
-    type === "add" ? this.loadDailogData() : this.loadDailogData(row);
+    type === "add" ? this.loadDailogData() : this.loadDailogData(JSON.parse(JSON.stringify(row)));
   }
   loadDailogData(row?: IDevice): void {
     let defaultData: IDevice = {
@@ -264,7 +264,7 @@ export default class DeviceList extends Vue {
     }).then(() => {
       service({
         method: "delete",
-        url: `/api//business/EmsDevice/${row.devId}`,
+        url: `/api/business/EmsDevice/${row.devId}`,
       }).then((res) => {
         if (res && res.data.code === 200) {
           this.$message({

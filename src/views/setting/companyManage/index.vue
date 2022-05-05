@@ -188,7 +188,7 @@ export default class CompanyManage extends Vue {
     this.companyDialogTitle = obj[type];
     this.currentCompany = {};
     (this.$refs.companyDialog as any).showDialog();
-    type === "add" ? this.loadDailogData() : this.loadDailogData(row);
+    type === "add" ? this.loadDailogData() : this.loadDailogData(JSON.parse(JSON.stringify(row)));
   }
   loadDailogData(row?: ICompany): void {
     const parentId = this.currentSelectedRow ? this.currentSelectedRow.compyId : 0;

@@ -101,6 +101,7 @@ import NewDialog from "@/components/newDialog/index.vue";
 import { IOption } from "@/utils/interface";
 import service from "@/utils/request";
 import moment from 'moment';
+import { Form } from "element-ui";
 
 interface IDevice {
   devName: string;
@@ -161,14 +162,13 @@ export default class DeviceDialog extends Vue {
   };
 
 	@Watch("currentDevice", { immediate: true, deep: true })
-  getCurrentCompany(newVal: any, oldVal: any) {
+  getCurrentDevice(newVal: any, oldVal: any) {
     this.device = newVal;
   }
 
 	closeDialog(): void {
     this.isShow = false;
-    (this.$refs["form"] as any).resetFields();
-    this.$emit("fetchData");
+    (this.$refs["form"] as Form).resetFields();
   }
   showDialog(): void {
     this.isShow = true;

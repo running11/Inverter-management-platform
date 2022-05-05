@@ -8,31 +8,14 @@
           </div>
           <div class="list-box">
             <div class="item">
-              <label>当日发电量</label>
+              <!-- <label>当日发电量</label> -->
+              <label>{{$t("homePage.dayPowerGeneration")}}</label>
               <span class="num">120</span>
               <span class="unit">kWh</span>
             </div>
             <div class="item">
-              <label>累计发电量</label>
-              <span class="num">120</span>
-              <span class="unit">kWh</span>
-            </div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="6">
-        <div class="grid-content">
-          <div class="img-box">
-            <img src="@/assets/images/icon_electricity.png" alt="发电量" />
-          </div>
-          <div class="list-box">
-            <div class="item">
-              <label>当日充电电量</label>
-              <span class="num">120</span>
-              <span class="unit">kWh</span>
-            </div>
-            <div class="item">
-              <label>当日放电电量</label>
+              <!-- <label>累计发电量</label> -->
+              <label>{{$t("homePage.cumulativePowerGeneration")}}</label>
               <span class="num">120</span>
               <span class="unit">kWh</span>
             </div>
@@ -46,12 +29,14 @@
           </div>
           <div class="list-box">
             <div class="item">
-              <label>累计充电电量</label>
+              <!-- <label>当日充电电量</label> -->
+              <label>{{$t("homePage.dayChargeQuantity")}}</label>
               <span class="num">120</span>
               <span class="unit">kWh</span>
             </div>
             <div class="item">
-              <label>累计放电电量</label>
+              <!-- <label>当日放电电量</label> -->
+              <label>{{$t("homePage.dayDischargeCapacity")}}</label>
               <span class="num">120</span>
               <span class="unit">kWh</span>
             </div>
@@ -65,12 +50,35 @@
           </div>
           <div class="list-box">
             <div class="item">
-              <label>当日收益</label>
+              <!-- <label>累计充电电量</label> -->
+              <label>{{$t("homePage.accumulatedChargeCapacity")}}</label>
+              <span class="num">120</span>
+              <span class="unit">kWh</span>
+            </div>
+            <div class="item">
+              <!-- <label>累计放电电量</label> -->
+              <label>{{$t("homePage.accumulatedDischargeCapacity")}}</label>
+              <span class="num">120</span>
+              <span class="unit">kWh</span>
+            </div>
+          </div>
+        </div>
+      </el-col>
+      <el-col :span="6">
+        <div class="grid-content">
+          <div class="img-box">
+            <img src="@/assets/images/icon_electricity.png" alt="发电量" />
+          </div>
+          <div class="list-box">
+            <div class="item">
+              <!-- <label>当日收益</label> -->
+              <label>{{$t("homePage.dayIncome")}}</label>
               <span class="num">120</span>
               <span class="unit">元</span>
             </div>
             <div class="item">
-              <label>累计收益</label>
+              <!-- <label>累计收益</label> -->
+              <label>{{$t("homePage.cumulativeIncome")}}</label>
               <span class="num">120</span>
               <span class="unit">元</span>
             </div>
@@ -400,7 +408,7 @@ export default class Home extends Vue {
       border-radius: 4px;
       display: flex;
       .img-box {
-        width: 36%;
+        width: 32%;
         min-height: 120px;
         display: flex;
         justify-content: center;

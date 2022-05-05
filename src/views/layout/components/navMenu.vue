@@ -8,7 +8,7 @@
         :key="navMenu.name"
       >
         <i :class="['iconfont', navMenu.meta.icon]"></i>
-        <span slot="title">{{ navMenu.meta.title }}</span>
+        <span slot="title">{{ $t(navMenu.meta.title) }}</span>
       </el-menu-item>
 
       <!-- 此菜单下还有子菜单 -->
@@ -20,7 +20,7 @@
       >
         <template slot="title">
           <i :class="['iconfont', navMenu.meta.icon]"></i>
-          <span slot="title">{{ navMenu.meta.title }}</span>
+          <span slot="title">{{ $t(navMenu.meta.title) }}</span>
         </template>
         <!-- 递归 -->
         <nav-menu :key="navMenu.name" :navMenus="navMenu.children"></nav-menu>
