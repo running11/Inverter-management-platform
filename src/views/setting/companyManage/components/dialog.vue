@@ -14,36 +14,36 @@
         :model="company"
         :rules="rules"
       >
-        <el-form-item label="公司名称" prop="compyName">
+        <el-form-item :label="$t('companyManage.companyName')" prop="compyName">
           <el-input
             v-model="company.compyName"
-            placeholder="请输入公司名称"
+            :placeholder="$t('companyManage.pleaseEnterCompanyName')"
           />
         </el-form-item>
-        <el-form-item label="公司地址" prop="address">
+        <el-form-item :label="$t('companyManage.companyAddress')" prop="address">
           <el-input
             v-model="company.address"
-            placeholder="请输入公司地址"
+            :placeholder="$t('companyManage.pleaseEnterCompanyAddress')"
           />
         </el-form-item>
-        <el-form-item label="联系人" prop="contactPerson">
+        <el-form-item :label="$t('companyManage.contactPerson')" prop="contactPerson">
           <el-input
             v-model="company.contactPerson"
-            placeholder="请输入联系人"
+            :placeholder="$t('companyManage.pleaseEnterContactPerson')"
           />
         </el-form-item>
-        <el-form-item label="联系方式" prop="contactMethod">
+        <el-form-item :label="$t('companyManage.contactMethod')" prop="contactMethod">
           <el-input
             v-model="company.contactMethod"
-            placeholder="请输入手机号或座机号或邮箱地址"
+            :placeholder="$t('companyManage.pleaseEnterContactMethod')"
           />
         </el-form-item>
-        <el-form-item label="公司描述" prop="compyDescription">
+        <el-form-item :label="$t('companyManage.companyDescription')" prop="compyDescription">
           <el-input
             type="textarea"
             :rows="3"
             v-model="company.compyDescription"
-            placeholder="请输入公司描述"
+            :placeholder="$t('companyManage.pleaseEnterCompanyDescription')"
           />
         </el-form-item>
       </el-form>
@@ -54,6 +54,7 @@
 import { Component, Prop, Watch, Vue } from "vue-property-decorator";
 import NewDialog from "@/components/newDialog/index.vue";
 import service from "@/utils/request";
+import i18n from "@/language";
 
 interface ICompany {
   companyName: string;
@@ -77,13 +78,13 @@ export default class CompanyDialog extends Vue {
 
   rules: any = {
     compyName: [
-      { required: true, message: "请输入公司名称", trigger: "blur" },
+      { required: true, message: i18n.t(`companyManage.pleaseEnterCompanyName`), trigger: "blur" },
     ],
     address: [
-      { required: true, message: "请输入公司地址", trigger: "blur" },
+      { required: true, message: i18n.t(`companyManage.pleaseEnterCompanyAddress`), trigger: "blur" },
     ],
     contactPerson: [
-      { required: false, message: "请输入联系人", trigger: "blur" },
+      { required: false, message: i18n.t(`companyManage.pleaseEnterContactPerson`), trigger: "blur" },
     ],
   };
 
@@ -112,7 +113,7 @@ export default class CompanyDialog extends Vue {
           .then((res) => {
             if (res && res.data.code === 200) {
               this.$message({
-                message: "修改成功",
+                message: i18n.t(`common.editSuccess`) as string,
                 type: "success"
               });
               this.isShow = false;
@@ -137,7 +138,7 @@ export default class CompanyDialog extends Vue {
           .then((res) => {
             if (res && res.data.code === 200) {
               this.$message({
-                message: "添加成功",
+                message: i18n.t(`common.addSuccess`) as string,
                 type: "success"
               });
               this.isShow = false;

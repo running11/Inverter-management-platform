@@ -1,9 +1,9 @@
 <template>
   <div class="company-manage-wrapper">
     <div class="title-box">
-      <div class="title">公司管理</div>
+      <div class="title">{{$t("companyManage.title")}}</div>
       <div class="toolbar-right">
-        <el-button type="primary" @click="showDialog('add')">新增</el-button>
+        <el-button type="primary" @click="showDialog('add')">{{$t("common.new")}}</el-button>
       </div>
     </div>
     <!-- 当前选中的行，需要传进去，如果点了修改，再请求列表，选中的状态应该是原先的 -->
@@ -38,6 +38,7 @@ import TreeTable from "@/components/treeTable/index.vue";
 import CompanyDialog from "@/views/setting/companyManage/components/dialog.vue";
 import { ITheadColums, ITableList } from "@/utils/interface";
 import service from "@/utils/request";
+import i18n from "@/language";
 
 interface ICompany {
   compyName: string;
@@ -55,28 +56,28 @@ interface ICompany {
   },
 })
 export default class CompanyManage extends Vue {
-  companyDialogTitle = "新增用户";
+  companyDialogTitle = i18n.t(`companyManage.addCompany`); // 新增公司
   currentCompany: ICompany | any = null;
   currentSelectedRow: any = null; // 当前选中的列，如果选中了，新增的当时下的子公司，若没有选中，则新增的根节点下
   theadColumns: ITheadColums[] = [
     {
-      text: "公司名称",
+      text: i18n.t(`companyManage.companyName`) as string, // 公司名称
       field: "compyName",
     },
     {
-      text: "公司地址",
+      text: i18n.t(`companyManage.companyAddress`) as string, // 公司地址
       field: "address",
     },
     {
-      text: "联系人",
+      text: i18n.t(`companyManage.contactPerson`) as string, // 联系人
       field: "contactPerson",
     },
     {
-      text: "联系方式",
+      text: i18n.t(`companyManage.contactMethod`) as string, // 联系方式
       field: "contactMethod",
     },
     {
-      text: "公司描述",
+      text: i18n.t(`companyManage.companyDescription`) as string, // 公司描述
       field: "compyDescription",
     },
   ];
@@ -155,9 +156,9 @@ export default class CompanyManage extends Vue {
   }
 
   handleDetele(row: ICompany): void {
-    this.$confirm("此操作将永久删除, 是否继续?", "提示", {
-      confirmButtonText: "确定",
-      cancelButtonText: "取消",
+    this.$confirm(i18n.t(`common.deletePrompt`) as string, i18n.t(`common.prompt`) as string, {
+      confirmButtonText: i18n.t(`common.confirmButtonText`) as string,
+      cancelButtonText: i18n.t(`common.cancelButtonText`) as string,
       type: "warning",
     }).then(() => {
       service({
@@ -166,7 +167,7 @@ export default class CompanyManage extends Vue {
       }).then((res) => {
         if (res && res.data.code === 200) {
           this.$message({
-            message: "删除成功",
+            message: i18n.t(`common.deleteSuccess`) as string,
             center: true,
             type: "success"
           });
@@ -182,8 +183,8 @@ export default class CompanyManage extends Vue {
 
   showDialog(type: string, row: ICompany): void {
     let obj: any = {
-      add: "新增公司",
-      edit: "修改公司",
+      add: i18n.t(`companyManage.addCompany`), // 新增公司
+      edit: i18n.t(`companyManage.editCompany`), // 修改公司
     };
     this.companyDialogTitle = obj[type];
     this.currentCompany = {};

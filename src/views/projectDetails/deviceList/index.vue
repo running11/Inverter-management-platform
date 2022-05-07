@@ -2,8 +2,8 @@
   <div>
     <div class="search-wrapper">
       <el-form :inline="true" :model="form" ref="searchForm">
-        <el-form-item label="设备类型">
-          <el-select v-model="form.deviceType" placeholder="请选择">
+        <el-form-item :label="$t('deviceList.deviceType')">
+          <el-select v-model="form.deviceType" :placeholder="$t('common.pleaseSelect')">
             <el-option
               v-for="item in deviceList"
               :key="item.value"
@@ -13,21 +13,21 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="设备名称">
+        <el-form-item :label="$t('deviceList.deviceName')">
           <el-input
             v-model="form.deviceName"
-            placeholder="请输入设备名称"
+            :placeholder="$t('deviceList.pleaseEnterDeviceName')"
           ></el-input>
         </el-form-item>
         <el-form-item label="SN">
-          <el-input v-model="form.SNNumber" placeholder="请输入SN号"></el-input>
+          <el-input v-model="form.SNNumber" :placeholder="$t('deviceList.pleaseEnterSNNumber')"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="el-icon-search" size="mini">搜索</el-button>
-          <el-button icon="el-icon-refresh" size="mini" @click="resetForm">重置</el-button>
+          <el-button type="primary" icon="el-icon-search" size="mini">{{$t("common.search")}}</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetForm">{{$t("common.reset")}}</el-button>
         </el-form-item>
       </el-form>
-      <el-button class="add-btn" type="primary" @click="showDialog('add')">新增</el-button>
+      <el-button class="add-btn" type="primary" @click="showDialog('add')">{{$t("common.new")}}</el-button>
     </div>
     <div class="table-wrapper">
       <e-table
@@ -62,6 +62,7 @@ import DeviceDialog from "@/views/projectDetails/deviceList/components/dialog.vu
 import service from "@/utils/request";
 import moment from 'moment';
 import { Form } from "element-ui";
+import i18n from "@/language";
 
 interface IDevice {
   devName: string;
@@ -102,35 +103,35 @@ export default class DeviceList extends Vue {
   ];
   theadColumns: ITheadColums[] = [
     {
-      text: "设备名称",
+      text: i18n.t(`deviceList.deviceName`) as string,// 设备名称
       field: "devName",
     },
     {
-      text: "设备sn",
+      text: i18n.t(`deviceList.deviceSN`) as string, // 设备sn
       field: "devSn",
     },
     {
-      text: "设备地址",
+      text: i18n.t(`deviceList.deviceAddress`) as string, // 设备地址
       field: "devAddress",
     },
     {
-      text: "设备类型",
+      text: i18n.t(`deviceList.deviceType`) as string, // 设备类型
       field: "devType",
     },
     {
-      text: "设备型号",
+      text: i18n.t(`deviceList.deviceModel`) as string, // 设备型号
       field: "devModel",
     },
     {
-      text: "生产厂家",
+      text: i18n.t(`deviceList.manufacturer`) as string, // 生产厂家
       field: "company",
     },
     {
-      text: "品牌",
+      text: i18n.t(`deviceList.brand`) as string, // 品牌
       field: "brand",
     },
     {
-      text: "安装时间",
+      text: i18n.t(`deviceList.installTime`) as string, // 安装时间
       field: "installTime",
       slot: true,
       render: (h: any, params: any) => {
@@ -142,15 +143,15 @@ export default class DeviceList extends Vue {
       }
     },
     {
-      text: "网关sn",
+      text: i18n.t(`deviceList.gatewaySN`) as string, // 网关sn
       field: "gatewaySn",
     },
     {
-      text: "设备分组",
+      text: i18n.t(`deviceList.deviceGroup`) as string, // 设备分组
       field: "devGroup",
     },
     {
-      text: "操作",
+      text: i18n.t(`common.operation`) as string, // 操作
       field: "specialOperation",
       slot: true,
       render: (h: any, params: any) => {
@@ -165,7 +166,6 @@ export default class DeviceList extends Vue {
           class: "icon el-icon-delete",
           on: {
             click: () => {
-              console.log(params, `pppppp`)
               this.handleDetele(params.row);
             },
           },
@@ -230,8 +230,8 @@ export default class DeviceList extends Vue {
   }
   showDialog(type: string, row: IDevice): void {
     let obj: any = {
-      add: "新增设备",
-      edit: "修改设备",
+      add: i18n.t(`deviceList.addDevice`) as string, // 新增设备
+      edit: i18n.t(`deviceList.editDevice`) as string, // 修改设备
     };
     this.deviceDialogTitle = obj[type];
     this.currentDevice = {};
@@ -256,10 +256,9 @@ export default class DeviceList extends Vue {
     this.currentDevice = row || defaultData;
   }
   handleDetele(row: any): void{
-    console.log(row, `rrrr`)
-    this.$confirm("此操作将永久删除, 是否继续?", "提示", {
-      confirmButtonText: "确定",
-      cancelButtonText: "取消",
+    this.$confirm(i18n.t(`common.deletePrompt`) as string, i18n.t(`common.prompt`) as string, {
+      confirmButtonText: i18n.t(`common.confirmButtonText`) as string,
+      cancelButtonText: i18n.t(`common.cancelButtonText`) as string,
       type: "warning",
     }).then(() => {
       service({
@@ -268,7 +267,7 @@ export default class DeviceList extends Vue {
       }).then((res) => {
         if (res && res.data.code === 200) {
           this.$message({
-            message: "删除成功",
+            message: i18n.t(`common.deleteSuccess`) as string,
             center: true,
             type: "success"
           });

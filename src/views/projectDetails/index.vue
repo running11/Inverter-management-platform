@@ -1,8 +1,8 @@
 <template>
   <div class="details-wrapper">
     <el-breadcrumb separator="/" class="breadcrumb">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>{{ title }}</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/' }">{{ $t("menus.home") }}</el-breadcrumb-item>
+      <el-breadcrumb-item>{{ $t(title) }}</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="list">
       <div

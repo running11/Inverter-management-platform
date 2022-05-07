@@ -57,6 +57,7 @@ import service from "@/utils/request";
 import { ElForm } from "element-ui/types/form";
 import { Mutation } from "vuex-class";
 import { Route } from 'vue-router';
+import { encrypt } from "@/utils";
 interface ILoginForm {
   username: string;
   password: string;
@@ -148,6 +149,12 @@ export default class Login extends Vue {
             if (res && res.data.code === 200) {
               // console.log(this.redirect, `this.redirect`);
               this.updateTokenValue(res.data.data);
+              // 由于 token 30分钟会过期，所以把这个时间记录下来
+              window.localStorage.setItem("tokenTimeMillis", new Date().getTime().toString());
+              // 把登录参数记录下来，过期前可以再请求
+              let loginInfo = paramsData;
+              loginInfo.password = encrypt(paramsData.password)
+              window.localStorage.setItem("loginInfo", JSON.stringify(loginInfo));
               this.$router.push(this.redirect || "/home");
               this.loading = false;
               service.get("/api/getInfo")

@@ -88,9 +88,9 @@
     </el-row>
     <div class="table-wrapper">
       <div class="search-box">
-        <div class="title">项目列表</div>
+        <div class="title">{{$t("homePage.projectList")}}</div>
         <div class="toolbar-right">
-          <el-button type="primary" @click="showDialog">新增</el-button>
+          <el-button type="primary" @click="showDialog">{{$t("common.add")}}</el-button>
           <popover-column
             :columnsAllList="theadColumns"
             :selectedCloumns="theadSelectedColumns"
@@ -126,6 +126,7 @@ import ETable from "@/components/eTable/index.vue";
 import HomeDialog from "@/views/home/components/dialog.vue";
 import { ITheadColums, ITableList } from "@/utils/interface";
 import service from "@/utils/request";
+import i18n from "@/language";
 
 @Component({
   components: {
@@ -136,14 +137,14 @@ import service from "@/utils/request";
   },
 })
 export default class Home extends Vue {
-  private dialogTitle = "新增项目";
+  private dialogTitle = i18n.t(`projectManage.addProject`); // 新增项目
   private listLoading = false;
   private total = 0;
   private page = 1;
   private pageSize = 10;
   theadColumns: ITheadColums[] = [
     {
-      text: "状态",
+      text: i18n.t(`homePage.status`) as string, // 状态
       field: "status",
       slot: true,
       disabled: true,
@@ -169,62 +170,62 @@ export default class Home extends Vue {
       },
     },
     {
-      text: "项目名称",
+      text: i18n.t(`homePage.projectName`) as string, // 项目名称
       field: "projectName",
     },
     {
-      text: "光伏装机容量(kW)",
+      text: `${i18n.t("homePage.pvCapacity")}(kW)` as string, // 光伏装机容量(kW)
       field: "pvCapacity",
       sortable: true,
     },
     {
-      text: "储能装机容量(kW)",
+      text: `${i18n.t("homePage.batteryCapacity")}(kW)` as string, // 储能装机容量(kW)
       field: "batteryCapacity",
       sortable: true,
     },
     {
-      text: "储能装机能量(kWh)",
+      text: `${i18n.t("homePage.batteryEnergy")}(kWh)` as string, // 储能装机能量(kWh)
       field: "batteryEnergy",
     },
     {
-      text: "当日收益(万元)",
+      text: `${i18n.t("homePage.dailyIncome")}(万元)` as string, // 当日收益(万元)
       field: "dailyIncome",
       sortable: true,
     },
     {
-      text: "当日发电电量(kWh)",
+      text: `${i18n.t("homePage.dailyGeneration")}(kWh)` as string, // 当日发电电量(kWh)
       field: "dailyGeneration",
     },
     {
-      text: "当日充电电量(kWh)",
+      text: `${i18n.t("homePage.dailyCharge")}(kWh)` as string, // 当日充电电量(kWh)
       field: "dailyCharge",
     },
     {
-      text: "当日放电电量(kWh)",
+      text: `${i18n.t("homePage.dailyDischarge")}(kWh)` as string, // 当日放电电量(kWh)
       field: "dailyDischarge",
     },
     {
-      text: "电池SOC(%)",
+      text: `${i18n.t("homePage.dailyDischarge")}(%)` as string, // 电池SOC(%)
       field: "batterySoc",
     },
     {
-      text: "累计收益",
+      text: i18n.t(`homePage.totalIncome`) as string, // 累计收益
       field: "totalIncome",
     },
     {
-      text: "累计发电电量(MWh)",
+      text: `${i18n.t("homePage.totalGeneration")}(MWh)` as string, // 累计发电电量(MWh)
       field: "totalGeneration",
     },
     {
-      text: "累计充电电量(MWh)",
+      text: `${i18n.t("homePage.totalCharge")}(MWh)` as string, // 累计充电电量(MWh)
       field: "totalCharge",
     },
     {
-      text: "累计放电电量(MWh)",
+      text: `${i18n.t("homePage.totalDischarge")}(MWh)` as string, // 累计放电电量(MWh) 
       field: "totalDischarge",
     },
     {
-      text: "操作",
+      text: i18n.t(`common.operation`) as string, // 操作
       field: "specialOperation",
       slot: true,
       disabled: true,
@@ -237,13 +238,13 @@ export default class Home extends Vue {
               this.toProjectDetails(params);
             },
           },
-        }, "详情")]);
+        }, i18n.t(`common.details`))]);
       },
     },
   ];
   theadSelectedColumns: ITheadColums[] = [
     {
-      text: "状态",
+      text: i18n.t(`homePage.status`) as string, // 状态
       field: "status",
       disabled: true,
       slot: true,
@@ -269,42 +270,42 @@ export default class Home extends Vue {
       },
     },
     {
-      text: "项目名称",
+      text: i18n.t(`homePage.projectName`) as string, // 项目名称
       field: "projectName",
     },
     {
-      text: "光伏装机容量(kW)",
+      text: `${i18n.t("homePage.pvCapacity")}(kW)` as string, // 光伏装机容量(kW)
       field: "pvCapacity",
       sortable: true,
     },
     {
-      text: "储能装机容量(kW)",
+      text: `${i18n.t("homePage.batteryCapacity")}(kW)` as string, // 储能装机容量(kW)
       field: "batteryCapacity",
       sortable: true,
     },
     {
-      text: "储能装机能量(kWh)",
+      text: `${i18n.t("homePage.batteryEnergy")}(kWh)` as string, // 储能装机能量(kWh)
       field: "batteryEnergy",
     },
     {
-      text: "当日收益(万元)",
+      text: `${i18n.t("homePage.dailyIncome")}(万元)` as string, // 当日收益(万元)
       field: "dailyIncome",
       sortable: true,
     },
     {
-      text: "当日发电电量(kWh)",
+      text: `${i18n.t("homePage.dailyGeneration")}(kWh)` as string, // 当日发电电量(kWh)
       field: "dailyGeneration",
     },
     {
-      text: "当日充电电量(kWh)",
+      text: `${i18n.t("homePage.dailyDischarge")}(kWh)` as string, // 当日放电电量(kWh)
       field: "dailyCharge",
     },
     {
-      text: "当日放电电量(kWh)",
+      text: `${i18n.t("homePage.dailyDischarge")}(kWh)` as string, // 当日放电电量(kWh)
       field: "dailyDischarge",
     },
     {
-      text: "操作",
+      text: i18n.t(`common.operation`) as string, // 操作
       field: "specialOperation",
       slot: true,
       disabled: true,
@@ -317,7 +318,7 @@ export default class Home extends Vue {
               this.toProjectDetails(params);
             },
           },
-        }, "详情")]);
+        }, i18n.t(`common.details`))]);
       },
     },
   ];
@@ -357,10 +358,9 @@ export default class Home extends Vue {
     this.fetchData();
   }
   del(params: any): void{
-    console.log(`删除`, params);
-    this.$confirm("此操作将永久删除, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+    this.$confirm(i18n.t(`common.deletePrompt`) as string, i18n.t(`common.prompt`) as string, {
+      confirmButtonText: i18n.t(`common.confirmButtonText`) as string,
+      cancelButtonText: i18n.t(`common.cancelButtonText`) as string,
         type: "warning"
       }).then(() => {
         service({
@@ -369,7 +369,7 @@ export default class Home extends Vue {
         }).then((res) => {
           if (res && res.data.code === 200) {
             this.$message({
-              message: "删除成功",
+              message: i18n.t(`common.deleteSuccess`) as string,
               center: true,
               type: "success"
             });

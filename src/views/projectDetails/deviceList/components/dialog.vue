@@ -14,26 +14,26 @@
         :model="device"
         :rules="rules"
       >
-        <el-form-item label="设备名称" prop="devName">
+        <el-form-item :label="$t('deviceList.deviceName')" prop="devName">
           <el-input
 						v-model="device.devName"
-            placeholder="请输入设备名称"
+            :placeholder="$t('deviceList.pleaseEnterDeviceName')"
           />
         </el-form-item>
-        <el-form-item label="设备sn" prop="devSn">
+        <el-form-item :label="$t('deviceList.deviceSN')" prop="devSn">
           <el-input
 						v-model="device.devSn"
-            placeholder="请输入设备sn"
+            :placeholder="$t('deviceList.pleaseEnterDeviceSN')"
           />
         </el-form-item>
-        <el-form-item label="设备地址" prop="devAddress">
+        <el-form-item :label="$t('deviceList.deviceAddress')" prop="devAddress">
           <el-input
 						v-model="device.devAddress"
-            placeholder="请输入联系人"
+            :placeholder="$t('deviceList.pleaseEnterDeviceAddress')"
           />
         </el-form-item>
-        <el-form-item label="设备类型" prop="devType">
-					<el-select v-model="device.devType" placeholder="请输入设备类型">
+        <el-form-item :label="$t('deviceList.deviceType')" prop="devType">
+					<el-select v-model="device.devType" :placeholder="$t('deviceList.pleaseSelectDeviceType')">
             <el-option
               v-for="item in deviceList"
               :key="item.value"
@@ -43,44 +43,44 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="设备型号" prop="devModel">
+        <el-form-item :label="$t('deviceList.deviceModel')" prop="devModel">
           <el-input
 						v-model="device.devModel"
-            placeholder="请输入设备型号"
+            :placeholder="$t('deviceList.pleaseEnterDeviceModel')"
           />
         </el-form-item>
-				<el-form-item label="生产厂家" prop="company">
+				<el-form-item :label="$t('deviceList.manufacturer')" prop="company">
           <el-input
 						v-model="device.company"
-            placeholder="请输入生产厂家"
+            :placeholder="$t('deviceList.pleaseEnterManufacturer')"
           />
         </el-form-item>
-				<el-form-item label="品牌" prop="brand">
+				<el-form-item :label="$t('deviceList.brand')" prop="brand">
           <el-input
 						v-model="device.brand"
-            placeholder="请输入品牌"
+            :placeholder="$t('deviceList.pleaseEnterBrand')"
           />
         </el-form-item>
-				<el-form-item label="安装时间" prop="installTime">
+				<el-form-item :label="$t('deviceList.installTime')" prop="installTime">
 					<el-date-picker
 						v-model="device.installTime"
 						type="date"
-						placeholder="请输入安装时间">
+						:placeholder="$t('deviceList.pleaseSelectInstallTime')">
 					</el-date-picker>
         </el-form-item>
-				<el-form-item label="网关sn" prop="gatewaySn">
+				<el-form-item :label="$t('deviceList.gatewaySN')" prop="gatewaySn">
           <el-input
 						v-model="device.gatewaySn"
-            placeholder="请输入网关sn"
+            :placeholder="$t('deviceList.pleaseEnterGatewaySN')"
           />
         </el-form-item>
-				<el-form-item label="设备分组" prop="devGroup">
+				<el-form-item :label="$t('deviceList.deviceGroup')" prop="devGroup">
 					<el-select
 						v-model="device.devGroup"
 						allow-create
 						default-first-option
 						filterable
-						placeholder="请选择设备分组"
+						:placeholder="$t('deviceList.pleaseSelectDeviceGroup')"
 						@change.native="selectDevGroup">
             <el-option
               v-for="item in deviceGroup"
@@ -102,6 +102,7 @@ import { IOption } from "@/utils/interface";
 import service from "@/utils/request";
 import moment from 'moment';
 import { Form } from "element-ui";
+import i18n from '@/language';
 
 interface IDevice {
   devName: string;
@@ -145,19 +146,19 @@ export default class DeviceDialog extends Vue {
 
 	rules: any = {
     devName: [
-      { required: true, message: "请输入设备名称", trigger: "blur" },
+      { required: true, message: i18n.t(`deviceList.pleaseEnterDeviceName`) as string, trigger: "blur" },
     ],
     devSn: [
-      { required: true, message: "请输入设备Sn", trigger: "blur" },
+      { required: true, message: i18n.t(`deviceList.pleaseEnterDeviceSN`) as string, trigger: "blur" },
     ],
     devAddress: [
-      { required: true, message: "请输入设备地址", trigger: "blur" },
+      { required: true, message: i18n.t(`deviceList.pleaseEnterDeviceAddress`) as string, trigger: "blur" },
     ],
 		devType: [
-      { required: true, message: "请输入设备类型", trigger: "blur" },
+      { required: true, message: i18n.t(`deviceList.pleaseSelectDeviceType`) as string, trigger: "blur" },
     ],
 		devModel: [
-      { required: true, message: "请输入设备型号", trigger: "blur" },
+      { required: true, message: i18n.t(`deviceList.pleaseEnterDeviceModel`) as string, trigger: "blur" },
     ],
   };
 
@@ -190,7 +191,7 @@ export default class DeviceDialog extends Vue {
           .then((res) => {
             if (res && res.data.code === 200) {
               this.$message({
-                message: "修改成功",
+                message: i18n.t(`common.editSuccess`) as string,
                 type: "success"
               });
               this.isShow = false;
@@ -215,7 +216,7 @@ export default class DeviceDialog extends Vue {
           .then((res) => {
             if (res && res.data.code === 200) {
               this.$message({
-                message: "添加成功",
+                message: i18n.t(`common.addSuccess`) as string,
                 type: "success"
               });
               this.isShow = false;

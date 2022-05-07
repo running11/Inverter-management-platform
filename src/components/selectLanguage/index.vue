@@ -52,6 +52,7 @@ export default class SelectLanguage extends Vue {
   changeLanguage(value: string): void {
     this.updateLanguageValue(value);
     this.$i18n.locale = value;
+    window.location.reload();
   }
 }
 </script>
@@ -75,6 +76,9 @@ export default class SelectLanguage extends Vue {
   }
   ::v-deep.el-select .el-input .el-select__caret {
     display: none;
+  }
+  ::v-deep.el-input--suffix .el-input__inner{
+    padding-right: 0;
   }
 }
 </style>
