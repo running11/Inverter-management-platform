@@ -33,4 +33,8 @@ export function praseStrZero(str:any) {
   }
   return str;
 }
-
+//导出表格下载
+const baseURL = process.env.BASE_URL
+export function download(fileName:any) {
+  window.open(baseURL+'api' + fileName)
+}

@@ -247,6 +247,22 @@ export const routes: Array<RouteConfig> = [
             },
           },
           {
+            path: "roleManage",
+            name: "roleManage",
+            component: () => import("@/views/setting/roleManage/index.vue"),
+            meta: {
+              title: "角色管理",
+            },
+          },
+          {
+            path: "menuManage",
+            name: "menuManage",
+            component: () => import("@/views/setting/menuManage/index.vue"),
+            meta: {
+              title: "菜单管理",
+            },
+          },
+          {
             path: "personCenter",
             name: "personCenter",
             component: () => import("@/views/setting/personCenter/index.vue"),

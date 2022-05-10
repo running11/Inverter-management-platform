@@ -131,15 +131,12 @@ export function importTemplate() {
 // 根据参数键名查询参数值
 export function getConfigKey(configKey:any) {
   return request({
-    url: '/system/config/configKey/' + configKey,
+    url: '/api/system/config/configKey/' + configKey,
     method: 'get'
   })
 }
 //导出表格下载
+const baseURL = process.env.BASE_URL
 export function download(fileName:any) {
-  // window.location.href = baseURL + "/common/download?fileName=" + encodeURI(fileName) + "&delete=" + true;
-  // window.open(baseURL + "/common/download?fileName=" + encodeURI(fileName) + "&delete=" + true)
-  
-  window.open('http://47.103.108.152:8886' + fileName)
-  
+  window.open(baseURL+'api' + fileName)
 }

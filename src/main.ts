@@ -8,6 +8,7 @@ import "./assets/styles/index.scss";
 import "./permission.ts";
 import i18n from "./language";
 import echarts from "echarts";
+import "@/assets/icons/index";//使用图标
 
 Vue.use(ElementUI);
 Vue.config.productionTip = false;

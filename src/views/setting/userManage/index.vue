@@ -4,15 +4,15 @@
     <div class="content-box">
       <div class="left">
         <el-input
-          v-model="deptName"
-          placeholder="请输入部门名称"
+          v-model="compyName"
+          placeholder="请输入公司名称"
           clearable
           prefix-icon="el-icon-search"
           class="mt"
         />
 
         <el-tree
-          :data="deptOptions"
+          :data="compyOptions"
           :props="defaultProps"
           :expand-on-click-node="false"
           :filter-node-method="filterNode"
@@ -75,11 +75,10 @@
               <el-button
                 type="primary"
                 icon="el-icon-search"
-                size="mini"
                 @click="handleQuery"
                 >搜索</el-button
               >
-              <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
+              <el-button icon="el-icon-refresh" @click="resetQuery"
                 >重置</el-button
               >
             </el-form-item>
@@ -184,16 +183,14 @@
             :tableData="userList"
           ></e-table>
           <div class="pagination-box">
-            <div class="pagination-box">
-              <el-pagination
-                background
-                layout="prev, pager, next, total"
-                :page-size="queryParams.pageSize"
-                :current-page="queryParams.page"
-                :total="total"
-                @current-change="handleCurrentChange"
-              />
-            </div>
+            <el-pagination
+              background
+              layout="prev, pager, next, total"
+              :page-size="queryParams.pageSize"
+              :current-page="queryParams.pageNum"
+              :total="total"
+              @current-change="handleCurrentChange"
+            />
           </div>
         </div>
       </div>
@@ -247,12 +244,13 @@
               </el-form-item>
             </el-col>
             <el-col :lg="12">
-              <el-form-item label="归属部门" prop="deptId">
+              <el-form-item label="归属公司" prop="compyId">
                 <treeselect
-                  v-model="form.deptId"
-                  :options="deptOptions"
+                  :normalizer="normalizer"
+                  v-model="form.compyId"
+                  :options="compyOptions"
                   :show-count="true"
-                  placeholder="请选择归属部门"
+                  placeholder="请选择归属公司"
                 />
               </el-form-item>
             </el-col>
@@ -385,13 +383,13 @@ import {
   download,
 } from "@/api/user/user";
 import { getDicts } from "@/api/dict/data";
-interface TreeData {
-  id?: any;
-  label?: string;
-  disabled?: boolean;
-  isLeaf?: boolean;
-  children?: TreeData[];
-}
+// interface TreeData {
+//   id?: any;
+//   label?: string;
+//   disabled?: boolean;
+//   isLeaf?: boolean;
+//   children?: TreeData[];
+// }
 interface IUser {
   [propName: string]: any;
 }
@@ -407,13 +405,13 @@ interface IUser {
 export default class userManage extends Vue {
   defaultProps = {
     children: "children",
-    label: "label",
+    label: "compyName",
   };
   listLoading = false;
   // 总条数
   total = 0;
   // 用户表格数据
-  userList = [];
+  userList: ITableList = [];
   // 弹出层标题
   title = "";
   //是否显示弹出层
@@ -421,9 +419,9 @@ export default class userManage extends Vue {
   // 选中userId数组
   ids = [];
   // 部门名称
-  deptName = "";
+  compyName = "";
   // 部门树选项
-  deptOptions = [];
+  compyOptions = [];
   // 默认密码
   initPassword = undefined;
   // 日期范围
@@ -439,7 +437,7 @@ export default class userManage extends Vue {
     userName: undefined,
     phonenumber: undefined,
     status: undefined, //0正常，1停用
-    deptId: undefined,
+    compyId: undefined,
   };
   //性别字典
   sexOptions = [];
@@ -455,8 +453,8 @@ export default class userManage extends Vue {
     nickName: [
       { required: true, message: "用户昵称不能为空", trigger: "blur" },
     ],
-    deptId: [
-      { required: true, message: "归属部门不能为空", trigger: "change" },
+    compyId: [
+      { required: true, message: "归属公司不能为空", trigger: "change" },
     ],
     password: [
       { required: true, message: "用户密码不能为空", trigger: "blur" },
@@ -512,8 +510,8 @@ export default class userManage extends Vue {
       },
     },
     {
-      text: "部门",
-      field: "deptName",
+      text: "公司",
+      field: "compyName",
     },
     {
       text: "手机号码",
@@ -533,7 +531,7 @@ export default class userManage extends Vue {
               "inactive-value": "1",
             },
             on: {
-              change: (value: any) => {
+              change: () => {
                 this.handleStatusChange(params.row);
               },
             },
@@ -658,8 +656,8 @@ export default class userManage extends Vue {
       },
     },
     {
-      text: "部门",
-      field: "deptName",
+      text: "公司",
+      field: "compyName",
     },
     {
       text: "手机号码",
@@ -679,7 +677,7 @@ export default class userManage extends Vue {
               "inactive-value": "1",
             },
             on: {
-              change: (value: any) => {
+              change: () => {
                 this.handleStatusChange(params.row);
               },
             },
@@ -752,8 +750,8 @@ export default class userManage extends Vue {
       },
     },
   ];
-  @Watch("deptName")
-  getDeptName(val: any) {
+  @Watch("compyName")
+  getcompyName(val: any) {
     (this.$refs.tree as any).filter(val);
     // console.log(val);
   }
@@ -762,16 +760,32 @@ export default class userManage extends Vue {
     this.getTreeselect();
     getDicts("sys_normal_disable").then((response: any) => {
       // console.log("用户状态", response.data.data);
-      this.statusOptions = response.data.data;
+      if (response && response.data.code === 200) {
+        this.statusOptions = response.data.data;
+      }
     });
     getDicts("sys_user_sex").then((response: any) => {
-      this.sexOptions = response.data.data;
-      console.log(this.sexOptions, "性别");
+      if (response && response.data.code === 200) {
+        this.sexOptions = response.data.data;
+      }
     });
-    // getConfigKey("sys.user.initPassword").then((response:any) => {
-    //   console.log(response)
-    //   // this.initPassword = response.data;
-    // });
+    getConfigKey("sys.user.initPassword").then((response: any) => {
+      // console.log(response.data,"getConfigKey")
+      if (response && response.data.code === 200) {
+        this.initPassword = response.data.data;
+      }
+    });
+  }
+  //treeSelect配置
+  normalizer(node: any) {
+    if (node.children && !node.children.length) {
+      delete node.children;
+    }
+    return {
+      id: node.compyId,
+      label: node.compyName,
+      children: node.children,
+    };
   }
   /** 查询用户列表 */
   getList() {
@@ -781,22 +795,22 @@ export default class userManage extends Vue {
         if (response && response.data.code === 200) {
           this.userList = response.data.data.result;
           this.total = response.data.data.totalNum;
-          // console.log(this.userList, "列表");
+          console.log(this.userList, "列表");
         }
         this.listLoading = false;
       }
     );
   }
-  /** 查询部门下拉树结构 */
+  /** 查询公司下拉树结构 */
   getTreeselect() {
     service({
-      url: "/api/system/dept/treeselect",
+      url: "/api/business/EmsCompany/treeList",
       method: "get",
     })
       .then((res) => {
         if (res && res.data.code === 200) {
-          // console.log("用户", res.data.data);
-          this.deptOptions = res.data.data;
+          console.log("公司", res.data.data);
+          this.compyOptions = res.data.data;
         }
       })
       .catch((err) => {
@@ -810,8 +824,7 @@ export default class userManage extends Vue {
   }
   //节点点击事件
   handleNodeClick(data: any): void {
-    // console.log(data.id);
-    this.queryParams.deptId = data.id;
+    this.queryParams.compyId = data.compyId;
     this.getList();
   }
   /** 搜索按钮操作 */
@@ -825,7 +838,7 @@ export default class userManage extends Vue {
   reset() {
     this.form = {
       userId: undefined,
-      deptId: undefined,
+      compyId: undefined,
       userName: undefined,
       nickName: undefined,
       password: undefined,
@@ -842,7 +855,7 @@ export default class userManage extends Vue {
   /** 重置按钮操作 */
   resetQuery() {
     this.dateRange = [];
-    this.queryParams.deptId = undefined;
+    this.queryParams.compyId = undefined;
     this.resetForm("queryForm");
     console.log(this.queryParams);
     this.handleQuery();
@@ -870,17 +883,18 @@ export default class userManage extends Vue {
       confirmButtonText: "确定",
       cancelButtonText: "取消",
       inputPattern: /^\S{6,}$/,
-      inputErrorMessage: '密码不少于六位数'
+      inputErrorMessage: "密码不少于六位数",
     })
       .then((res: any) => {
         console.log(res.value);
-          resetUserPwd(row.userId, res.value).then((response) => {
-            if (response && response.data.code === 200)
-              this.$message({
-                type: "success",
-                message: "密码修改成功",
-              });
-          });
+        resetUserPwd(row.userId, res.value).then((response) => {
+          if (response && response.data.code === 200) {
+            this.$message({
+              type: "success",
+              message: "密码修改成功",
+            });
+          }
+        });
       })
       .catch(() => {
         this.$message({
@@ -894,15 +908,14 @@ export default class userManage extends Vue {
     this.reset();
     this.getTreeselect();
     getUser(0).then((response: any) => {
-      console.log(response);
+      // console.log(response);
       if (response && response.data.code === 200) {
         this.postOptions = response.data.data.posts;
         this.roleOptions = response.data.data.roles;
         this.open = true;
         this.title = "新增用户";
       }
-
-      // this.form.password = this.initPassword;
+      this.form.password = this.initPassword;
     });
   }
   /** 修改按钮操作 */
@@ -913,9 +926,10 @@ export default class userManage extends Vue {
     getUser(userId).then((response) => {
       if (response && response.data.code === 200) {
         var data = response.data.data;
+        console.log(data, "xiugai");
         this.form = {
           userId: data.user.userId,
-          deptId: data.user.deptId,
+          compyId: data.user.compyId,
           userName: data.user.userName,
           nickName: data.user.nickName,
           password: "",
@@ -988,9 +1002,8 @@ export default class userManage extends Vue {
         });
       })
 
-      .catch(()=> {
-          // console.log(row.status);
-      
+      .catch(() => {
+        // console.log(row.status);
       });
   }
   /** 导出按钮操作 */
@@ -1004,7 +1017,7 @@ export default class userManage extends Vue {
       .then(() => {
         exportUser(queryParams).then((response: any) => {
           console.log(response);
-          if (response && response.data.code === 200 ) {
+          if (response && response.data.code === 200) {
             this.$message({
               type: "success",
               message: "导出成功",

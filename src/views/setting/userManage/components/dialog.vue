@@ -45,11 +45,10 @@
   </new-dialog>
 </template>
 <script lang="ts">
-import { Component, Prop, Watch, Vue } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import NewDialog from "@/components/newDialog/index.vue";
 import { getToken } from "@/utils/auth";
 import { download } from "@/api/user/user";
-import service from "@/utils/request";
 @Component({
   components: {
     NewDialog,
@@ -81,11 +80,11 @@ export default class UserDialog extends Vue {
     download("/system/user/importTemplate");
   }
   // 文件上传中处理
-  handleFileUploadProgress(event: any, file: any, fileList: any) {
+  handleFileUploadProgress() {
     this.upload.isUploading = true;
   }
   // 文件上传成功处理
-  handleFileSuccess(response: any, file: any, fileList: any) {
+  handleFileSuccess(response: any) {
     this.upload.open = false;
     this.upload.isUploading = false;
     (this.$refs.upload as any).clearFiles();
