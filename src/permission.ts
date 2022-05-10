@@ -2,12 +2,13 @@ import router from "@/router";
 import getPageTitle from "@/utils/getPageTitle";
 import NProgress from "nprogress";
 import { getToken } from "@/utils/auth";
+import i18n from '@/language';
 
 const whiteList = ["/login"];
 
 router.beforeEach((to, from, next) => {
   NProgress.start();
-  document.title = getPageTitle(to.meta.title);
+  document.title = getPageTitle(i18n.t(to.meta.title) as string);
   
   if (getToken()) {
     if (to.path === "/login") {

@@ -4,7 +4,7 @@ import locale from "element-ui/lib/locale";
 import enLocale from "element-ui/lib/locale/lang/en";
 import zhLocale from "element-ui/lib/locale/lang/zh-CN";
 import twLocale from "element-ui/lib/locale/lang/zh-TW";
-// import jaLocale from "element-ui/lib/locale/lang/ja";
+import jaLocale from "element-ui/lib/locale/lang/ja";
 import { getLanguage } from "@/utils/language";
 
 Vue.use(VueI18n);
@@ -14,6 +14,7 @@ const i18n = new VueI18n({
     "zh-CN": Object.assign(require("@/language/zh.ts"), zhLocale), // 中文语言包
     "zh-TW": Object.assign(require("@/language/tw.ts"), twLocale),
     "en-US": Object.assign(require("@/language/en.ts"), enLocale),
+    "ja-JP": Object.assign(require("@/language/ja.ts"), jaLocale),
   },
   silentFallbackWarn: true,
   silentTranslationWarn: true,

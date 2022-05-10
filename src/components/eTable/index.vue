@@ -24,7 +24,7 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Prop, Emit, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 import { ITheadColums, ITableList } from "@/utils/interface";
 
 var exSlot = {
@@ -86,9 +86,6 @@ export default class ETable extends Vue {
   }
   ::v-deep.el-table::before {
     height: 0;
-  }
-  ::v-deep.el-table .el-table__cell {
-    padding: 6px 0;
   }
   ::v-deep.el-table .el-table__row:nth-child(even) {
     background: $tbodyTrBg;

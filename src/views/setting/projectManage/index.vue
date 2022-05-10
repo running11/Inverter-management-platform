@@ -1,6 +1,6 @@
 <template>
   <div class="main-wrapper">
-    <div class="title">项目管理</div>
+    <div class="title">{{$t("projectManage.title")}}</div>
     <div class="content-box">
       <div class="menu-box">
         <el-tree

@@ -3,7 +3,7 @@
     <div class="title-box">
       <div class="title"></div>
       <div class="toolbar-right">
-        <el-button type="primary" @click="showDialog('add')">新增</el-button>
+        <el-button type="primary" @click="showDialog('add')">{{$t("common.new")}}</el-button>
       </div>
     </div>
     <div class="table-wrapper">
@@ -16,7 +16,7 @@
       >
         <template slot="setup">
           <el-button type="primary" plain @click="toProjectConfig"
-            >项目配置</el-button
+            >{{$t("projectManage.projectConfig")}}</el-button
           >
         </template>
       </table-custom>

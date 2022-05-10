@@ -36,7 +36,7 @@ export default class Header extends Vue {
     this.$router.push({
       path: "/login",
       query: {
-        redirect: this.$route.name || ''
+        redirect: this.$route.fullPath || ''
       }
     });
     // service

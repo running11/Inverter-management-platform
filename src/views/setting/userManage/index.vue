@@ -1112,6 +1112,7 @@ export default class userManage extends Vue {
     }
     .right {
       flex: 1;
+      overflow: hidden;
       .wd {
         width: 240px;
       }
