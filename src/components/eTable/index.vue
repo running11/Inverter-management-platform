@@ -1,6 +1,10 @@
 <template>
   <div class="e-table-wrapper table-box">
-    <el-table empty-text="暂无数据" :data="tableData" v-loading="loading">
+    <el-table :data="tableData" v-loading="loading">
+      <template slot="empty">
+        <img class="empty-img" src="@/assets/images/icon_no_data.png"/>
+        <p class="empty-text">{{$t("common.noData")}}</p>
+      </template>
       <el-table-column
         v-for="(item, index) in tableCloumns"
         :key="index"
@@ -17,6 +21,14 @@
             :index="scope.$index"
             :cloumn="item"
           ></ex-slot>
+          <span v-else-if="item.slot">
+            <!-- 自定义内容，有的需要显示，把值传给父级 -->
+            <slot
+              :name="item.field"
+              :value="scope.row[item.field]"
+              :row="item"
+            ></slot>
+          </span>
           <span v-else>{{ scope.row[item.field] }}</span>
         </template>
       </el-table-column>
@@ -109,6 +121,16 @@ export default class ETable extends Vue {
   }
   ::v-deep.el-table .descending .sort-caret.descending {
     border-top-color: #409eff;
+  }
+  .empty-img{
+    display: block;
+    width: 100px;
+    height: auto;
+    margin: 20px auto;
+  }
+  .empty-text{
+    line-height: 30px;
+    margin: 0 0 15px;
   }
 }
 </style>

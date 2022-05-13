@@ -8,13 +8,13 @@
         :rules="loginRules"
       >
         <div class="title-container">
-          <h3 class="title">光储云平台</h3>
+          <h3 class="title">{{$t("header.title")}}</h3>
         </div>
         <el-form-item prop="username">
           <el-input
             v-model="loginForm.username"
             class="username"
-            placeholder="请输入用户名"
+            :placeholder="$t('login.pleaseEnterUserName')"
             name="username"
             type="text"
           />
@@ -23,7 +23,7 @@
           <el-input
             v-model="loginForm.password"
             class="password"
-            placeholder="请输入密码"
+            :placeholder="$t('login.pleaseEnterPassword')"
             name="password"
             type="password"
           />
@@ -34,18 +34,18 @@
         <el-form-item class="code-form-item" prop="code">
           <el-input
             v-model="loginForm.code"
-            placeholder="请输入验证码"
+            :placeholder="$t('login.pleaseEnterCode')"
             name="code"
             @keyup.enter.native="handleLogin"
           />
-          <img :src="codeImgUrl" alt="验证码" @click="getCode" />
+          <img :src="codeImgUrl" :alt="$t('login.code')" @click="getCode" />
         </el-form-item>
         <el-button
           class="login-btn"
           :loading="loading"
           type="primary"
           @click.native.prevent="handleLogin"
-          >登录</el-button
+          >{{$t("login.login")}}</el-button
         >
       </el-form>
     </div>
@@ -58,6 +58,7 @@ import { ElForm } from "element-ui/types/form";
 import { Mutation } from "vuex-class";
 import { Route } from 'vue-router';
 import { encrypt } from "@/utils";
+import i18n from "@/language";
 interface ILoginForm {
   username: string;
   password: string;
@@ -65,21 +66,21 @@ interface ILoginForm {
 }
 const validateUsername = (rule: any, value: string, callback: any) => {
   if (!value) {
-    callback(new Error("请输入正确的用户名"));
+    callback(new Error(i18n.t(`login.usernameTip`) as string)); // 请输入正确的用户名
   } else {
     callback();
   }
 };
 const validatePassword = (rule: any, value: string, callback: any) => {
   if (!value) {
-    callback(new Error("密码不能为空"));
+    callback(new Error(i18n.t(`login.passwordTip`) as string)); // 密码不能为空
   } else {
     callback();
   }
 };
 const validateCode = (rule: any, value: string, callback: any) => {
   if (!value) {
-    callback(new Error("验证码不能为空"));
+    callback(new Error(i18n.t(`login.codeTip`) as string)); // 验证码不能为空
   } else {
     callback();
   }
@@ -211,7 +212,7 @@ export default class Login extends Vue {
       img {
         position: absolute;
         width: 80px;
-        height: 39px;
+        height: 38px;
         top: 1px;
         right: 1px;
         cursor: pointer;

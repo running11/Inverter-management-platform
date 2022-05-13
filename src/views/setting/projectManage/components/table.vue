@@ -7,176 +7,240 @@
       </div>
     </div>
     <div class="table-wrapper">
-      <table-custom
-        :theadColumns="theadColumns"
-        :tableList="list"
-        ref="table"
-        @bindDeleteBtn="handleDeleteBtn"
-        @bindEditBtn="handleModify"
+      <e-table
+        :loading="listLoading"
+        :tableCloumns="theadColumns"
+        :tableData="list"
       >
-        <template slot="setup">
-          <el-button type="primary" plain @click="toProjectConfig"
-            >{{$t("projectManage.projectConfig")}}</el-button
-          >
-        </template>
-      </table-custom>
+      </e-table>
 
       <div class="pagination-box">
-        <el-pagination background layout="prev, pager, next" :total="100">
-        </el-pagination>
+        <el-pagination
+          v-if="list.length"
+          background
+          layout="prev, pager, next, total"
+          :page-size="pageSize"
+          :current-page="page"
+          :total="total"
+          @current-change="handleCurrentChange"
+        />
       </div>
     </div>
-    <project-dialog
-      ref="projectDialog"
-      :title="dialogType"
-      :current-project="currentProject"
-    ></project-dialog>
     <!-- 跟首页的新增是公用的 -->
     <home-dialog
       ref="homeDialog"
       :title="dialogTitle"
+      :currentProject="currentProject"
+      @fetchData="getProjectList"
     >
     </home-dialog>
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import { ITheadColums, ITableList } from "@/utils/interface";
-import TableCustom from "@/components/table/index.vue";
-import projectDialog from "./dialog.vue";
+import ETable from "@/components/eTable/index.vue";
 import HomeDialog from "@/views/home/components/dialog.vue";
+import service from "@/utils/request";
+import moment from "moment";
+import i18n from "@/language";
 
 interface IProject {
   projectName: string;
-  companyName: string;
-  powerStationName: string;
-  connectionTime: string;
-  contacts: string;
-  phone: string;
+  plantName: string;
+  address: string;
+  contactPerson: string;
+  contactMethod: string;
+  [propName: string]: any;
 }
 @Component({
   components: {
-    TableCustom,
-    projectDialog,
+    ETable,
     HomeDialog
   },
 })
 export default class projectTable extends Vue {
-  dialogTitle = "新增项目";
+  @Prop(Number) companyId!: number;
+  private listLoading = false;
+  compyId = this.companyId;
+  dialogTitle = i18n.t(`projectManage.addProject`); // 新增项目
   currentProject: IProject | any = {};
-  dialogType = "新增项目";
+  private total = 0;
+  private page = 1;
+  private pageSize = 10;
 
   theadColumns: ITheadColums[] = [
     {
-      text: "项目名称",
+      text: i18n.t(`projectManage.projectName`) as string, // 项目名称
       field: "projectName",
     },
     {
-      text: "所属公司",
+      text: i18n.t(`projectManage.companyName`) as string, // 所属公司
       field: "companyName",
     },
     {
-      text: "电站名称",
-      field: "powerStationName",
+      text: i18n.t(`projectManage.plantName`) as string, // 电站名称
+      field: "plantName",
     },
     {
-      text: "并网时间",
-      field: "connectionTime",
+      text: i18n.t(`projectManage.gridConnectionDate`) as string, // 并网时间
+      field: "gridConnectionDate",
+      slot: true,
+      render: (h: any, params: any) => {
+        if(params.row.gridConnectionDate.toString().length > 10) {
+          return h('div', moment(params.row.gridConnectionDate).format("YYYY-MM-DD"))
+        }else{
+          return h('div', '')
+        }
+      }
     },
     {
-      text: "联系人",
-      field: "contacts",
+      text: i18n.t(`projectManage.contactPerson`) as string, // 联系人
+      field: "contactPerson",
     },
     {
-      text: "联系方式",
-      field: "phone",
+      text: i18n.t(`projectManage.contactMethod`) as string, // 联系方式
+      field: "contactMethod",
     },
     {
-      text: "设置",
+      text: i18n.t(`projectManage.setup`) as string, // 设置
       field: "setup",
       slot: true,
+      render: (h: any, params: any) => {
+        return h("div", {}, [h("el-button", {
+          class: "el-button--primary is-plain",
+          on: {
+            click: () => {
+              this.toProjectConfig();
+            },
+          },
+        }, i18n.t(`projectManage.projectConfig`) as string)]); // 项目配置
+      },
+    },
+    {
+      text: i18n.t(`common.operation`) as string, // 操作
+      field: "specialOperation",
+      slot: true,
+      render: (h: any, params: any) => {
+        return h("div", {}, [h("i", {
+          class: "icon el-icon-edit",
+          on: {
+            click: () => {
+              this.showDialog('edit', params.row);
+            },
+          },
+        }), h("i", {
+          class: "icon el-icon-delete",
+          on: {
+            click: () => {
+              this.handleDetele(params.row);
+            },
+          },
+        })]);
+      },
     },
   ];
 
-  list: ITableList[] = [
-    {
-      projectName: "001",
-      companyName: "正泰公司",
-      powerStationName: "滨江园区测试站",
-      connectionTime: "2020-10-21",
-      contacts: "张三",
-      phone: "15647895489",
-    },
-    {
-      projectName: "002",
-      companyName: "正泰公司",
-      powerStationName: "滨江园区测试站",
-      connectionTime: "2020-10-21",
-      contacts: "李四",
-      phone: "15647895489",
-    },
-    {
-      projectName: "003",
-      companyName: "正泰公司",
-      powerStationName: "滨江园区测试站",
-      connectionTime: "2020-06-21",
-      contacts: "李四",
-      phone: "15647895489",
-    },
-  ];
+  list: ITableList[] = [];
   mounted(): void {
     this.$nextTick((): void => {
-      (this.$refs.table as any).operationVisible = true;
+      // (this.$refs.table as any).operationVisible = true;
     });
   }
+
+  @Watch("companyId", { immediate: true, deep: true })
+  getCompanyId(newVal: any, oldVal: any){
+    this.compyId = newVal;
+    this.getProjectList();
+  }
+
+  // 获取项目list table
+  getProjectList(): void{
+    const paramsData = {
+      ProjectName: "",
+      CompyId: this.compyId,
+      PageNum: this.page,
+      PageSize: this.pageSize,
+      Sort: "",
+      SortType: "ascending"
+    }
+    this.listLoading = true;
+    service({
+      method: "get",
+      url: "/api/business/EmsProject/childlist",
+      params: paramsData,
+    })
+      .then((res) => {
+        if (res && res.data.code === 200) {
+          this.list = res.data.data.result || [];
+          this.total = res.data.data.totalNum || 0;
+        }
+        this.listLoading = false;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  handleCurrentChange(val: number): void {
+    this.page = val;
+    this.getProjectList();
+  }
+
   //显示对话框
   showDialog(type: string, row?: IProject): void {
     let obj: any = {
-      add: "新增项目",
-      edit: "修改项目",
+      add: i18n.t(`projectManage.addProject`), // 新增项目
+      edit: i18n.t(`projectManage.editProject`), // 修改项目
     };
-    this.dialogType = obj[type];
-    this.currentProject = {};
-    // (this.$refs.projectDialog as any).showDialog();
+    this.dialogTitle = obj[type];
     (this.$refs.homeDialog as any).showDialog();
     type === "add" ? this.loadDailogData() : this.loadDailogData(row);
   }
   loadDailogData(row?: IProject): void {
     let defaultData: IProject = {
+      compyId: this.compyId,
+      compyName: "",
+      projectId: undefined,
       projectName: "",
-      companyName: "",
-      powerStationName: "",
-      connectionTime: "",
-      contacts: "",
-      phone: "",
+      plantName: "",
+      gridConnectionDate: "",
+      address: "",
+      contactPerson: "",
+      contactMethod: "",
+      plantImage: "",
+      region: "中国",
+      longitude: 0,
+      latitude: 0,
+      zone: "",
+      safeRunDate: "",
+      remark: ""
     };
     this.currentProject = row || defaultData;
   }
-  //修改
-  handleModify(item: IProject) {
-    // console.log(item, "修改");
-    this.showDialog("edit", item);
-  }
   //删除
-  handleDeleteBtn(item: IProject): void {
-    // console.log(item, "删除");
-    this.$confirm("确认删除该设备吗?", "提示", {
-      confirmButtonText: "确定",
-      cancelButtonText: "取消",
+  handleDetele(row: any): void{
+    this.$confirm(i18n.t(`common.deletePrompt`) as string, i18n.t(`common.prompt`) as string, {
+      confirmButtonText: i18n.t(`common.confirmButtonText`) as string,
+      cancelButtonText: i18n.t(`common.cancelButtonText`) as string,
       type: "warning",
-    })
-      .then(() => {
-        this.$message({
-          type: "success",
-          message: "删除成功!",
-        });
+    }).then(() => {
+      service({
+        method: "delete",
+        url: `/api/business/EmsProject/${row.projectId}`,
+      }).then((res) => {
+        if (res && res.data.code === 200) {
+          this.$message({
+            message: i18n.t(`common.deleteSuccess`) as string,
+            center: true,
+            type: "success"
+          });
+          this.getProjectList();
+        }
       })
-      .catch(() => {
-        this.$message({
-          type: "info",
-          message: "已取消删除",
-        });
+      .catch((err) => {
+        console.log(err);
       });
+    });
   }
   //项目配置
   toProjectConfig(): void {

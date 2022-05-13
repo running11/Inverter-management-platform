@@ -1,86 +1,16 @@
 <template>
   <div class="main-wrapper">
     <el-row :gutter="12">
-      <el-col :span="6">
+      <el-col :span="6" v-for="(item, index) in statisticsList" :key="index">
         <div class="grid-content">
           <div class="img-box">
-            <img src="@/assets/images/icon_electricity.png" alt="发电量" />
+            <img :src="item.image" alt="发电量" />
           </div>
           <div class="list-box">
-            <div class="item">
-              <!-- <label>当日发电量</label> -->
-              <label>{{$t("homePage.dayPowerGeneration")}}</label>
-              <span class="num">120</span>
-              <span class="unit">kWh</span>
-            </div>
-            <div class="item">
-              <!-- <label>累计发电量</label> -->
-              <label>{{$t("homePage.cumulativePowerGeneration")}}</label>
-              <span class="num">120</span>
-              <span class="unit">kWh</span>
-            </div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="6">
-        <div class="grid-content">
-          <div class="img-box">
-            <img src="@/assets/images/icon_electricity.png" alt="发电量" />
-          </div>
-          <div class="list-box">
-            <div class="item">
-              <!-- <label>当日充电电量</label> -->
-              <label>{{$t("homePage.dayChargeQuantity")}}</label>
-              <span class="num">120</span>
-              <span class="unit">kWh</span>
-            </div>
-            <div class="item">
-              <!-- <label>当日放电电量</label> -->
-              <label>{{$t("homePage.dayDischargeCapacity")}}</label>
-              <span class="num">120</span>
-              <span class="unit">kWh</span>
-            </div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="6">
-        <div class="grid-content">
-          <div class="img-box">
-            <img src="@/assets/images/icon_electricity.png" alt="发电量" />
-          </div>
-          <div class="list-box">
-            <div class="item">
-              <!-- <label>累计充电电量</label> -->
-              <label>{{$t("homePage.accumulatedChargeCapacity")}}</label>
-              <span class="num">120</span>
-              <span class="unit">kWh</span>
-            </div>
-            <div class="item">
-              <!-- <label>累计放电电量</label> -->
-              <label>{{$t("homePage.accumulatedDischargeCapacity")}}</label>
-              <span class="num">120</span>
-              <span class="unit">kWh</span>
-            </div>
-          </div>
-        </div>
-      </el-col>
-      <el-col :span="6">
-        <div class="grid-content">
-          <div class="img-box">
-            <img src="@/assets/images/icon_electricity.png" alt="发电量" />
-          </div>
-          <div class="list-box">
-            <div class="item">
-              <!-- <label>当日收益</label> -->
-              <label>{{$t("homePage.dayIncome")}}</label>
-              <span class="num">120</span>
-              <span class="unit">元</span>
-            </div>
-            <div class="item">
-              <!-- <label>累计收益</label> -->
-              <label>{{$t("homePage.cumulativeIncome")}}</label>
-              <span class="num">120</span>
-              <span class="unit">元</span>
+            <div class="item" v-for="(rol, i) in item.list" :key="i">
+              <label>{{rol.newDesc}}</label>
+              <span class="num">{{rol.value}}</span>
+              <span class="unit">{{rol.unit}}</span>
             </div>
           </div>
         </div>
@@ -90,7 +20,7 @@
       <div class="search-box">
         <div class="title">{{$t("homePage.projectList")}}</div>
         <div class="toolbar-right">
-          <el-button type="primary" @click="showDialog">{{$t("common.add")}}</el-button>
+          <el-button type="primary" @click="showDialog">{{$t("common.new")}}</el-button>
           <popover-column
             :columnsAllList="theadColumns"
             :selectedCloumns="theadSelectedColumns"
@@ -105,6 +35,7 @@
       ></e-table>
       <div class="pagination-box">
         <el-pagination
+          v-if="list.length"
           background
           layout="prev, pager, next, total"
           :page-size="pageSize"
@@ -115,7 +46,12 @@
       </div>
     </div>
 
-    <home-dialog ref="homeDialog" :title="dialogTitle" @fetchData="fetchData"></home-dialog>
+    <home-dialog
+      ref="homeDialog"
+      :title="dialogTitle"
+      :currentProject="currentProject"
+      @fetchData="fetchData">
+    </home-dialog>
   </div>
 </template>
 <script lang="ts">
@@ -137,6 +73,8 @@ import i18n from "@/language";
   },
 })
 export default class Home extends Vue {
+  currentProject: any = null;
+  private statisticsList:any = []; // 统计对象
   private dialogTitle = i18n.t(`projectManage.addProject`); // 新增项目
   private listLoading = false;
   private total = 0;
@@ -209,19 +147,19 @@ export default class Home extends Vue {
       field: "batterySoc",
     },
     {
-      text: i18n.t(`homePage.totalIncome`) as string, // 累计收益
+      text: i18n.t(`homePage.totalIncomeTable`) as string, // 累计收益
       field: "totalIncome",
     },
     {
-      text: `${i18n.t("homePage.totalGeneration")}(MWh)` as string, // 累计发电电量(MWh)
+      text: `${i18n.t("homePage.totalGenerationTable")}(MWh)` as string, // 累计发电电量(MWh)
       field: "totalGeneration",
     },
     {
-      text: `${i18n.t("homePage.totalCharge")}(MWh)` as string, // 累计充电电量(MWh)
+      text: `${i18n.t("homePage.totalChargeTable")}(MWh)` as string, // 累计充电电量(MWh)
       field: "totalCharge",
     },
     {
-      text: `${i18n.t("homePage.totalDischarge")}(MWh)` as string, // 累计放电电量(MWh) 
+      text: `${i18n.t("homePage.totalDischargeTable")}(MWh)` as string, // 累计放电电量(MWh) 
       field: "totalDischarge",
     },
     {
@@ -288,21 +226,21 @@ export default class Home extends Vue {
       field: "batteryEnergy",
     },
     {
-      text: `${i18n.t("homePage.dailyIncome")}(万元)` as string, // 当日收益(万元)
-      field: "dailyIncome",
+      text: `${i18n.t("homePage.dayIncome")}(万元)` as string, // 当日收益(万元)
+      field: "dayIncome",
       sortable: true,
     },
     {
-      text: `${i18n.t("homePage.dailyGeneration")}(kWh)` as string, // 当日发电电量(kWh)
-      field: "dailyGeneration",
+      text: `${i18n.t("homePage.dayGeneration")}(kWh)` as string, // 当日发电电量(kWh)
+      field: "dayGeneration",
     },
     {
-      text: `${i18n.t("homePage.dailyDischarge")}(kWh)` as string, // 当日放电电量(kWh)
-      field: "dailyCharge",
+      text: `${i18n.t("homePage.dayDischarge")}(kWh)` as string, // 当日放电电量(kWh)
+      field: "dayCharge",
     },
     {
-      text: `${i18n.t("homePage.dailyDischarge")}(kWh)` as string, // 当日放电电量(kWh)
-      field: "dailyDischarge",
+      text: `${i18n.t("homePage.dayDischarge")}(kWh)` as string, // 当日放电电量(kWh)
+      field: "dayDischarge",
     },
     {
       text: i18n.t(`common.operation`) as string, // 操作
@@ -325,7 +263,42 @@ export default class Home extends Vue {
   private list: ITableList[] = [];
 
   created(): void {
+    this.getStatisticsData();
     this.fetchData();
+  }
+
+  getStatisticsData(): void{ // 获取首页统计数据
+    service({
+      method: "get",
+      url: "/api/business/Statistics/homeData",
+    })
+      .then((res) => {
+        if (res && res.data.code === 200) {
+          let list = res.data.data || [],
+              newList = [],
+              j = -1,
+              images = [
+                require("@/assets/images/icon_electricity.png"),
+                require("@/assets/images/icon_electricity.png"),
+                require("@/assets/images/icon_electricity.png"),
+                require("@/assets/images/icon_electricity.png")
+              ];
+          for(let i = 0, len = list.length; i < len; i++){
+            list[i]['newDesc'] = i18n.t(`homePage.${list[i].code}`);
+          }
+          for(let i = 0, len = list.length; i < len; i+=2){
+            j++;
+            newList.push({
+              image: images[j],
+              list: list.slice(i, i+2)
+            });
+          }
+          this.statisticsList = newList;
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   fetchData(): void {
@@ -393,6 +366,24 @@ export default class Home extends Vue {
     window.open(href, "_blank");
   }
   showDialog(): void {
+    let defaultData: any = {
+      compyId: undefined,
+      compyName: "",
+      projectName: undefined,
+      plantName: "",
+      gridConnectionDate: "",
+      address: "",
+      contactPerson: "",
+      contactMethod: "",
+      plantImage: "",
+      region: "中国",
+      longitude: 0,
+      latitude: 0,
+      zone: "",
+      safeRunDate: "",
+      remark: ""
+    };
+    this.currentProject = defaultData;
     (this.$refs.homeDialog as any).showDialog();
   }
 }
@@ -408,7 +399,7 @@ export default class Home extends Vue {
       border-radius: 4px;
       display: flex;
       .img-box {
-        width: 32%;
+        width: 30%;
         min-height: 120px;
         display: flex;
         justify-content: center;
@@ -424,16 +415,16 @@ export default class Home extends Vue {
           margin-bottom: 10px;
           line-height: 36px;
           label {
-            font-size: 15px;
+            font-size: 14px;
             color: $gray;
           }
           .num {
-            font-size: 24px;
+            font-size: 22px;
             color: rgba(0, 0, 0, 0.85);
             margin: 0 2px;
           }
           .unit {
-            font-size: 10px;
+            font-size: 9px;
             color: #333333;
           }
         }

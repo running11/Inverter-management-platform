@@ -17,7 +17,7 @@
         />
       </div>
       <div class="table-box">
-        <project-table :companyId="currentCompanyId"></project-table>
+        <project-table ref="projectTable" :companyId="currentCompanyId"></project-table>
       </div>
     </div>
   </div>
@@ -46,9 +46,6 @@ export default class projectManage extends Vue {
   companyList:any = [];
   treeExpandedKeys: string[] | number[] = [];
   currentCompanyId: any = null;
-  private total = 0;
-  private page = 1;
-  private pageSize = 10;
   private defaultProps = {
     children: "children",
     label: "compyName",
@@ -77,21 +74,18 @@ export default class projectManage extends Vue {
               this.currentCompanyId = list[0].compyId; // 默认选中第一个
               this.$nextTick(() => {
                 (this.$refs["tree"] as any).setCurrentKey(this.currentCompanyId);
+                (this.$refs.projectTable as any).getProjectList();
               })
-              this.getProjectList();
             }
           }else{
             this.currentCompanyId = compyId;
             this.treeExpandedKeys = (getParentId(list, this.currentCompanyId));
             this.$nextTick(() => {
               (this.$refs["tree"] as any).setCurrentKey(this.currentCompanyId);
+              (this.$refs.projectTable as any).getProjectList();
             })
           }
-
-          // console.log(this.treeExpandedKeys, this.currentCompanyId, "treeExpandedKeystreeCheckedKeys");
-          
           this.companyList = list;
-          // console.log("公司列表", this.companyList);
         }
       })
       .catch((err) => {
@@ -102,35 +96,9 @@ export default class projectManage extends Vue {
     this.currentCompany = data;
     this.treeExpandedKeys = [data.parentId, data.compyId];
     this.currentCompanyId = data.compyId;
-    // console.log(this.treeExpandedKeys, this.currentCompanyId, '点击树型选项');
+    (this.$refs.projectTable as any).getProjectList();
   }
-  // 获取项目list table
-  getProjectList(): void{
-    const paramsData = {
-      ProjectName: "",
-      CompyId: this.currentCompany.compyId,
-      PageNum: this.page,
-      PageSize: this.pageSize,
-      Sort: "",
-      SortType: "ascending"
-    }
-    service({
-      method: "get",
-      url: "/api/business/EmsProject/childlist",
-      params: paramsData,
-    })
-      .then((res) => {
-        if (res && res.data.code === 200) {
-          // console.log("项目列表", res.data);
-          // this.list = res.data.data.result || [];
-          // this.total = res.data.data.totalNum || 0;
-        }
-        // this.listLoading = false;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
+  
 }
 </script>
 <style lang="scss" scoped>
@@ -146,7 +114,7 @@ export default class projectManage extends Vue {
   .content-box {
     display: flex;
     .menu-box {
-      min-width: 130px;
+      min-width: 170px;
       box-sizing: border-box;
       padding: 20px 0;
       ::v-deep.el-tree-node__content{

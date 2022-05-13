@@ -107,3 +107,17 @@ export function decrypt(data: any) {
   const decryptedStr = decrypt.toString(CryptoJS.enc.Utf8);
   return decryptedStr.toString();
 }
+
+/** 
+ * 根据传入的值，返回对应的中文name，常用的地方是表格那里
+ * @param {list}      源数据
+ * @param {id}        传入的值
+ * @returns {string}
+ */
+export function getLable(list: [], id: number | string, value: any, label: string){
+  if(id != '' && Array.isArray(list) && list.length != 0){
+    return !list.find(item => item[value] == id) ? id : list.find(item => item[value] == id)![label];
+  }else{
+    return id;
+  }
+}
