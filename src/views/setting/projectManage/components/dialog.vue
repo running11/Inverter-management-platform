@@ -20,23 +20,19 @@
         <el-form-item label="公司名称" prop="companyName">
           <el-input v-model="projectForm.companyName" placeholder=""></el-input>
         </el-form-item>
-        <el-form-item label="电站名称" prop="powerStationName">
+        <el-form-item label="电站名称" prop="plantName">
           <el-input
-            v-model="projectForm.powerStationName"
+            v-model="projectForm.plantName"
             placeholder=""
           ></el-input>
         </el-form-item>
-        <el-form-item label="并网时间" prop="connectionTime">
+        <el-form-item label="并网时间" prop="gridConnectionDate">
           <el-date-picker
-            v-model="projectForm.connectionTime"
+            v-model="projectForm.gridConnectionDate"
             type="date"
             placeholder="选择日期"
           >
           </el-date-picker>
-          <!-- <el-input
-            v-model="projectForm.connectionTime"
-            placeholder=""
-          ></el-input> -->
         </el-form-item>
         <el-form-item label="联系人" prop="contacts">
           <el-input v-model="projectForm.contacts" placeholder=""></el-input>
@@ -55,7 +51,7 @@ import { isvalidPhone } from "@/utils/validate";
 interface IProject {
   projectName: string;
   companyName: string;
-  powerStationName: string;
+  plantName: string;
   connectionTime: string;
   contacts: string;
   phone: string;
@@ -75,7 +71,7 @@ export default class projectManageDialog extends Vue {
     companyName: [
       { required: true, message: "请输入公司名称", trigger: "blur" },
     ],
-    powerStationName: [
+    plantName: [
       { required: true, message: "请输入电站名称", trigger: "blur" },
     ],
     connectionTime: [

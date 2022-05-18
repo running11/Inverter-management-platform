@@ -1,6 +1,6 @@
 <template>
   <div class="e-table-wrapper table-box">
-    <el-table :data="tableData" v-loading="loading">
+    <el-table :data="list" v-loading="loading">
       <template slot="empty">
         <img class="empty-img" src="@/assets/images/icon_no_data.png"/>
         <p class="empty-text">{{$t("common.noData")}}</p>
@@ -36,7 +36,7 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import { ITheadColums, ITableList } from "@/utils/interface";
 
 var exSlot = {
@@ -69,9 +69,11 @@ export default class ETable extends Vue {
   @Prop(Boolean) loading!: false;
   @Prop(Array) tableCloumns!: ITheadColums;
   @Prop(Array) tableData!: ITableList;
+  list: any = this.tableData;
 
-  created() {
-    // console.log(this.tableCloumns, this.tableData);
+  @Watch("tableData", { immediate: true, deep: true })
+  getTableData(newVal: any, oldVal: any){
+    this.list = newVal;
   }
 }
 </script>

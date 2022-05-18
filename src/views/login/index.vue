@@ -55,7 +55,7 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import service from "@/utils/request";
 import { ElForm } from "element-ui/types/form";
-import { Mutation } from "vuex-class";
+import { Mutation, Action } from "vuex-class";
 import { Route } from 'vue-router';
 import { encrypt } from "@/utils";
 import i18n from "@/language";
@@ -90,6 +90,7 @@ const validateCode = (rule: any, value: string, callback: any) => {
 })
 export default class Login extends Vue {
   @Mutation updateTokenValue: any;
+  @Action getDeviceTypeList: any;
   private loginForm: ILoginForm = {
     username: "",
     password: "",
@@ -113,7 +114,7 @@ export default class Login extends Vue {
   }
   @Watch("$route", {immediate: true})
   routechange(route: Route) {
-    console.log(route, `login route`)
+    // console.log(route, `login route`)
     this.redirect = route.query && route.query.redirect;
   }
 
@@ -158,7 +159,8 @@ export default class Login extends Vue {
               window.localStorage.setItem("loginInfo", JSON.stringify(loginInfo));
               this.$router.push(this.redirect || "/home");
               this.loading = false;
-              service.get("/api/getInfo")
+              service.get("/api/getInfo");
+              this.getDeviceTypeList(); // 调获取当前用户所有设备类型的接口 侧边栏设备中心下的数据
             }
           })
           .catch((err) => {

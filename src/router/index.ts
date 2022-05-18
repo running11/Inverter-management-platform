@@ -82,7 +82,6 @@ export const routes: Array<RouteConfig> = [
           title: "menus.equipmentCenter", // 设备中心
           icon: "icon-shebeixinghao",
         },
-
         children: [
           {
             path: "EMS",
@@ -94,53 +93,62 @@ export const routes: Array<RouteConfig> = [
           },
 
           {
-            path: "inverter",
-            name: "inverter",
+            path: "Inverter",
+            name: "Inverter",
             component: () => import("@/views/deviceCenter/inverter/index.vue"),
             meta: {
-              title: "menus.inverter", // 逆变器
+              title: "menus.Inverter", // 逆变器
             },
           },
           {
-            path: "PCS",
-            name: "PCS",
+            path: "Pcs",
+            name: "Pcs",
             component: () => import("@/views/deviceCenter/PCS/index.vue"),
             meta: {
-              title: "menus.PCS", // PCS
+              title: "menus.Pcs", // PCS
             },
           },
           {
-            path: "battery",
-            name: "battery",
+            path: "Bms",
+            name: "Bms",
             component: () => import("@/views/deviceCenter/battery/index.vue"),
             meta: {
-              title: "menus.battery", // 电池
+              title: "menus.Bms", // 电池
             },
           },
           {
-            path: "airConditioning",
-            name: "airConditioning",
+            path: "Air",
+            name: "Air",
             component: () =>
               import("@/views/deviceCenter/airConditioning/index.vue"),
             meta: {
-              title: "menus.airConditioning", // 空调
+              title: "menus.Air", // 空调
             },
           },
           {
-            path: "UPS",
-            name: "UPS",
+            path: "Ups",
+            name: "Ups",
             component: () => import("@/views/deviceCenter/UPS/index.vue"),
             meta: {
-              title: "menus.UPS", // UPS
+              title: "menus.Ups", // UPS
             },
           },
           {
-            path: "electricityMeter",
-            name: "electricityMeter",
+            path: "Meter",
+            name: "Meter",
             component: () =>
               import("@/views/deviceCenter/electricityMeter/index.vue"),
             meta: {
-              title: "menus.electricityMeter", // 电表
+              title: "menus.Meter", // 电表
+            },
+          },
+          {
+            path: "TempHumi",
+            name: "TempHumi",
+            component: () =>
+              import("@/views/deviceCenter/tempHumi/index.vue"),
+            meta: {
+              title: "menus.TempHumi", // 温湿度控制器
             },
           },
           {

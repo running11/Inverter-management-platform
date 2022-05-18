@@ -74,7 +74,6 @@ export default class projectManage extends Vue {
               this.currentCompanyId = list[0].compyId; // 默认选中第一个
               this.$nextTick(() => {
                 (this.$refs["tree"] as any).setCurrentKey(this.currentCompanyId);
-                (this.$refs.projectTable as any).getProjectList();
               })
             }
           }else{
@@ -82,7 +81,6 @@ export default class projectManage extends Vue {
             this.treeExpandedKeys = (getParentId(list, this.currentCompanyId));
             this.$nextTick(() => {
               (this.$refs["tree"] as any).setCurrentKey(this.currentCompanyId);
-              (this.$refs.projectTable as any).getProjectList();
             })
           }
           this.companyList = list;
@@ -96,7 +94,6 @@ export default class projectManage extends Vue {
     this.currentCompany = data;
     this.treeExpandedKeys = [data.parentId, data.compyId];
     this.currentCompanyId = data.compyId;
-    (this.$refs.projectTable as any).getProjectList();
   }
   
 }
@@ -123,6 +120,7 @@ export default class projectManage extends Vue {
     }
     .table-box {
       flex: 1;
+      overflow: hidden;
     }
   }
 }

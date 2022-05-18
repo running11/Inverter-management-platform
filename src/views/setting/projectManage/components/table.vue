@@ -141,7 +141,7 @@ export default class projectTable extends Vue {
     },
   ];
 
-  list: ITableList[] = [];
+  list: ITableList = [];
   mounted(): void {
     this.$nextTick((): void => {
       // (this.$refs.table as any).operationVisible = true;
@@ -151,7 +151,9 @@ export default class projectTable extends Vue {
   @Watch("companyId", { immediate: true, deep: true })
   getCompanyId(newVal: any, oldVal: any){
     this.compyId = newVal;
-    this.getProjectList();
+    if(this.companyId) {
+      this.getProjectList();
+    };
   }
 
   // 获取项目list table

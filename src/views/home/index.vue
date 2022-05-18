@@ -73,7 +73,7 @@ import i18n from "@/language";
   },
 })
 export default class Home extends Vue {
-  currentProject: any = null;
+  currentProject: any = {};
   private statisticsList:any = []; // 统计对象
   private dialogTitle = i18n.t(`projectManage.addProject`); // 新增项目
   private listLoading = false;
@@ -369,7 +369,8 @@ export default class Home extends Vue {
     let defaultData: any = {
       compyId: undefined,
       compyName: "",
-      projectName: undefined,
+      projectId: undefined,
+      projectName: "",
       plantName: "",
       gridConnectionDate: "",
       address: "",

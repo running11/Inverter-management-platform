@@ -28,9 +28,11 @@ const errorTip = (msg: string) => {
   })
 }
 
+const url = process.env.NODE_ENV === "production" ? 'http://47.103.108.152:8886' : '/';
 const service = axios.create({
   // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  // baseURL: "http://47.103.108.152:8886",
+  baseURL: url,
+  withCredentials: false,
   headers: {
     "Content-Type": "application/json;charset=UTF-8"
   }
@@ -39,7 +41,12 @@ const service = axios.create({
 // http request 拦截器
 service.interceptors.request.use(
   (config: AxiosRequestConfig): AxiosRequestConfig => {
-    // // 判断是否存在token，如果存在的话，则每个http header都加上token
+    console.log(config, `ccccccc`)
+    if(process.env.NODE_ENV === "production"){ // 生产环境下所有的接口不带 "/api", 拦截的时候去掉
+      console.log("生产环境", config);
+      config.url = config.url?.replace("/api", "");
+    }
+    // 判断是否存在token，如果存在的话，则每个http header都加上token
     if (store.getters.getTokenValue) {
       config!.headers!.Authorization = store.getters.getTokenValue;
     }
@@ -53,7 +60,6 @@ service.interceptors.request.use(
 // http response 拦截器
 service.interceptors.response.use(
   (response: AxiosResponse) => {
-    // console.log(response, `rrrrrrrrrr`);
     if (response.status === 200 && response.data.code === 200) {
       // myMessage.success(response.data.msg);
       return Promise.resolve(response);

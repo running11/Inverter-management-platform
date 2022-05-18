@@ -29,6 +29,29 @@ export function queryParentNode(node: any, name: string, temp = undefined) {
   return parentNode;
 }
 
+/**
+ * 递归-----查询 树组件 父节点
+ * @param {Object} node      树的源数据
+ * @param {Object} name      节点的name
+ * @returns {Object} temp    返回的父节点数据
+ */
+export function getTreeItem(node: any, name: string) {
+  let result: any = null;
+  for (let i = 0; i < node.length; i++) {
+    const obj = node[i];
+    if (obj.name === name) {
+      result = obj;
+      return result;
+    }else{
+      if(obj.children){
+        result = getTreeItem(obj.children, name);
+        if (result) return result;
+      }
+    }
+  }
+  // return result;
+}
+
 // 判断是否为数组
 const isArr = (origin: any): boolean => {
   const str = "object Array";

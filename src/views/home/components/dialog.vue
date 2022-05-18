@@ -68,7 +68,7 @@
       </el-form>
 
       <el-form
-        v-if="active === 1"
+        v-if="active === 1 && otherForm"
         label-width="145px"
         class="form"
         ref="otherForm"
@@ -167,10 +167,10 @@ export default class HomeDialog extends Vue {
   isShow = false;
 
   basicForm: any = {
-    compyId: this.currentProject.companyId,
+    compyId: undefined,
     compyName: this.currentProject.compyName,
     projectName: this.currentProject.projectName,
-    plantName: this.currentProject.plantImage,
+    plantName: this.currentProject.plantName,
     gridConnectionDate: this.currentProject.gridConnectionDate,
     address: this.currentProject.address,
     contactPerson: this.currentProject.contactPerson,
@@ -225,12 +225,13 @@ export default class HomeDialog extends Vue {
   }
 
   @Watch("currentProject", { immediate: true, deep: true })
-  getCurrentDevice(newVal: any, oldVal: any) {
+  getCurrentDProject(newVal: any, oldVal: any) {
     // console.log(newVal, oldVal, `nnnnn`);
     if(newVal){
       this.basicForm.compyId = newVal.compyId;
       this.basicForm.compyName = newVal.compyName;
       this.basicForm.projectName = newVal.projectName;
+      this.basicForm.plantName = newVal.plantName;
       this.basicForm.gridConnectionDate = newVal.gridConnectionDate;
       this.basicForm.address = newVal.address;
       this.basicForm.contactPerson = newVal.contactPerson;
@@ -293,7 +294,6 @@ export default class HomeDialog extends Vue {
         if (res && res.data.code === 200) {
           let list = res.data.data || [];
           this.companyList = list;
-          // console.log("公司列表", this.companyList);
         }
       })
       .catch((err) => {
@@ -323,15 +323,14 @@ export default class HomeDialog extends Vue {
   submitForm(): void {
     // 提交
     (this.$refs["otherForm"] as any).validate((valid: boolean) => {
-      console.log(this.currentProject);
       if(valid){
         if(this.currentProject.projectId != undefined){
           const paramsData = {
             compyId: this.basicForm.compyId, // 公司id 所属公司
             projectName: this.basicForm.projectName, // 项目名称
             plantName: this.basicForm.plantName, // 电站名称
-            gridConnectionDate: moment(this.basicForm.gridConnectionDate).valueOf(), // 并网时间
             projectType: this.currentProject.projectType, // 项目类型 默认传"00"
+            gridConnectionDate: moment(this.basicForm.gridConnectionDate).valueOf(), // 并网时间
             address: this.basicForm.address, // 地址
             contactPerson: this.basicForm.contactPerson, // 联系人
             contactMethod: this.basicForm.contactMethod, // 联系方式
@@ -344,6 +343,7 @@ export default class HomeDialog extends Vue {
             zone: this.otherForm.zone || "", // 时区
             remark: this.otherForm.remark || "" // 备注
           };
+          console.log(this.currentProject, paramsData);
           service({
             method: "put",
             url: "/api/business/EmsProject",
