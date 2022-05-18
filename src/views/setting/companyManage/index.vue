@@ -131,7 +131,6 @@ export default class CompanyManage extends Vue {
         if (res && res.data.code === 200) {
           let list = res.data.data || [];
           this.list = list;
-          // console.log("公司列表", list, this.currentSelectedRow);
           this.$nextTick(() => {
             if(this.$refs.tTable as any && this.currentSelectedRow) {
               (this.$refs.tTable as any).setSelectedRow(this.currentSelectedRow)

@@ -35,10 +35,10 @@
         <el-form-item :label="$t('deviceList.deviceType')" prop="devType">
 					<el-select v-model="device.devType" :placeholder="$t('deviceList.pleaseSelectDeviceType')">
             <el-option
-              v-for="item in deviceList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="item in devList"
+              :key="item.dictValue"
+              :label="item.desc"
+              :value="item.dictValue"
             >
             </el-option>
           </el-select>
@@ -121,18 +121,10 @@ interface IDevice {
 export default class DeviceDialog extends Vue {
 	@Prop(String) title!: string;
   @Prop(Object) currentDevice!: IDevice;
+  @Prop(Array) deviceList!: any;
   isShow = false;
 	device: IDevice = this.currentDevice;
-	deviceList: IOption[] = [
-    {
-      value: 1,
-      label: "设备1",
-    },
-    {
-      value: 2,
-      label: "设备2",
-    },
-  ];
+	devList: any = this.deviceList;
 	deviceGroup: IOption[] = [
 		{
 			value: 1,
@@ -162,9 +154,17 @@ export default class DeviceDialog extends Vue {
     ],
   };
 
+  @Watch("deviceList", { immediate: true, deep: true })
+  getDeviceList(newVal: any) {
+    this.devList = newVal;
+  }
+
 	@Watch("currentDevice", { immediate: true, deep: true })
-  getCurrentDevice(newVal: any, oldVal: any) {
-    this.device = newVal;
+  getCurrentDevice(newVal: any) {
+    if(newVal){
+      this.device = newVal;
+      if(newVal['devType']) this.device['devType'] = newVal['devType'].toString();
+    }
   }
 
 	closeDialog(): void {
@@ -180,7 +180,6 @@ export default class DeviceDialog extends Vue {
 	submitForm(): void {
 		(this.$refs["form"] as any).validate((valid: any) => {
       if(valid){
-				console.log("11");
 				if(this.currentDevice.devId != undefined){
           this.device.installTime = moment(this.device.installTime).valueOf();
           service({

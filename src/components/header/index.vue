@@ -20,7 +20,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import SelectLanguage from "@/components/selectLanguage/index.vue";
-import service from "@/utils/request";
+// import service from "@/utils/request";
 import { Mutation } from "vuex-class";
 
 @Component({

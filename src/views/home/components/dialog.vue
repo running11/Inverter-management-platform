@@ -8,85 +8,77 @@
       :on-close="closeDialog"
       :on-submit="submitForm">
       <el-steps class="step-wrapper" :active="active">
-        <el-step title="基本属性"></el-step>
-        <el-step title="其他"></el-step>
+        <el-step :title="$t('projectManage.basicProperty')"></el-step>
+        <el-step :title="$t('projectManage.other')"></el-step>
       </el-steps>
 
       <el-form
-        v-if="active === 0"
+        v-if="active === 0 && basicForm"
         label-width="145px"
         class="form"
         ref="basicForm"
         :model="basicForm"
         :rules="basicFormRules"
       >
-        <el-form-item label="所属公司" prop="compyName">
-          <el-input
-            placeholder="请输入项目名称"
-            v-model="basicForm.compyName"
-            @click.native="changeSelectTree"
-            @blur="hideParentClick"
-          />
-          <el-tree
-            v-show="isShowTree"
-            id="floatTree"
-            class="tree"
-            empty-text="暂无数据"
-            highlight-current
-            :expand-on-click-node="false"
-            :props="{label: 'compyName'}"
-            :data="companyList"
-            @node-click="selectCompany"
+        <el-form-item :label="$t('projectManage.companyName')" prop="compyId">
+          <treeselect
+            v-model="basicForm.compyId"
+            :options="companyList"
+            :normalizer="normalizer"
+            :show-count="true"
+            :placeholder="$t('projectManage.pleaseSelectCompany')"
+            @input="changeCompyId"
+            @close="changeCompyId"
           />
         </el-form-item>
-        <el-form-item label="项目名称" prop="projectName">
+        <el-form-item :label="$t('projectManage.projectName')" prop="projectName">
           <el-input
-            placeholder="请输入项目名称"
+            :placeholder="$t('projectManage.pleaseEnterProjectName')"
             v-model="basicForm.projectName"
           />
         </el-form-item>
-        <el-form-item label="电站名称" prop="plantName">
+        <el-form-item :label="$t('projectManage.plantName')" prop="plantName">
           <el-input
-            placeholder="请输入电站名称"
+            :placeholder="$t('projectManage.pleaseEnterPlantName')"
             v-model="basicForm.plantName"
           />
         </el-form-item>
-        <el-form-item label="并网时间" prop="gridConnectionDate">
+        <el-form-item :label="$t('projectManage.gridConnectionDate')" prop="gridConnectionDate">
           <el-date-picker
             v-model="basicForm.gridConnectionDate"
             type="date"
-            placeholder="选择日期">
+            :placeholder="$t('projectManage.pleaseSelectGridConnectionDate')">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="地址" prop="address">
+        <el-form-item :label="$t('projectManage.address')" prop="address">
           <el-input
-            placeholder="请输入地址"
+            :placeholder="$t('projectManage.pleaseEnterAddress')"
             v-model="basicForm.address"
           />
         </el-form-item>
-        <el-form-item label="联系人" prop="contactPerson">
+        <el-form-item :label="$t('projectManage.contactPerson')" prop="contactPerson">
           <el-input
-            placeholder="请输入联系人"
+            :placeholder="$t('projectManage.pleaseEnterContactPerson')"
             v-model="basicForm.contactPerson"
           />
         </el-form-item>
-        <el-form-item label="联系方式" prop="contactMethod">
-          <el-input placeholder="请输入手机号或座机号或邮箱地址" v-model="basicForm.contactMethod" />
+        <el-form-item :label="$t('projectManage.contactMethod')" prop="contactMethod">
+          <el-input :placeholder="$t('projectManage.pleaseEnterContactMethod')" v-model="basicForm.contactMethod" />
         </el-form-item>
       </el-form>
 
       <el-form
-        v-if="active === 1"
+        v-if="active === 1 && otherForm"
         label-width="145px"
         class="form"
         ref="otherForm"
         :model="otherForm"
         :rules="otherFormRules"
       >
-        <el-form-item label="电站图片" prop="plantImage">
+        <el-form-item :label="$t('projectManage.plantImage')" prop="plantImage">
           <file-upload @getImageUrl="getImageUrl"></file-upload>
         </el-form-item>
-        <el-form-item style="margin-top: -10px;" label="所在地区" prop="region">
+        <el-form-item style="margin-top: -10px;" :label="$t('projectManage.region')" prop="region">
           <el-select v-model="otherForm.region" placeholder="">
             <template v-for="(item, index) in countryList">
               <el-option
@@ -97,67 +89,71 @@
             </template>
           </el-select>
         </el-form-item>
-        <el-form-item label="经纬度">
+        <el-form-item :label="$t('projectManage.lngAndLat')">
           <el-input
-            placeholder="请输入经纬度"
+            :placeholder="$t('projectManage.pleaseSelectLngAndLat')"
             v-model="computedLngAndLat"
             @focus="innerVisible = true"
           />
         </el-form-item>
-        <el-form-item label="电站时区" prop="zone">
+        <el-form-item :label="$t('projectManage.zone')" prop="zone">
           <el-input
-            placeholder="请输入电站时区"
+            :placeholder="$t('projectManage.pleaseEnterZone')"
             v-model="otherForm.zone"
           />
         </el-form-item>
-        <el-form-item label="安全运行开始时间" prop="safeRunDate">
+        <el-form-item :label="$t('projectManage.safeRunDate')" prop="safeRunDate">
           <el-date-picker
             v-model="otherForm.safeRunDate"
             type="date"
-            placeholder="选择日期">
+            :placeholder="$t('projectManage.pleaseEnterSafeRunDate')">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="电站简介" prop="remark">
+        <el-form-item :label="$t('projectManage.remark')" prop="remark">
           <el-input
             type="textarea"
             :rows="3"
-            placeholder="请输入电站简介"
+            :placeholder="$t('projectManage.pleaseEnterRemark')"
             v-model="otherForm.remark"
           />
         </el-form-item>
       </el-form>
       <div class="btn-box">
-        <el-button class="btn" v-if="active == 1" @click="prev">上一步</el-button>
-        <el-button class="btn" v-if="active == 0" @click="next">下一步</el-button>
-        <el-button class="btn" type="primary" v-if="active == 1" @click="submitForm">提交</el-button>
+        <el-button class="btn" v-if="active == 1" @click="prev">{{$t("projectManage.prev")}}</el-button>
+        <el-button class="btn" v-if="active == 0" @click="next">{{$t("projectManage.next")}}</el-button>
+        <el-button class="btn" type="primary" v-if="active == 1" @click="submitForm">{{$t("projectManage.submit")}}</el-button>
       </div>
     </new-dialog>
 
     <el-dialog
       width="58%"
-      title="选择经纬度"
+      :title="$t('projectManage.selectLngAndLat')"
       :visible.sync="innerVisible"
       append-to-body
       :before-close="closeMap">
       <map-test @getLngAndLat="getLngAndLat"></map-test>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="closeMap">取 消</el-button>
-        <el-button type="primary" @click="getFinLngAndLat">确 定</el-button>
+        <el-button @click="closeMap">{{$t("common.cancelButtonText")}}</el-button>
+        <el-button type="primary" @click="getFinLngAndLat">{{$t("common.confirmButtonText")}}</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import NewDialog from "@/components/newDialog/index.vue";
 import countryJSON from "@/utils/countryList";
 import service from "@/utils/request";
 import moment from 'moment';
 import MapTest from "@/components/map/index.vue";
 import FileUpload from "@/components/fileUpload/index.vue";
+import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import i18n from "@/language";
 
 @Component({
   components: {
+    Treeselect,
     NewDialog,
     MapTest,
     FileUpload
@@ -165,71 +161,113 @@ import FileUpload from "@/components/fileUpload/index.vue";
 })
 export default class HomeDialog extends Vue {
   @Prop(String) title!: string;
+  @Prop(Object) currentProject!: any;
   innerVisible = false;
   active = 0;
   isShow = false;
 
   basicForm: any = {
-    compyId: "",
-    compyName: "",
-    projectName: "",
-    plantName: "",
-    gridConnectionDate: "",
-    address: "",
-    contactPerson: "",
-    contactMethod: ""
+    compyId: undefined,
+    compyName: this.currentProject.compyName,
+    projectName: this.currentProject.projectName,
+    plantName: this.currentProject.plantName,
+    gridConnectionDate: this.currentProject.gridConnectionDate,
+    address: this.currentProject.address,
+    contactPerson: this.currentProject.contactPerson,
+    contactMethod: this.currentProject.contactMethod,
   };
   otherForm = {
-    plantImage: "",
-    region: "中国",
-    longitude: 0,
-    latitude: 0,
-    zone: "",
-    safeRunDate: "",
-    remark: ""
+    plantImage: this.currentProject.plantImage,
+    region: this.currentProject.region,
+    longitude: this.currentProject.longitude,
+    latitude: this.currentProject.latitude,
+    zone: this.currentProject.zone,
+    safeRunDate: this.currentProject.safeRunDate,
+    remark: this.currentProject.remark
   };
   lngAndLat: string[] = [];
   basicFormRules: any = {
-    compyName: [
-      { required: true, message: "请选择所属公司", trigger: "blur" },
+    compyId: [
+      { required: true, message: i18n.t(`projectManage.pleaseSelectCompany`), trigger: "input" },
     ],
     projectName: [
-      { required: true, message: "请输入项目名称", trigger: "blur" },
+      { required: true, message: i18n.t(`projectManage.pleaseEnterProjectName`), trigger: "blur" },
     ],
     plantName: [
-      { required: true, message: "请输入电站名称", trigger: "blur" },
+      { required: true, message: i18n.t(`projectManage.pleaseEnterPlantName`), trigger: "blur" },
     ],
     gridConnectionDate: [
-      { required: true, message: "请选择并网时间", trigger: "blur" },
+      { required: true, message: i18n.t(`projectManage.pleaseSelectGridConnectionDate`), trigger: "blur" },
     ],
     address: [
-      { required: false, message: "请输入地址", trigger: "blur" },
+      { required: false, message: i18n.t(`projectManage.pleaseEnterAddress`), trigger: "blur" },
     ],
     contactPerson: [
-      { required: false, message: "请输入联系人", trigger: "blur" },
+      { required: false, message: i18n.t(`projectManage.pleaseEnterContactPerson`), trigger: "blur" },
     ],
   }
   otherFormRules: any = {
-    plantImage: [{ required: false, message: "请选择电站图片", trigger: "blur" }],
+    plantImage: [
+      { required: false, message: i18n.t(`projectManage.pleaseSelectPlantImage`), trigger: "blur" }
+    ],
     region: [
-      { required: false, message: "请选择所在地区", trigger: "blur" },
+      { required: false, message: i18n.t(`projectManage.pleaseSelectRegion`), trigger: "blur" },
     ],
     safeRunDate: [
-      { required: false, message: "请选择安全运行开始时间", trigger: "blur" },
+      { required: false, message: i18n.t(`projectManage.pleaseEnterSafeRunDate`), trigger: "blur" },
     ]
   };
   countryList = countryJSON;
-  isShowTree = false;
   companyList = [];
 
   get computedLngAndLat() {
     return this.lngAndLat.toString();
   }
 
+  @Watch("currentProject", { immediate: true, deep: true })
+  getCurrentDProject(newVal: any, oldVal: any) {
+    // console.log(newVal, oldVal, `nnnnn`);
+    if(newVal){
+      this.basicForm.compyId = newVal.compyId;
+      this.basicForm.compyName = newVal.compyName;
+      this.basicForm.projectName = newVal.projectName;
+      this.basicForm.plantName = newVal.plantName;
+      this.basicForm.gridConnectionDate = newVal.gridConnectionDate;
+      this.basicForm.address = newVal.address;
+      this.basicForm.contactPerson = newVal.contactPerson;
+      this.basicForm.contactMethod = newVal.contactMethod;
+      this.otherForm.plantImage = newVal.plantImage;
+      this.otherForm.region = newVal.region;
+      this.otherForm.longitude = newVal.longitude;
+      this.otherForm.latitude = newVal.latitude;
+      this.otherForm.zone = newVal.zone;
+      this.otherForm.safeRunDate = newVal.safeRunDate;
+      this.otherForm.remark = newVal.remark;
+    }
+  }
+
   created(): void{
     this.getCompanyList();
   }
 
+  /** 转换菜单数据结构 */
+  normalizer(node: any) {
+    if (node.children && !node.children.length) {
+      delete node.children;
+    }
+    return {
+      id: node.compyId,
+      label: node.compyName,
+      children: node.children,
+    };
+  }
+
+  // Treeselect 触发校验
+  changeCompyId(): void{
+    this.$nextTick(() => {
+      (this.$refs["basicForm"] as any).validateField("compyId");
+    })
+  }
   closeMap(): void{
     this.innerVisible = false;
   }
@@ -238,7 +276,7 @@ export default class HomeDialog extends Vue {
     this.otherForm.plantImage = url;
   }
   getLngAndLat(payload: any): void{
-    console.log(payload.position, "获取经纬度");
+    // console.log(payload.position, "获取经纬度");
     this.lngAndLat = payload.position;
     this.otherForm.longitude = payload.position[0];
     this.otherForm.latitude = payload.position[1];
@@ -247,22 +285,6 @@ export default class HomeDialog extends Vue {
     this.innerVisible = false;
   }
 
-  changeSelectTree(): void{
-    this.isShowTree = !this.isShowTree;
-  }
-  hideParentClick(e: any): void{
-    var isOther = e.relatedTarget == null || e.relatedTarget.closest("div.el-tree") == null || e.relatedTarget.closest("div.el-tree").id != "floatTree";
-    if(isOther){
-      this.isShowTree = false;
-    }else{
-      e.target.focus();
-    }
-  }
-  selectCompany(data:any, Node:any): void{
-    this.basicForm.compyId = data.compyId;
-    this.basicForm.compyName = data.compyName;
-    this.isShowTree = false;
-  }
   getCompanyList(): void{
     service({
       method: "get",
@@ -272,7 +294,6 @@ export default class HomeDialog extends Vue {
         if (res && res.data.code === 200) {
           let list = res.data.data || [];
           this.companyList = list;
-          // console.log("公司列表", this.companyList);
         }
       })
       .catch((err) => {
@@ -302,45 +323,83 @@ export default class HomeDialog extends Vue {
   submitForm(): void {
     // 提交
     (this.$refs["otherForm"] as any).validate((valid: boolean) => {
-      console.log(valid);
       if(valid){
-        const paramsData = {
-          compyId: this.basicForm.compyId, // 公司id 所属公司
-          projectName: this.basicForm.projectName, // 项目名称
-          plantName: this.basicForm.plantName, // 电站名称
-          gridConnectionDate: moment(this.basicForm.gridConnectionDate).valueOf(), // 并网时间
-          projectType: "00", // 项目类型 默认传"00"
-          address: this.basicForm.address, // 地址
-          contactPerson: this.basicForm.contactPerson, // 联系人
-          contactMethod: this.basicForm.contactMethod, // 联系方式
-          plantImage: this.otherForm.plantImage, // 电站图片
-          region: this.otherForm.region, // 国家或地区（存储编码）
-          longitude: this.otherForm.longitude, // 经度
-          latitude: this.otherForm.latitude, // 纬度
-          safeRunDate: this.otherForm.safeRunDate || 0, // 安全运行开始时间
-          status: "0", // 项目状态（0正常 1停用） 默认传0
-          zone: this.otherForm.zone, // 时区
-          remark: this.otherForm.remark // 备注
-        };
-        service({
-          method: "post",
-          url: "/api/business/EmsProject",
-          data: paramsData,
-        })
-          .then((res) => {
-            if (res && res.data.code === 200) {
-              this.$message({
-                message: "添加成功",
-                center: true,
-                type: "success"
-              });
-              this.isShow = false;
-              this.$emit("fetchData");
-            }
+        if(this.currentProject.projectId != undefined){
+          const paramsData = {
+            compyId: this.basicForm.compyId, // 公司id 所属公司
+            projectName: this.basicForm.projectName, // 项目名称
+            plantName: this.basicForm.plantName, // 电站名称
+            projectType: this.currentProject.projectType, // 项目类型 默认传"00"
+            gridConnectionDate: moment(this.basicForm.gridConnectionDate).valueOf(), // 并网时间
+            address: this.basicForm.address, // 地址
+            contactPerson: this.basicForm.contactPerson, // 联系人
+            contactMethod: this.basicForm.contactMethod, // 联系方式
+            plantImage: this.otherForm.plantImage, // 电站图片
+            region: this.otherForm.region, // 国家或地区（存储编码）
+            longitude: this.otherForm.longitude, // 经度
+            latitude: this.otherForm.latitude, // 纬度
+            safeRunDate: moment(this.otherForm.safeRunDate).valueOf() || 0, // 安全运行开始时间
+            status: this.currentProject.status, // 项目状态（0正常 1停用） 默认传0
+            zone: this.otherForm.zone || "", // 时区
+            remark: this.otherForm.remark || "" // 备注
+          };
+          console.log(this.currentProject, paramsData);
+          service({
+            method: "put",
+            url: "/api/business/EmsProject",
+            data: paramsData,
           })
-          .catch((err) => {
-            console.log(err);
-          });
+            .then((res) => {
+              if (res && res.data.code === 200) {
+                this.$message({
+                  message: i18n.t(`common.editSuccess`) as string,
+                  type: "success"
+                });
+                this.isShow = false;
+                this.$emit("fetchData");
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }else{
+          const paramsData = {
+            compyId: this.basicForm.compyId, // 公司id 所属公司
+            projectName: this.basicForm.projectName, // 项目名称
+            plantName: this.basicForm.plantName, // 电站名称
+            gridConnectionDate: moment(this.basicForm.gridConnectionDate).valueOf(), // 并网时间
+            projectType: "00", // 项目类型 默认传"00"
+            address: this.basicForm.address, // 地址
+            contactPerson: this.basicForm.contactPerson, // 联系人
+            contactMethod: this.basicForm.contactMethod, // 联系方式
+            plantImage: this.otherForm.plantImage, // 电站图片
+            region: this.otherForm.region, // 国家或地区（存储编码）
+            longitude: this.otherForm.longitude, // 经度
+            latitude: this.otherForm.latitude, // 纬度
+            safeRunDate: moment(this.otherForm.safeRunDate).valueOf() || 0, // 安全运行开始时间
+            status: "0", // 项目状态（0正常 1停用） 默认传0
+            zone: this.otherForm.zone, // 时区
+            remark: this.otherForm.remark // 备注
+          };
+          service({
+            method: "post",
+            url: "/api/business/EmsProject",
+            data: paramsData,
+          })
+            .then((res) => {
+              if (res && res.data.code === 200) {
+                this.$message({
+                  message: i18n.t(`common.addSuccess`) as string,
+                  type: "success"
+                });
+                this.isShow = false;
+                this.$emit("fetchData");
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
       }
     });
   }

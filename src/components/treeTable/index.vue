@@ -19,6 +19,10 @@
       :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       @row-click="handleRowClick"
     >
+      <template slot="empty">
+        <img class="empty-img" src="@/assets/images/icon_no_data.png"/>
+        <p class="empty-text">{{$t("common.noData")}}</p>
+      </template>
       <el-table-column
         v-for="(item, i) in theadColumns"
         :key="i"
@@ -91,16 +95,6 @@ export default class TreeTable extends Vue {
     return resultItem
   }
 
-  // getRow(list: any, row: any){
-  //   const list1 = JSON.parse(JSON.stringify(list));
-  //    if(!list1 || !list1.length || !row) return;
-  //   while (list1.length) {
-  //     const item = list.shift();
-  //     if (item['compyId'] === row['compyId']) return item;
-  //     if (item.children) list1.push(item.children);
-  //   }
-  // }
-
   clearSelectedRow(): void{ // 取消行选中
     // 是个嵌套数组， children可能有无数级
     this.$nextTick(() => {
@@ -116,6 +110,16 @@ export default class TreeTable extends Vue {
   }
   .el-table .current-row > td {
     background: transparent !important;
+  }
+  .empty-img{
+    display: block;
+    width: 100px;
+    height: auto;
+    margin: 20px auto;
+  }
+  .empty-text{
+    line-height: 30px;
+    margin: 0 0 15px;
   }
 }
 </style>

@@ -6,9 +6,9 @@
           <el-select v-model="form.deviceType" :placeholder="$t('common.pleaseSelect')">
             <el-option
               v-for="item in deviceList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              :key="item.dictValue"
+              :label="item.desc"
+              :value="item.dictValue"
             >
             </el-option>
           </el-select>
@@ -23,7 +23,7 @@
           <el-input v-model="form.SNNumber" :placeholder="$t('deviceList.pleaseEnterSNNumber')"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" icon="el-icon-search" size="mini">{{$t("common.search")}}</el-button>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="fetchData">{{$t("common.search")}}</el-button>
           <el-button icon="el-icon-refresh" size="mini" @click="resetForm">{{$t("common.reset")}}</el-button>
         </el-form-item>
       </el-form>
@@ -31,9 +31,14 @@
     </div>
     <div class="table-wrapper">
       <e-table
+        :loading="listLoading"
         :tableCloumns="theadColumns"
         :tableData="list"
-      ></e-table>
+      >
+      <template slot="devType" slot-scope="scope">
+        {{getDeviceTypeLabel(scope.value)}}
+      </template>
+      </e-table>
       <div class="pagination-box">
         <el-pagination
           background
@@ -48,6 +53,7 @@
 
     <device-dialog
       ref="deviceDialog"
+      :deviceList="deviceList"
       :title="deviceDialogTitle"
       :current-device="currentDevice"
       @fetchData="fetchData"
@@ -56,13 +62,14 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { IOption, ITheadColums, ITableList } from "@/utils/interface";
+import { ITheadColums, ITableList } from "@/utils/interface";
 import ETable from "@/components/eTable/index.vue";
 import DeviceDialog from "@/views/projectDetails/deviceList/components/dialog.vue";
 import service from "@/utils/request";
-import moment from 'moment';
+import moment from "moment";
 import { Form } from "element-ui";
 import i18n from "@/language";
+import { getLable } from "@/utils";
 
 interface IDevice {
   devName: string;
@@ -80,6 +87,7 @@ interface IDevice {
   },
 })
 export default class DeviceList extends Vue {
+  private listLoading = false;
   private projectId:any = "";
   private total = 0;
   private page = 1;
@@ -91,16 +99,7 @@ export default class DeviceList extends Vue {
     deviceName: "",
     SNNumber: "",
   };
-  deviceList: IOption[] = [
-    {
-      value: 1,
-      label: "设备1",
-    },
-    {
-      value: 2,
-      label: "设备2",
-    },
-  ];
+  deviceList: any = [];
   theadColumns: ITheadColums[] = [
     {
       text: i18n.t(`deviceList.deviceName`) as string,// 设备名称
@@ -117,6 +116,7 @@ export default class DeviceList extends Vue {
     {
       text: i18n.t(`deviceList.deviceType`) as string, // 设备类型
       field: "devType",
+      slot: true
     },
     {
       text: i18n.t(`deviceList.deviceModel`) as string, // 设备型号
@@ -177,17 +177,40 @@ export default class DeviceList extends Vue {
 
   created(): void{
     this.projectId = this.$route.query.id; // projectId
-    this.fetchData();
+    this.getDeviceType();
+  }
+
+  async getDeviceType(){ // 获取设备类型
+    await service({
+      method: "get",
+      url: `/api/system/dict/data/type/device_type`
+    })
+      .then((res) => {
+        if (res && res.data.code === 200) {
+          let list = res.data.data;
+          for(let i = 0, len = list.length; i < len; i++){
+            list[i]["desc"] = i18n.t(`deviceList.${list[i].dictLabel}`);
+          }
+          this.deviceList = list;
+          this.fetchData();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  getDeviceTypeLabel(value: string | number){
+    return getLable(this.deviceList, value, 'dictValue', 'desc');
   }
 
   fetchData(): void{
     const paramsData = {
-      DevId: 1,
+      DevId: undefined,
       ProjectId: this.projectId || 1,
       DevName: this.form.deviceName,
       DevSn: this.form.SNNumber,
       DevAddress: "",
-      DevType: "",
+      DevType: this.form.deviceType,
       DevModel: "",
       Company: "",
       Brand: "",
@@ -199,6 +222,7 @@ export default class DeviceList extends Vue {
       Sort: "",
       SortType: "ascending"
     };
+    this.listLoading = true;
     service({
       method: "get",
       url: "/api/business/EmsDevice/list",
@@ -209,6 +233,7 @@ export default class DeviceList extends Vue {
           this.list = res.data.data.result || [];
           this.total = res.data.data.totalNum || 0;
         }
+        this.listLoading = false;
       })
       .catch((err) => {
         console.log(err);

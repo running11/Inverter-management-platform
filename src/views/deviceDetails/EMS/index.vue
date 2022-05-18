@@ -33,6 +33,8 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import BasicInfo from "../components/basicInfo.vue";
+import service from "@/utils/request";
+import qs from "qs";
 interface DataItem {
   label: string;
   value: string;
@@ -84,7 +86,26 @@ export default class emsDetails extends Vue {
     },
   ];
   created(): void {
-    console.log("123");
+    // console.log("123");
+    this.getEMSRealTimeData();
+  }
+
+  getEMSRealTimeData(): void {
+    service({
+      method: "post",
+      url: "/api2/api/Third/Rtd/DeviceData",
+      params: {
+        sn: "1065602052002"
+      },
+    })
+      .then((res) => {
+        if (res && res.data.code === 200) {
+          console.log(JSON.parse(res.data.data), `第二个服务地址，前面加/api2`);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 }
 </script>

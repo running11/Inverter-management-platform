@@ -29,6 +29,29 @@ export function queryParentNode(node: any, name: string, temp = undefined) {
   return parentNode;
 }
 
+/**
+ * 递归-----查询 树组件 父节点
+ * @param {Object} node      树的源数据
+ * @param {Object} name      节点的name
+ * @returns {Object} temp    返回的父节点数据
+ */
+export function getTreeItem(node: any, name: string) {
+  let result: any = null;
+  for (let i = 0; i < node.length; i++) {
+    const obj = node[i];
+    if (obj.name === name) {
+      result = obj;
+      return result;
+    }else{
+      if(obj.children){
+        result = getTreeItem(obj.children, name);
+        if (result) return result;
+      }
+    }
+  }
+  // return result;
+}
+
 // 判断是否为数组
 const isArr = (origin: any): boolean => {
   const str = "object Array";
@@ -106,4 +129,18 @@ export function decrypt(data: any) {
   });
   const decryptedStr = decrypt.toString(CryptoJS.enc.Utf8);
   return decryptedStr.toString();
+}
+
+/** 
+ * 根据传入的值，返回对应的中文name，常用的地方是表格那里
+ * @param {list}      源数据
+ * @param {id}        传入的值
+ * @returns {string}
+ */
+export function getLable(list: [], id: number | string, value: any, label: string){
+  if(id != '' && Array.isArray(list) && list.length != 0){
+    return !list.find(item => item[value] == id) ? id : list.find(item => item[value] == id)![label];
+  }else{
+    return id;
+  }
 }
