@@ -251,7 +251,7 @@ export const routes: Array<RouteConfig> = [
             name: "roleManage",
             component: () => import("@/views/setting/roleManage/index.vue"),
             meta: {
-              title: "角色管理",
+              title: "menus.roleManage",//角色管理
             },
           },
           {
@@ -259,7 +259,7 @@ export const routes: Array<RouteConfig> = [
             name: "menuManage",
             component: () => import("@/views/setting/menuManage/index.vue"),
             meta: {
-              title: "菜单管理",
+              title: "menus.menuManage",//菜单管理
             },
           },
           {

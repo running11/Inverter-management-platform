@@ -1,11 +1,11 @@
 <template>
   <div class="main-wrapper">
-    <div class="title">用户管理</div>
+    <div class="title">{{$t("userManage.title")}}</div>
     <div class="content-box">
       <div class="left">
         <el-input
           v-model="compyName"
-          placeholder="请输入公司名称"
+          :placeholder="text.pleaseEnterCompanyName"
           clearable
           prefix-icon="el-icon-search"
           class="mt"
@@ -27,27 +27,27 @@
             :model="queryParams"
             ref="queryForm"
             :inline="true"
-            label-width="78px"
+            label-width="120px"
           >
-            <el-form-item label="用户名称" prop="userName">
+            <el-form-item :label="text.userName" prop="userName">
               <el-input
                 v-model="queryParams.userName"
-                placeholder="请输入用户名"
+                :placeholder="text.pleaseUserName"
                 class="wd"
               ></el-input>
             </el-form-item>
 
-            <el-form-item label="手机" prop="phonenumber">
+            <el-form-item :label="text.phone" prop="phonenumber">
               <el-input
                 v-model="queryParams.phonenumber"
-                placeholder="请输入手机号"
+                :placeholder="text.pleasePhone"
                 class="wd"
               ></el-input>
             </el-form-item>
-            <el-form-item label="状态" prop="status">
+            <el-form-item :label="text.userStatus" prop="status">
               <el-select
                 v-model="queryParams.status"
-                placeholder="用户状态"
+                :placeholder="text.userStatus"
                 clearable
                 class="wd"
               >
@@ -59,7 +59,7 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item label="创建时间">
+            <el-form-item :label="text.createTime">
               <el-date-picker
                 v-model="dateRange"
                 class="wd"
@@ -67,8 +67,8 @@
                 value-format="yyyy-MM-dd"
                 type="daterange"
                 range-separator="-"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
+                :start-placeholder="text.startTime"
+                :end-placeholder="text.endTime"
               ></el-date-picker>
             </el-form-item>
             <el-form-item>
@@ -76,10 +76,10 @@
                 type="primary"
                 icon="el-icon-search"
                 @click="handleQuery"
-                >搜索</el-button
+                >{{$t("common.search")}}</el-button
               >
               <el-button icon="el-icon-refresh" @click="resetQuery"
-                >重置</el-button
+                >{{$t("common.reset")}}</el-button
               >
             </el-form-item>
           </el-form>
@@ -92,19 +92,19 @@
                 plain
                 icon="el-icon-upload2"
                 @click="handleImport"
-                >导入</el-button
+                >{{$t("common.importBtn")}}</el-button
               >
               <el-button
                 type="warning"
                 plain
                 icon="el-icon-download"
-                size="mini"
+                
                 @click="handleExport"
-                >导出
+                >{{$t("common.exportBtn")}}
               </el-button>
             </div>
             <div class="toolbar-right">
-              <el-button type="primary" @click="handleAdd">新增</el-button>
+              <el-button type="primary" @click="handleAdd">{{$t("common.new")}}</el-button>
               <popover-column
                 :columnsAllList="theadColumns"
                 :selectedCloumns="theadSelectedColumns"
@@ -206,7 +206,7 @@
         :on-submit="submitForm"
       >
         <el-form
-          label-width="100px"
+          label-width="120px"
           class="form"
           ref="form"
           :model="form"
@@ -214,20 +214,20 @@
         >
           <el-row v-if="form.userId == undefined">
             <el-col :lg="12">
-              <el-form-item label="用户名" prop="userName">
+              <el-form-item :label="text.userName" prop="userName">
                 <el-input
                   :disabled="form.userId != undefined"
                   v-model="form.userName"
-                  placeholder="请输入用户名(用于登陆)"
+                  :placeholder="text.pleaseUserName"
                 />
               </el-form-item>
             </el-col>
             <el-col :lg="12">
-              <el-form-item label="用户密码" prop="password">
+              <el-form-item  :label="text.userPassword" prop="password">
                 <el-input
                   :disabled="form.userId != undefined"
                   v-model="form.password"
-                  placeholder="请输入用户密码"
+                  :placeholder="text.pleaseUserPassword"
                   type="password"
                 />
               </el-form-item>
@@ -236,40 +236,40 @@
 
           <el-row>
             <el-col :lg="12">
-              <el-form-item label="用户昵称" prop="nickName">
+              <el-form-item :label="text.nickName" prop="nickName">
                 <el-input
                   v-model="form.nickName"
-                  placeholder="请输入用户昵称"
+                  :placeholder="text.pleaseNickName"
                 />
               </el-form-item>
             </el-col>
             <el-col :lg="12">
-              <el-form-item label="归属公司" prop="compyId">
+              <el-form-item :label="text.company" prop="compyId">
                 <treeselect
                   :normalizer="normalizer"
                   v-model="form.compyId"
                   :options="compyOptions"
                   :show-count="true"
-                  placeholder="请选择归属公司"
+                  :placeholder="text.pleaseCompany"
                 />
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :lg="12">
-              <el-form-item label="手机号码" prop="phonenumber">
+              <el-form-item :label="text.phone" prop="phonenumber">
                 <el-input
                   v-model="form.phonenumber"
-                  placeholder="请输入手机号码"
+                  :placeholder="text.pleasePhone"
                   maxlength="11"
                 />
               </el-form-item>
             </el-col>
             <el-col :lg="12">
-              <el-form-item label="电子邮箱">
+              <el-form-item :label="text.email">
                 <el-input
                   v-model="form.email"
-                  placeholder="请输入邮箱"
+                  :placeholder="text.pleaseEmail"
                   maxlength="50"
                 />
               </el-form-item>
@@ -277,8 +277,8 @@
           </el-row>
           <el-row>
             <el-col :lg="12">
-              <el-form-item label="用户性别">
-                <el-select v-model="form.sex" placeholder="请选择">
+              <el-form-item :label="text.sex">
+                <el-select v-model="form.sex" :placeholder="text.please">
                   <el-option
                     v-for="dict in sexOptions"
                     :key="dict.dictValue"
@@ -289,7 +289,7 @@
               </el-form-item>
             </el-col>
             <el-col :lg="12">
-              <el-form-item label="用户状态">
+              <el-form-item :label="text.userStatus">
                 <el-radio-group v-model="form.status">
                   <el-radio
                     v-for="dict in statusOptions"
@@ -303,8 +303,8 @@
           </el-row>
           <el-row>
             <el-col :lg="12">
-              <el-form-item label="岗位">
-                <el-select v-model="form.postIds" multiple placeholder="请选择">
+              <el-form-item :label="text.post">
+                <el-select v-model="form.postIds" multiple :placeholder="text.please">
                   <el-option
                     v-for="item in postOptions"
                     :key="item.postId"
@@ -317,11 +317,11 @@
               </el-form-item>
             </el-col>
             <el-col :lg="12">
-              <el-form-item label="角色">
+              <el-form-item :label="text.role">
                 <el-select
                   v-model="form.roleIds"
                   multiple
-                  placeholder="请选择"
+                  :placeholder="text.please"
                   @change="selectRole($event)"
                 >
                   <el-option
@@ -338,11 +338,11 @@
           </el-row>
           <el-row>
             <el-col :lg="24">
-              <el-form-item label="备注">
+              <el-form-item :label="text.remark">
                 <el-input
                   v-model="form.remark"
                   type="textarea"
-                  placeholder="请输入内容"
+                  :placeholder="text.pleaseContent"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -390,6 +390,7 @@ import { getDicts } from "@/api/dict/data";
 //   isLeaf?: boolean;
 //   children?: TreeData[];
 // }
+import i18n from "@/language";
 interface IUser {
   [propName: string]: any;
 }
@@ -403,6 +404,32 @@ interface IUser {
   },
 })
 export default class userManage extends Vue {
+  text = {
+    userName : i18n.t('userManage.userName'),
+    pleaseEnterCompanyName:i18n.t('companyManage.pleaseEnterCompanyName'),
+    pleaseUserName: i18n.t('userManage.pleaseUserName'),
+    phone:i18n.t('userManage.phone'),
+    userStatus:i18n.t('userManage.userStatus'),
+    createTime:i18n.t('userManage.createTime'),
+    resetPassword:i18n.t('userManage.resetPassword'),
+    pleasePhone:i18n.t('userManage.pleasePhone'),
+    nickName:i18n.t('userManage.nickName'),
+    userPassword:i18n.t('userManage.userPassword'),
+    pleaseUserPassword:i18n.t('userManage.pleaseUserPassword'),
+    pleaseNickName: i18n.t('userManage.pleaseNickName'),
+    company: i18n.t('userManage.company'),
+    pleaseCompany: i18n.t('userManage.pleaseCompany'),
+    email: i18n.t('userManage.email'),
+    startTime: i18n.t('userManage.startTime'),
+    endTime: i18n.t('userManage.endTime'),
+    sex: i18n.t('userManage.sex'),
+    please: i18n.t('userManage.please'),
+    role:i18n.t('userManage.role'),
+    post:i18n.t('userManage.post'),
+    remark:i18n.t('userManage.remark'),
+    pleaseContent:i18n.t('userManage.pleaseContent'),
+    pleaseEmail:i18n.t('userManage.pleaseEmail')
+  }
   defaultProps = {
     children: "children",
     label: "compyName",
@@ -448,55 +475,55 @@ export default class userManage extends Vue {
   // 表单校验
   rules: any = {
     userName: [
-      { required: true, message: "用户名称不能为空", trigger: "blur" },
+      { required: true, message: i18n.t('userManage.pleaseUserName') as string, trigger: "blur" },
     ],
     nickName: [
-      { required: true, message: "用户昵称不能为空", trigger: "blur" },
+      { required: true, message: i18n.t('userManage.pleaseNickName') as string, trigger: "blur" },
     ],
     compyId: [
-      { required: true, message: "归属公司不能为空", trigger: "change" },
+      { required: true, message: i18n.t('userManage.pleaseCompany') as string, trigger: "change" },
     ],
     password: [
-      { required: true, message: "用户密码不能为空", trigger: "blur" },
+      { required: true, message:i18n.t('userManage.pleaseUserPassword') as string, trigger: "blur" },
     ],
     email: [
-      { required: false, message: "邮箱地址不能为空", trigger: "blur" },
+      { required: false, message: i18n.t('userManage.pleaseEmail') as string, trigger: "blur" },
       {
         type: "email",
-        message: "'请输入正确的邮箱地址",
+        message: i18n.t('userManage.pleaseEmail') as string,
         trigger: ["blur", "change"],
       },
     ],
     phonenumber: [
-      { required: false, message: "手机号码不能为空", trigger: "blur" },
+      { required: false, message: i18n.t('userManage.pleasePhone') as string, trigger: "blur" },
       {
         pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
-        message: "请输入正确的手机号码",
+        message: i18n.t('userManage.pleasePhone') as string,
         trigger: "blur",
       },
     ],
   };
   theadColumns: ITheadColums[] = [
     {
-      text: "编号",
+      text: i18n.t('userManage.number') as string,
       field: "userId",
       disabled: true,
-      width: 56,
+      width: 60,
       // slot: true,
       // render: (h: any, params: any) => {
       //   return h("div", {}, [h("span", {}, `${params.index + 1}`)]);
       // },
     },
     {
-      text: "登录名",
+      text: i18n.t('userManage.loginName') as string,
       field: "userName",
     },
     {
-      text: "昵称",
+      text: i18n.t('userManage.nickName') as string,
       field: "nickName",
     },
     {
-      text: "头像",
+      text: i18n.t('userManage.avatar') as string,
       field: "avatar",
       slot: true,
       render: (h: any, params: any) => {
@@ -510,15 +537,15 @@ export default class userManage extends Vue {
       },
     },
     {
-      text: "公司",
+      text: i18n.t('userManage.company') as string,
       field: "compyName",
     },
     {
-      text: "手机号码",
+      text: i18n.t('userManage.phone') as string,
       field: "phonenumber",
     },
     {
-      text: "用户状态",
+      text: i18n.t('userManage.userStatus') as string,
       field: "status",
       slot: true,
       width: "90",
@@ -540,15 +567,16 @@ export default class userManage extends Vue {
       },
     },
     {
-      text: "创建时间",
+      text: i18n.t('userManage.createTime') as string,
       field: "createTime",
       sortable: true,
       width: "180",
     },
     {
-      text: "设置",
+      text: i18n.t('userManage.config') as string,
       field: "passwordConfig",
       slot: true,
+      width: "180",
       disabled: true,
       render: (h: any, params: any) => {
         return h("div", {}, [
@@ -562,13 +590,14 @@ export default class userManage extends Vue {
                 },
               },
             },
-            "重置密码"
+            this.text.resetPassword
+
           ),
         ]);
       },
     },
     {
-      text: "操作",
+      text: i18n.t('common.operation') as string,
       field: "specialOperation",
       slot: true,
       width: "90px",
@@ -605,44 +634,44 @@ export default class userManage extends Vue {
     },
 
     {
-      text: "登录IP",
+      text: i18n.t('userManage.loginIp') as string,
       field: "loginIP",
     },
     {
-      text: "最后登录时间",
+      text: i18n.t('userManage.lastTime') as string, 
       field: "loginDate",
     },
 
     {
-      text: "创建人",
+      text: i18n.t('userManage.creatPeople') as string, 
       field: "createBy",
     },
     {
-      text: "备注",
+      text: i18n.t('userManage.remark') as string, 
       field: "remark",
     },
   ];
   theadSelectedColumns: ITheadColums[] = [
     {
-      text: "编号",
+      text: i18n.t('userManage.number') as string,
       field: "userId",
       disabled: true,
-      width: 56,
+      width: 60,
       // slot: true,
       // render: (h: any, params: any) => {
       //   return h("div", {}, [h("span", {}, `${params.index + 1}`)]);
       // },
     },
     {
-      text: "登录名",
+      text: i18n.t('userManage.loginName') as string,
       field: "userName",
     },
     {
-      text: "昵称",
+      text: i18n.t('userManage.nickName') as string,
       field: "nickName",
     },
     {
-      text: "头像",
+      text: i18n.t('userManage.avatar') as string,
       field: "avatar",
       slot: true,
       render: (h: any, params: any) => {
@@ -656,15 +685,15 @@ export default class userManage extends Vue {
       },
     },
     {
-      text: "公司",
+      text: i18n.t('userManage.company') as string,
       field: "compyName",
     },
     {
-      text: "手机号码",
+      text:  i18n.t('userManage.phone') as string,
       field: "phonenumber",
     },
     {
-      text: "用户状态",
+      text: i18n.t('userManage.userStatus') as string,
       field: "status",
       slot: true,
       width: "90",
@@ -686,14 +715,15 @@ export default class userManage extends Vue {
       },
     },
     {
-      text: "创建时间",
+      text: i18n.t('userManage.createTime') as string,
       field: "createTime",
       sortable: true,
       width: "180",
     },
     {
-      text: "设置",
+      text: i18n.t('userManage.config') as string,
       field: "passwordConfig",
+      width:"180",
       slot: true,
       disabled: true,
       render: (h: any, params: any) => {
@@ -708,13 +738,14 @@ export default class userManage extends Vue {
                 },
               },
             },
-            "重置密码"
+             this.text.resetPassword
+           
           ),
         ]);
       },
     },
     {
-      text: "操作",
+      text: i18n.t('common.operation') as string,
       field: "specialOperation",
       slot: true,
       width: "90px",
@@ -795,7 +826,7 @@ export default class userManage extends Vue {
         if (response && response.data.code === 200) {
           this.userList = response.data.data.result;
           this.total = response.data.data.totalNum;
-          console.log(this.userList, "列表");
+          //console.log(this.userList, "列表");
         }
         this.listLoading = false;
       }
@@ -809,7 +840,7 @@ export default class userManage extends Vue {
     })
       .then((res) => {
         if (res && res.data.code === 200) {
-          console.log("公司", res.data.data);
+          //console.log("公司", res.data.data);
           this.compyOptions = res.data.data;
         }
       })
@@ -879,11 +910,11 @@ export default class userManage extends Vue {
 
   /** 重置密码按钮操作 */
   handleResetPwd(row: IUser) {
-    this.$prompt("请输入新密码", "提示", {
-      confirmButtonText: "确定",
-      cancelButtonText: "取消",
+    this.$prompt(i18n.t(`userManage.tipsContent`) as string,i18n.t(`common.prompt`) as string, {
+      confirmButtonText: i18n.t(`common.confirmButtonText`) as string,
+      cancelButtonText: i18n.t(`common.cancelButtonText`) as string,
       inputPattern: /^\S{6,}$/,
-      inputErrorMessage: "密码不少于六位数",
+      inputErrorMessage: i18n.t(`userManage.inputErrorMessage`) as string,
     })
       .then((res: any) => {
         console.log(res.value);
@@ -891,16 +922,16 @@ export default class userManage extends Vue {
           if (response && response.data.code === 200) {
             this.$message({
               type: "success",
-              message: "密码修改成功",
+              message: i18n.t(`common.editSuccess`) as string,
             });
           }
         });
       })
       .catch(() => {
-        this.$message({
-          type: "info",
-          message: "取消输入",
-        });
+        // this.$message({
+        //   type: "info",
+        //   message: "取消输入",
+        // });
       });
   }
   /** 新增按钮操作 */
@@ -913,7 +944,7 @@ export default class userManage extends Vue {
         this.postOptions = response.data.data.posts;
         this.roleOptions = response.data.data.roles;
         this.open = true;
-        this.title = "新增用户";
+        this.title = i18n.t(`userManage.addCompany`) as string;
       }
       this.form.password = this.initPassword;
     });
@@ -926,7 +957,7 @@ export default class userManage extends Vue {
     getUser(userId).then((response) => {
       if (response && response.data.code === 200) {
         var data = response.data.data;
-        console.log(data, "xiugai");
+        //console.log(data, "xiugai");
         this.form = {
           userId: data.user.userId,
           compyId: data.user.compyId,
@@ -945,7 +976,7 @@ export default class userManage extends Vue {
         this.postOptions = response.data.data.posts;
 
         this.open = true;
-        this.title = "修改用户";
+        this.title = i18n.t(`userManage.editCompany`) as string;
         // console.log(this.form.roleIds);
       }
     });
@@ -954,11 +985,11 @@ export default class userManage extends Vue {
   handleDelete(row: IUser) {
     const userId = row.userId;
     this.$confirm(
-      '是否确认删除用户编号为"' + row.userName + '"的数据项?',
-      "警告",
+       i18n.t(`userManage.deleContent`) as string +' '+row.userName + '?',
+      i18n.t(`common.prompt`) as string,
       {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+      confirmButtonText: i18n.t(`common.confirmButtonText`) as string,
+      cancelButtonText: i18n.t(`common.cancelButtonText`) as string,
         type: "warning",
       }
     )
@@ -967,26 +998,26 @@ export default class userManage extends Vue {
           if (res && res.data.code === 200) {
             this.$message({
               showClose: true,
-              message: "删除成功",
+              message: i18n.t(`common.deleteSuccess`) as string,
               type: "success",
             });
             this.getList();
           }
         });
       })
-      .catch(() => {
-        this.$message({
-          type: "info",
-          message: "已取消删除",
-        });
-      });
+      // .catch(() => {
+      //   // this.$message({
+      //   //   type: "info",
+      //   //   message: "已取消删除",
+      //   // });
+      // });
   }
   // 用户状态修改
   handleStatusChange(row: any) {
-    let text = row.status == "0" ? "停用" : "启用";
-    this.$confirm("确认要" + text + '"' + row.userName + '"用户吗?', "警告", {
-      confirmButtonText: "确定",
-      cancelButtonText: "取消",
+    let text = row.status == "0" ? i18n.t(`userManage.stop`) as string :  i18n.t(`userManage.startUsing`) as string;
+    this.$confirm(i18n.t(`userManage.isSure`) as string + text + '"' + row.userName + '?',  i18n.t(`common.prompt`) as string, {
+      confirmButtonText: i18n.t(`common.confirmButtonText`) as string,
+      cancelButtonText: i18n.t(`common.cancelButtonText`) as string,
       type: "warning",
     })
       .then(() => {
@@ -995,48 +1026,39 @@ export default class userManage extends Vue {
           if (res && res.data.code === 200) {
             this.$message({
               type: "success",
-              message: text + "成功",
+              message: text + i18n.t(`userManage.succ`) as string ,
             });
             this.getList();
           }
         });
       })
 
-      .catch(() => {
-        // console.log(row.status);
-      });
+      // .catch(() => {
+      //   // console.log(row.status);
+      // });
   }
   /** 导出按钮操作 */
   handleExport() {
     const queryParams = this.queryParams;
-    this.$confirm("是否确认导出所有用户数据项?", "警告", {
-      confirmButtonText: "确定",
-      cancelButtonText: "取消",
+    this.$confirm( i18n.t(`userManage.tipExport`) as string, i18n.t(`common.prompt`) as string, {
+      confirmButtonText: i18n.t(`common.confirmButtonText`) as string,
+      cancelButtonText: i18n.t(`common.cancelButtonText`) as string,
       type: "warning",
     })
       .then(() => {
         exportUser(queryParams).then((response: any) => {
           console.log(response);
           if (response && response.data.code === 200) {
-            this.$message({
-              type: "success",
-              message: "导出成功",
-            });
             download(response.data.data.path);
-          } else {
-            this.$message({
-              type: "error",
-              message: "导出失败",
-            });
-          }
+          } 
         });
       })
-      .catch(() => {
-        this.$message({
-          type: "info",
-          message: "已取消导出",
-        });
-      });
+      // .catch(() => {
+      //   // this.$message({
+      //   //   type: "info",
+      //   //   message: "已取消导出",
+      //   // });
+      // });
   }
 
   //关闭弹出框,取消按钮
@@ -1049,13 +1071,12 @@ export default class userManage extends Vue {
     (this.$refs["form"] as Form).validate((valid: any) => {
       if (valid) {
         // console.log(JSON.stringify(this.form), "提交添加用户");
-
         if (this.form.userId != undefined) {
           updateUser(this.form).then((response) => {
             if (response && response.data.code === 200) {
               this.$message({
                 type: "success",
-                message: "修改成功",
+                message: i18n.t(`common.editSuccess`) as string,
               });
               this.open = false;
               this.getList();
@@ -1066,9 +1087,8 @@ export default class userManage extends Vue {
             if (response && response.data.code === 200) {
               this.$message({
                 type: "success",
-                message: "新增成功",
+                message: i18n.t(`common.addSuccess`) as string,
               });
-
               this.open = false;
               this.getList();
             }
@@ -1102,7 +1122,7 @@ export default class userManage extends Vue {
     display: flex;
 
     .left {
-      width: 260px;
+      width: 240px;
       padding-right: 20px;
       box-sizing: border-box;
 
