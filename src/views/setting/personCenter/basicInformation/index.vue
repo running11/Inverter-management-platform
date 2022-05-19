@@ -8,69 +8,35 @@
         ref="userFrom"
         status-icon
         :hide-required-asterisk="isHide"
+        :rules="rules"
       >
-        <el-form-item
-          label="用户名称"
-          prop="userName"
-          :rules="{
-            required: true,
-            message: '用户名称不能为空',
-            trigger: 'blur',
-          }"
-        >
+        <el-form-item :label="text.userName" prop="userName">
           <el-input v-model="userInfo.userName" clearable></el-input>
         </el-form-item>
-        <el-form-item
-          label="邮件地址"
-          prop="email"
-          :rules="[
-            { required: true, message: '请输入邮箱地址', trigger: 'blur' },
-            {
-              type: 'email',
-              message: '请输入正确的邮箱地址',
-              trigger: ['blur', 'change'],
-            },
-          ]"
-        >
+        <el-form-item :label="text.email" prop="email">
           <el-input v-model="userInfo.email" clearable></el-input>
         </el-form-item>
-        <el-form-item
-          label="手机号码"
-          prop="phonenumber"
-          :rules="[
-            {
-              required: true,
-              trigger: 'blur',
-              validator: validPhone,
-            },
-          ]"
-        >
+        <el-form-item :label="text.phone" prop="phonenumber">
           <el-input v-model="userInfo.phonenumber" clearable></el-input>
         </el-form-item>
-        <el-form-item
-          label="角色"
-          prop="nickName"
-          :rules="{
-            required: true,
-            message: '请输入角色',
-            trigger: 'blur',
-          }"
-        >
+        <el-form-item :label="text.nickName" prop="nickName">
           <el-input v-model="userInfo.nickName" clearable></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submit">提交</el-button>
-          <el-button @click="resetForm">重置</el-button>
+          <el-button type="primary" @click="submit">{{
+            $t("personCenter.preserve")
+          }}</el-button>
+          <el-button @click="resetForm">{{ $t("common.reset") }}</el-button>
         </el-form-item>
       </el-form>
     </el-col>
     <el-col :span="12" :offset="3">
       <div class="rightbox">
-        <span>头像</span>
+        <span>{{ text.avatar }}</span>
         <div class="imgbox" v-if="imageUrl">
           <img :src="imageUrl" alt="" />
         </div>
-         <div class="imgbox" v-else>
+        <div class="imgbox" v-else>
           <img :src="defaultImageUrl" alt="" />
         </div>
       </div>
@@ -83,7 +49,9 @@
         :http-request="handelUpload"
         :before-upload="beforeUpload"
       >
-        <el-button size="small" icon="el-icon-upload2">更换头像</el-button>
+        <el-button size="small" icon="el-icon-upload2">{{
+          text.changeAvatar
+        }}</el-button>
       </el-upload>
     </el-col>
   </el-row>
@@ -93,6 +61,8 @@ import { Component, Vue } from "vue-property-decorator";
 import { Form } from "element-ui";
 import { isvalidPhone } from "@/utils/validate";
 import service from "@/utils/request";
+import i18n from "@/language";
+
 interface user {
   // [key: string]: any;
   userId: number;
@@ -106,6 +76,14 @@ interface user {
 
 @Component
 export default class basicInformation extends Vue {
+  text = {
+    userName: i18n.t("userManage.userName"),
+    email: i18n.t("userManage.email"),
+    phone: i18n.t("userManage.phone"),
+    nickName: i18n.t("userManage.nickName"),
+    avatar: i18n.t("userManage.avatar"),
+    changeAvatar: i18n.t("personCenter.changeAvatar"),
+  };
   private labelPosition = "top";
   private isHide = true;
   private userInfo: user = {
@@ -119,9 +97,28 @@ export default class basicInformation extends Vue {
   };
   private postGroup = ""; //接口返回字段，暂时不知道怎么用
   private roles = []; //接口返回字段，暂时不知道怎么用
-  private defaultImageUrl = require("@/assets/images/icon_electricity.png")
+  private defaultImageUrl = require("@/assets/images/icon_electricity.png");
   private imageUrl = "";
-
+  rules = {
+    userName: [
+      {
+        required: true,
+        message: i18n.t("personCenter.userNameTip"),
+        trigger: "blur",
+      },
+    ],
+    email: [
+      { required: false, trigger: "blur" },
+      {
+        type: "email",
+        message: i18n.t("personCenter.enterEmail"),
+        trigger: ["blur", "change"],
+      },
+    ],
+    phonenumber: [
+      { required: false, trigger: "blur", validator: this.validPhone },
+    ],
+  };
   mounted(): void {
     this.fetchData();
   }
@@ -144,9 +141,7 @@ export default class basicInformation extends Vue {
           this.userInfo.remark = res.data.data.user.remark;
           this.userInfo.phonenumber = res.data.data.user.phonenumber;
           this.userInfo.sex = parseInt(res.data.data.user.sex);
-          this.imageUrl = res.data.data.user.avatar || this.defaultImageUrl
-           
-          
+          this.imageUrl = res.data.data.user.avatar || this.defaultImageUrl;
         }
       })
       .catch((err) => {
@@ -156,9 +151,9 @@ export default class basicInformation extends Vue {
 
   validPhone(rule: any, value: number, callback: any): void {
     if (!value) {
-      callback(new Error("请输入手机号码"));
+      callback(new Error(i18n.t("userManage.pleasePhone") as string));
     } else if (!isvalidPhone(value)) {
-      callback(new Error("请输入正确的11位手机号码"));
+      callback(new Error(i18n.t("personCenter.succPhone") as string));
     } else {
       callback();
     }
@@ -167,10 +162,8 @@ export default class basicInformation extends Vue {
   submit(): void {
     (this.$refs.userFrom as Form).validate((valid: boolean) => {
       if (valid) {
-        alert(valid);
-
         const paramsData = JSON.stringify(this.userInfo);
-        console.log(paramsData, "提交");
+        //console.log(paramsData, "提交");
         service({
           method: "put",
           url: "/api/system/user/profile",
@@ -179,17 +172,16 @@ export default class basicInformation extends Vue {
         })
           .then((res) => {
             if (res && res.data.code === 200) {
-              console.log("33333", res.data);
+              this.$message({
+                type: "success",
+                message: i18n.t("personCenter.editSuccess") as string,
+              });
             }
           })
           .catch((err) => {
             console.log(err);
           });
       }
-      // else {
-      //   alert("error submit!!");
-      //   return false;
-      // }
     });
   }
 
@@ -198,16 +190,19 @@ export default class basicInformation extends Vue {
   }
 
   // 上传预处理
-  beforeUpload(file:any) {
+  beforeUpload(file: any) {
     if (file.type.indexOf("image/") == -1) {
-      alert("文件格式错误，请上传图片类型,如：JPG，PNG后缀的文件。");
+      this.$message({
+        type: "warning",
+        message: i18n.t("personCenter.fileTip") as string,
+      });
+      return false;
     } else {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
-      //  console.log(typeof(reader.result))
+        //  console.log(typeof(reader.result))
         this.imageUrl = reader.result as string;
-        
       };
     }
   }
@@ -259,7 +254,6 @@ export default class basicInformation extends Vue {
       margin: 0 auto;
       height: 200px;
     }
-   
   }
 }
 </style>

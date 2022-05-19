@@ -22,19 +22,19 @@
       >
     
       <i class="el-icon-upload"></i>
-      <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+      <div class="el-upload__text">{{$t("userManage.tipUpload")}}<em>{{$t("userManage.upload")}}</em></div>
       <div class="el-upload__tip text-center" slot="tip">
         <div class="el-upload__tip" slot="tip">
           <el-checkbox v-model="upload.updateSupport" />
-          是否更新已经存在的用户数据
+          {{$t("userManage.isUpdate")}}
         </div>
-        <span>仅允许导入xls、xlsx格式文件。</span>
+        <span>{{$t("userManage.fileFormat")}}</span>
         <el-link
           type="primary"
           :underline="false"
           style="font-size: 12px; vertical-align: baseline"
           @click="importTemplate"
-          >下载模板</el-link
+          >{{$t("userManage.downloadTemplate")}}</el-link
         >
       </div>
     </el-upload>
@@ -49,6 +49,7 @@ import { Component, Vue } from "vue-property-decorator";
 import NewDialog from "@/components/newDialog/index.vue";
 import { getToken } from "@/utils/auth";
 import { download } from "@/api/user/user";
+import i18n from "@/language";
 @Component({
   components: {
     NewDialog,
@@ -60,7 +61,7 @@ export default class UserDialog extends Vue {
     // 是否显示弹出层（用户导入）
     open: false,
     // 弹出层标题（用户导入）
-    title: "用户导入",
+    title: i18n.t('userManage.userImport'),
     // 是否禁用上传
     isUploading: false,
     // 是否更新已经存在的用户数据
@@ -72,7 +73,6 @@ export default class UserDialog extends Vue {
   };
   /** 导入按钮操作 */
   handleImport() {
-    this.upload.title = "用户导入";
     this.upload.open = true;
   }
   /** 下载模板操作 */
@@ -88,7 +88,7 @@ export default class UserDialog extends Vue {
     this.upload.open = false;
     this.upload.isUploading = false;
     (this.$refs.upload as any).clearFiles();
-    this.$alert(response.msg, "导入结果", { dangerouslyUseHTMLString: true });
+    this.$alert(response.msg, "", { dangerouslyUseHTMLString: true });
     this.$emit("fetchData");
   }
   // 提交上传文件

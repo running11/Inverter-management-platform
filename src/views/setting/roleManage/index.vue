@@ -1,7 +1,7 @@
 <template>
   <div class="main-wrapper">
     <div class="title-box">
-      <div class="title">角色管理</div>
+      <div class="title">{{$t("roleManage.title")}}</div>
     </div>
 
     <div class="search-box">
@@ -11,18 +11,18 @@
         :inline="true"
         label-width="78px"
       >
-        <el-form-item label="角色名称" prop="roleName">
+        <el-form-item :label="text.roleName" prop="roleName">
           <el-input
             v-model="queryParams.roleName"
-            placeholder="请输入角色名称"
+            :placeholder="text.pleaseEnterRoleName"
             @keyup.enter.native="handleQuery"
           ></el-input>
         </el-form-item>
 
-        <el-form-item label="状态" prop="status">
+        <el-form-item :label="text.roleStatus" prop="status">
           <el-select
             v-model="queryParams.status"
-            placeholder="角色状态"
+            :placeholder="text.roleStatus"
             clearable
           >
             <el-option
@@ -35,19 +35,19 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="handleQuery"
-            >搜索</el-button
+            >{{$t("common.search")}}</el-button
           >
-          <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
+          <el-button icon="el-icon-refresh" @click="resetQuery">{{$t("common.reset")}}</el-button>
         </el-form-item>
       </el-form>
       <div class="toolbar-right">
-        <el-button type="primary" @click="handleAdd">新增</el-button>
+        <el-button type="primary" @click="handleAdd">{{$t("common.new")}}</el-button>
         <el-button
           type="warning"
           plain
           icon="el-icon-download"
           @click="handleExport"
-          >导出
+          >{{$t("common.exportBtn")}}
         </el-button>
       </div>
     </div>
@@ -72,26 +72,26 @@
 
     <!-- 添加或修改角色配置对话框 -->
     <new-dialog
-      width="28%"
+      width="38%"
       :show="open"
       :title="title"
       :on-close="cancel"
       :on-submit="submitForm"
     >
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="110px">
         <el-row>
           <el-col>
-            <el-form-item label="角色名称" prop="roleName">
-              <el-input v-model="form.roleName" placeholder="请输入角色名称" />
+            <el-form-item :label="text.roleName" prop="roleName">
+              <el-input v-model="form.roleName" :placeholder="text.pleaseEnterRoleName" />
             </el-form-item>
           </el-col>
           <el-col>
-            <el-form-item label="权限字符" prop="roleKey">
-              <el-input v-model="form.roleKey" placeholder="请输入权限字符" />
+            <el-form-item :label="text.permissionCharacter" prop="roleKey">
+              <el-input v-model="form.roleKey" :placeholder="text.pleaseEnterRoleKey" />
             </el-form-item>
           </el-col>
           <el-col>
-            <el-form-item label="角色顺序" prop="roleSort">
+            <el-form-item :label="text.roleSort" prop="roleSort">
               <el-input-number
                 v-model="form.roleSort"
                 controls-position="right"
@@ -115,7 +115,7 @@
             </el-form-item>
           </el-col> -->
           <el-col>
-            <el-form-item label="状态" prop="status">
+            <el-form-item :label="text.roleStatus" prop="status">
               <el-radio-group v-model="form.status">
                 <el-radio
                   v-for="dict in statusOptions"
@@ -157,11 +157,11 @@
             </el-form-item>
           </el-col> -->
           <el-col :lg="24">
-            <el-form-item label="备注" prop="remark">
+            <el-form-item :label="text.remark" prop="remark">
               <el-input
                 v-model="form.remark"
                 type="textarea"
-                placeholder="请输入内容"
+                :placeholder="text.pleaseContent"
               ></el-input>
             </el-form-item>
           </el-col>
@@ -191,6 +191,7 @@ import {
   changeRoleStatus,
   download,
 } from "@/api/role/role";
+import i18n from "@/language";
 @Component({
   components: {
     ETable,
@@ -199,6 +200,17 @@ import {
   },
 })
 export default class RoleManage extends Vue {
+   text = {
+    roleName : i18n.t('roleManage.roleName'),
+    pleaseEnterRoleName:i18n.t('roleManage.pleaseEnterRoleName'),
+    roleStatus:i18n.t('roleManage.roleStatus'),
+    dataAuthority:i18n.t('roleManage.dataAuthority'),
+    permissionCharacter:i18n.t('roleManage.permissionCharacter'),
+    pleaseEnterRoleKey:i18n.t('roleManage.pleaseEnterRoleKey'),
+    remark:i18n.t('userManage.remark'),
+    roleSort:i18n.t('roleManage.roleSort'),
+    pleaseContent:i18n.t('userManage.pleaseContent'),
+  }
   loading = false;
   open = false;
   total = 0;
@@ -213,20 +225,20 @@ export default class RoleManage extends Vue {
   statusOptions = [];
   theadSelectedColumns: ITheadColums[] = [
     {
-      text: "编号",
+      text:i18n.t('userManage.number') as string,
       field: "roleId",
       disabled: true,
     },
     {
-      text: "角色名称",
+      text:i18n.t('roleManage.roleName') as string,
       field: "roleName",
     },
     {
-      text: "权限字符",
+      text: i18n.t('roleManage.permissionCharacter') as string,
       field: "roleKey",
     },
     {
-      text: "状态",
+      text: i18n.t('roleManage.roleStatus') as string,
       field: "status",
       slot: true,
       render: (h: any, params: any) => {
@@ -261,16 +273,16 @@ export default class RoleManage extends Vue {
       },
     },
     {
-      text: "创建时间",
+      text: i18n.t('userManage.createTime') as string,
       field: "createTime",
       sortable: true,
     },
     {
-      text: "备注",
+      text:  i18n.t('userManage.remark') as string, 
       field: "remark",
     },
     {
-      text: "设置",
+      text: i18n.t('userManage.config') as string,
       field: "passwordConfig",
       slot: true,
       disabled: true,
@@ -288,16 +300,17 @@ export default class RoleManage extends Vue {
                   },
                 },
               },
-              "数据权限"
+             this.text.dataAuthority
             ),
           ]);
         }
       },
     },
     {
-      text: "操作",
+      text: i18n.t('common.operation') as string,
       field: "specialOperation",
       slot: true,
+      width: "90px",
       disabled: true,
       render: (h: any, params: any) => {
         if (params.row.roleId != 1) {
@@ -344,11 +357,11 @@ export default class RoleManage extends Vue {
   // 表单校验
   rules = {
     roleName: [
-      { required: true, message: "角色名称不能为空", trigger: "blur" },
+      { required: true, message:i18n.t('roleManage.ruleName') as string, trigger: "blur" },
     ],
-    roleKey: [{ required: true, message: "权限字符不能为空", trigger: "blur" }],
+    roleKey: [{ required: true, message: i18n.t('roleManage.ruleRoleKey') as string, trigger: "blur" }],
     roleSort: [
-      { required: true, message: "角色顺序不能为空", trigger: "blur" },
+      { required: true, message: i18n.t('roleManage.ruleRoleSort') as string, trigger: "blur" },
     ],
   };
   created() {
@@ -365,7 +378,7 @@ export default class RoleManage extends Vue {
     listRole(addDateRange(this.queryParams, this.dateRange)).then(
       (response) => {
         if (response && response.data.code === 200) {
-          console.log(response.data, "角色");
+          //console.log(response.data, "角色");
           this.roleList = response.data.data.result;
           this.total = response.data.data.totalNum;
         }
@@ -380,11 +393,11 @@ export default class RoleManage extends Vue {
   }
   // 角色状态修改
   handleStatusChange(row: any, val: any) {
-    console.log(row.status, "*******");
-    let text = row.status == "0" ? "停用" : "启用";
-    this.$confirm("确认要" + text + '"' + row.roleName + '"用户吗?', "警告", {
-      confirmButtonText: "确定",
-      cancelButtonText: "取消",
+    //console.log(row.status, "*******");
+    let text = row.status == "0" ? i18n.t(`userManage.stop`) as string :  i18n.t(`userManage.startUsing`) as string;
+     this.$confirm(i18n.t(`userManage.isSure`) as string + text + '"' + row.roleName + '?', i18n.t(`common.prompt`) as string, {
+      confirmButtonText: i18n.t(`common.confirmButtonText`) as string,
+      cancelButtonText: i18n.t(`common.cancelButtonText`) as string,
       type: "warning",
     })
       .then(() => {
@@ -392,7 +405,7 @@ export default class RoleManage extends Vue {
           if (res && res.data.code === 200) {
             this.$message({
               type: "success",
-              message: text + "成功",
+               message: text + i18n.t(`userManage.succ`) as string ,
             });
             this.getList();
           }
@@ -400,21 +413,21 @@ export default class RoleManage extends Vue {
       })
 
       .catch(() => {
-        this.$message({
-          type: "info",
-          message: "已取消",
-        });
+        // this.$message({
+        //   type: "info",
+        //   message: "已取消",
+        // });
       });
   }
   /** 删除按钮操作 */
   handleDelete(row: any) {
     const roleId = row.roleId;
     this.$confirm(
-      '是否确认删除用户编号为"' + row.roleName + '"的数据项?',
-      "警告",
+       i18n.t(`roleManage.deleRole`) as string+'"' + row.roleName + '"?',
+      i18n.t(`common.prompt`) as string,
       {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+      confirmButtonText: i18n.t(`common.confirmButtonText`) as string,
+      cancelButtonText: i18n.t(`common.cancelButtonText`) as string,
         type: "warning",
       }
     )
@@ -423,7 +436,7 @@ export default class RoleManage extends Vue {
           if (res && res.data.code === 200) {
             this.$message({
               showClose: true,
-              message: "删除成功",
+              message: i18n.t(`common.deleteSuccess`) as string,
               type: "success",
             });
             this.getList();
@@ -431,10 +444,10 @@ export default class RoleManage extends Vue {
         });
       })
       .catch(() => {
-        this.$message({
-          type: "info",
-          message: "已取消删除",
-        });
+        // this.$message({
+        //   type: "info",
+        //   message: "已取消删除",
+        // });
       });
   }
   // 表单重置
@@ -472,7 +485,7 @@ export default class RoleManage extends Vue {
   handleAdd() {
     this.reset();
     this.open = true;
-    this.title = "添加角色";
+    this.title = i18n.t(`roleManage.addRole`) as string;
   }
   /** 修改按钮操作 ok */
   handleUpdate(row: any) {
@@ -483,7 +496,7 @@ export default class RoleManage extends Vue {
         this.form = response.data.data;
       }
       this.open = true;
-      this.title = "修改角色";
+      this.title = i18n.t(`roleManage.editRole`) as string;
     });
   }
   /** 提交按钮 */
@@ -495,7 +508,7 @@ export default class RoleManage extends Vue {
             if (response && response.data.code === 200) {
               this.$message({
                 type: "success",
-                message: "修改成功",
+                message: i18n.t('common.editSuccess') as string,
               });
               this.open = false;
               this.getList();
@@ -511,7 +524,7 @@ export default class RoleManage extends Vue {
             if (response && response.data.code === 200) {
               this.$message({
                 type: "success",
-                message: "新增成功",
+                message: i18n.t('common.addSuccess') as string,
               });
               this.open = false;
               this.getList();
@@ -542,9 +555,9 @@ export default class RoleManage extends Vue {
   //导出
   handleExport() {
     const queryParams = this.queryParams;
-    this.$confirm("是否确认导出所有角色数据项?", "警告", {
-      confirmButtonText: "确定",
-      cancelButtonText: "取消",
+    this.$confirm(i18n.t(`roleManage.tipExport`) as string,i18n.t(`common.prompt`) as string, {
+      confirmButtonText: i18n.t(`common.confirmButtonText`) as string,
+      cancelButtonText: i18n.t(`common.cancelButtonText`) as string,
       type: "warning",
     })
       .then(function () {

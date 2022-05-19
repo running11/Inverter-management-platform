@@ -7,25 +7,25 @@
     :on-close="closeDialog"
     :on-submit="submitFileForm"
   >
-    <el-form :model="form" label-width="80px" ref="form">
-      <el-form-item label="权限字符">
+    <el-form :model="form" label-width="120px" ref="form">
+      <el-form-item :label="text.permissionCharacter">
         {{ form.roleKey }}
       </el-form-item>
-      <el-form-item label="数据权限">
+      <el-form-item :label="text.dataAuthority">
         <el-checkbox
           v-model="menuExpand"
           @change="handleCheckedTreeExpand($event)"
-          >展开/折叠</el-checkbox
+          >{{$t("roleManage.openOrClose")}}</el-checkbox
         >
         <el-checkbox
           v-model="menuNodeAll"
           @change="handleCheckedTreeNodeAll($event)"
-          >全选/全不选</el-checkbox
+          >{{$t("roleManage.allOrNo")}}</el-checkbox
         >
         <el-checkbox
           v-model="form.menuCheckStrictly"
           @change="handleCheckedTreeConnect($event)"
-          >父子联动</el-checkbox
+          >{{$t("roleManage.linkage")}}</el-checkbox
         >
         <el-tree
           class="tree-border"
@@ -34,7 +34,7 @@
           ref="menu"
           node-key="id"
           :check-strictly="!form.menuCheckStrictly"
-          empty-text="加载中，请稍后"
+          empty-text=""
           :filter-node-method="menuFilterNode"
           :props="defaultProps"
         ></el-tree>
@@ -47,6 +47,8 @@ import { Component, Prop, Watch, Vue } from "vue-property-decorator";
 import NewDialog from "@/components/newDialog/index.vue";
 import {roleMenuTreeselect} from "@/api/menu/menu";
 import { dataScope } from "@/api/role/role";
+import i18n from "@/language";
+
 interface IRole {
   [propName: string]: any;
 }
@@ -59,7 +61,11 @@ export default class RoleDialog extends Vue {
   @Prop(Object) data!: IRole;
   role = this.data;
   open = false;
-  title = "角色权限分配";
+  title = i18n.t('roleManage.dialogTitle') as string;
+  text = {
+    dataAuthority:i18n.t('roleManage.dataAuthority'),
+    permissionCharacter:i18n.t('roleManage.permissionCharacter'),
+  }
   menuExpand = false;
   menuNodeAll = false;
   form = {
@@ -170,7 +176,7 @@ export default class RoleDialog extends Vue {
           console.log(response.data.data);
           this.$message({
             type: "success",
-            message: "修改成功",
+            message: i18n.t('common.editSuccess') as string,
           });
           this.closeDialog();
         }
