@@ -175,5 +175,11 @@ module.exports = {
     next: "下一步",
     submit: "提交",
     selectLngAndLat: "選擇經緯度"
+  },
+  EmsDetails: {
+    VAi34: "EMS版本號",
+    VAi35: "WebAPI版本號",
+    VAi36: "Web界面版本號",
+    VAi86: "光伏發電總功率"
   }
 };

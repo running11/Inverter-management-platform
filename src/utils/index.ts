@@ -144,3 +144,28 @@ export function getLable(list: [], id: number | string, value: any, label: strin
     return id;
   }
 }
+
+/**
+ * 后端返回的[{last_row(vai34): 0,
+      last_row(vai35): 0,
+      last_row(vai36): 0,
+      last_row(vai86): 0}]
+ * 返回 [{vai34: 0}, {vai35: 0}, ....]
+ * @param {List} node      list
+ * @returns {Object} temp   
+ */
+export function handleArrDimension(list: any){
+  const arr: any = [];
+  const reg = /[^(][a-zA-Z0-9]+(?=\))/g;
+  for(let i = 0; i < list.length; i++) {
+    for(const j in list[i]){
+      const key = j.match(reg)![0];
+      const obj = {
+        key: key,
+        value: list[i][j]
+      }
+      arr.push(obj);
+    }
+  }
+  return arr;
+}

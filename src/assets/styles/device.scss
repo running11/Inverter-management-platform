@@ -1,40 +1,42 @@
 .details-wrapper {
-
-  // padding: 20px;
   .box-card {
     width: 100%;
     margin-bottom: 20px;
-
+    padding: 20px 25px;
+    background-color: $white;
+    box-shadow: 4px 4px 40px rgb(0 0 0 / 5%);
+    box-sizing: border-box;
     .data-box {
-      padding: 15px 20px;
-      background-color: $white;
-
       .item-box {
         display: flex;
-
         .item2 {
           flex: 1;
         }
       }
-
       .item2 {
         width: 100%;
         display: inline-flex;
         flex-direction: column;
         align-items: flex-start;
-        padding-left: 34px;
+        padding-left: 46px;
         box-sizing: border-box;
         position: relative;
         margin: 20px 0;
         span{
+          font-size: 20px;
           color: $main-color;
+          margin-bottom: 4px;
+          .unit{
+            color: $gray;
+            font-size: 14px;
+          }
         }
         .red{
           color: #f00;
         }
         label {
           color: $gray;
-
+          font-size: 15px;
           span {
             color: $gray;
             font-size: 12px;
@@ -43,14 +45,14 @@
         .iconImg {
           position: absolute;
           display: flex;
-          width: 30px;
+          width: 46px;
           height: 100%;
           left:0;
-          justify-content: center;
+          // justify-content: center;
           align-items: center;
           img {
-            width: 24px;
-            height: 24px;
+            width: 36px;
+            height: 36px;
           }
         }
       }
@@ -58,21 +60,33 @@
 
     .title {
       display: inline-block;
-      margin-left: 4px;
       align-self: center;
-      padding: 5px 10px;
-      background-color: $main-color;
-      transform: skewY(-15deg);
-      transform: skewX(-15deg);
+      // background-color: $main-color;
+      // transform: skewY(-15deg);
+      // transform: skewX(-15deg);
+      position: relative;
+      padding-left: 10px;
     }
-
     b {
       color: #fff;
       display: inline-block;
       font-weight: normal;
-      transform: skewY(15deg);
-      transform: skewX(15deg);
+      // transform: skewY(15deg);
+      // transform: skewX(15deg);
+      font-size: 17px;
+      color: $gray;
+      line-height: 22px;
+      vertical-align: top;
     }
-   
+    .title::before{
+      content: "";
+      display: block;
+      width: 3px;
+      height: 22px;
+      background: linear-gradient(179deg,#00c5ff 0%,#237ae4 100%);
+      border-radius: 2px;
+      position: absolute;
+      left: 0;
+    }
   }
 }

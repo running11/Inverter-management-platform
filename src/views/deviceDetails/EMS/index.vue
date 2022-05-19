@@ -16,12 +16,13 @@
               :key="index"
             >
               <i class="iconImg"><img :src="item.iconUrl" alt="" /></i>
-              <span>{{ item.value }}</span>
+              <span>
+                {{ item.value }}
+                <span class="unit">{{item.unitName ? item.unitName : ""}}</span>
+              </span>
               <label
                 >{{ item.label
-                }}<span>{{
-                  item.unitName ? "（" + item.unitName + "）" : ""
-                }}</span></label
+                }}</label
               >
             </div>
           </div>
@@ -34,7 +35,9 @@
 import { Component, Vue } from "vue-property-decorator";
 import BasicInfo from "../components/basicInfo.vue";
 import service from "@/utils/request";
-import qs from "qs";
+import i18n from "@/language";
+import { handleArrDimension } from "@/utils";
+
 interface DataItem {
   label: string;
   value: string;
@@ -85,23 +88,61 @@ export default class emsDetails extends Vue {
       unitName: "kw",
     },
   ];
+  realTimeList: any = [];
+
   created(): void {
-    // console.log("123");
-    this.getEMSRealTimeData();
+    this.getProperList();
+  }
+
+  getProperList(): void{
+    const paramsData = {
+      sn: "1065602052001",
+      code: ["VAi34", "VAi35", "VAi36", "VAi86"]
+    };
+    service({
+      method: "post",
+      url: "/api2/api/Third/Rtd/ProperList",
+      data: paramsData
+    })
+      .then((res) => {
+        if (res && res.data.code === 200) {
+          // console.log(res.data.data, `拿到point点`);
+          let list = res.data.data.result || [];
+          for (let i = 0, len = list.length; i < len; i++) {
+            this.$set(list[i], 'desc', i18n.t(`EmsDetails.${list[i].propertyKey}`));
+          }
+          this.realTimeList = list;
+          this.getEMSRealTimeData();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   getEMSRealTimeData(): void {
     service({
       method: "post",
       url: "/api2/api/Third/Rtd/DeviceData",
-      params: {
-        sn: "1065602052002"
-      },
+      data: {
+        sn: "1065602052001",
+        keys: ["VAi34", "VAi35", "VAi36", "VAi86"]
+      }
     })
       .then((res) => {
         if (res && res.data.code === 200) {
-          console.log(JSON.parse(res.data.data), `第二个服务地址，前面加/api2`);
+          let list = JSON.parse(res.data.data) || [];
+          let newList = handleArrDimension(list);
+          for (let i = 0, len = this.realTimeList.length; i < len; i++) {
+            for (let j = 0, len2 = newList.length; j < len2; j++) {
+              // 两个接口返回的值不一样，转为小写比较
+              if (this.realTimeList[i]["propertyKey"].toLowerCase() === newList[j]["key"].toLowerCase()) {
+                this.$set(this.realTimeList[i], 'value', newList[j]["value"]);
+              }
+            }
+          }
         }
+        console.log(this.realTimeList, `最终的数据`);
       })
       .catch((err) => {
         console.log(err);

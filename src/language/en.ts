@@ -175,5 +175,11 @@ module.exports = {
     next: "Next step",
     submit: "Submit",
     selectLngAndLat: "Select latitude and longitude"
+  },
+  EmsDetails: {
+    VAi34: "EMS version number",
+    VAi35: "WebAPI version number",
+    VAi36: "Web interface version number",
+    VAi86: "Total photovoltaic power"
   }
 };

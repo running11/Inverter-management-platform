@@ -60,7 +60,7 @@ export default class emsDetails extends Vue {
   display: flex;
   background-color: $white;
   .img-box {
-    width: 240px;
+    width: 220px;
     height: 200px;
     margin-right: 40px;
     display: flex;

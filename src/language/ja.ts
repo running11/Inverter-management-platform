@@ -175,5 +175,11 @@ module.exports = {
     next: "次のステップ",
     submit: "参加する",
     selectLngAndLat: "緯度と経度を選択します"
+  },
+  EmsDetails: {
+    VAi34: "EMSバージョン番号",
+    VAi35: "WebAPIバージョン番号",
+    VAi36: "Webインターフェイスのバージョン番号",
+    VAi86: "総太陽光発電"
   }
 };

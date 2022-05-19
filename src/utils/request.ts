@@ -41,7 +41,6 @@ const service = axios.create({
 // http request 拦截器
 service.interceptors.request.use(
   (config: AxiosRequestConfig): AxiosRequestConfig => {
-    console.log(config, `ccccccc`)
     if(process.env.NODE_ENV === "production"){ // 生产环境下所有的接口不带 "/api", 拦截的时候去掉
       console.log("生产环境", config);
       config.url = config.url?.replace("/api", "");

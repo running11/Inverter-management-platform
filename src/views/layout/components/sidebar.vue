@@ -47,6 +47,7 @@ export default class Sidebar extends Vue {
 
   @Watch("$route")
   routechange(to: MenuItem) {
+    console.log(111)
     if (this.getSpecialActiveMenu(to.name)) {
       this.activeMenu = this.getSpecialActiveMenu(to.name) as string;
     } else {
@@ -76,12 +77,12 @@ export default class Sidebar extends Vue {
       ["deviceList", "home"],
       ["powerCurve", "home"],
       ["EmsDetails", "EMS"],
-      ["inverterDetails", "inverter"],
-      ["PcsDetails", "PCS"],
-      ["batteryDetails", "battery"],
-      ["airConditionDetails", "airConditioning"],
-      ["UPSDetails", "UPS"],
-      ["electricityMeterDetails", "electricityMeter"],
+      ["inverterDetails", "Inverter"],
+      ["PcsDetails", "Pcs"],
+      ["batteryDetails", "Bms"],
+      ["airConditionDetails", "Air"],
+      ["UPSDetails", "Ups"],
+      ["electricityMeterDetails", "Meter"],
       ["accessEquipment", "projectManage"],
       ["stringCapacity", "projectManage"],
       ["electricityPrice", "projectManage"],
