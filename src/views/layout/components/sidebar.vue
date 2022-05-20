@@ -47,7 +47,6 @@ export default class Sidebar extends Vue {
 
   @Watch("$route")
   routechange(to: MenuItem) {
-    console.log(111)
     if (this.getSpecialActiveMenu(to.name)) {
       this.activeMenu = this.getSpecialActiveMenu(to.name) as string;
     } else {

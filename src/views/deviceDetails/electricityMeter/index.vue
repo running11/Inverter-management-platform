@@ -9,100 +9,16 @@
         <span class="title"><b>实时数据</b></span>
         <div class="data-box">
           <el-row :gutter="10">
-            <el-col :span="5">
-              <div class="item2">
-                <i class="iconImg"
-                  ><img src="@/assets/images/dl.png" alt=""
-                /></i>
-                <span>5</span>
-                <label>A相电流<span>（A）</span></label>
-              </div>
-              <div class="item2">
-                <i class="iconImg"
-                  ><img src="@/assets/images/dl.png" alt=""
-                /></i>
-                <span>6</span>
-                <label>B相电流<span>（A）</span></label>
-              </div>
-
-              <div class="item2">
-                <i class="iconImg"
-                  ><img src="@/assets/images/dl.png" alt=""
-                /></i>
-                <span>7</span>
-                <label>C相电流<span>（A）</span></label>
-              </div>
-            </el-col>
-            <el-col :span="5">
-              <div class="item2">
-                <i class="iconImg"
-                  ><img src="@/assets/images/dy.png" alt=""
-                /></i>
-                <span>220</span>
-                <label>AB线电压<span>（V）</span></label>
-              </div>
-              <div class="item2">
-                <i class="iconImg"
-                  ><img src="@/assets/images/dy.png" alt=""
-                /></i>
-                <span>220</span>
-                <label>BC线电压<span>（V）</span></label>
-              </div>
-              <div class="item2">
-                <i class="iconImg"
-                  ><img src="@/assets/images/dy.png" alt=""
-                /></i>
-                <span>220</span>
-                <label>CA线电压<span>（V）</span></label>
-              </div>
-            </el-col>
-
-            <el-col :span="5">
-              <div class="item2">
-                <i class="iconImg"
-                  ><img src="@/assets/images/kw.png" alt=""
-                /></i>
-                <span>30</span>
-                <label>有功功率<span>（kw）</span></label>
-              </div>
-              <div class="item2">
-                <i class="iconImg"
-                  ><img src="@/assets/images/kw.png" alt=""
-                /></i>
-                <span>30</span>
-                <label>无功功率<span>（kvar）</span></label>
-              </div>
-              <div class="item2">
-                <i class="iconImg"
-                  ><img src="@/assets/images/kw.png" alt=""
-                /></i>
-                <span>30</span>
-                <label>功率因数</label>
-              </div>
-            </el-col>
-            <el-col :span="5">
-              <div class="item2">
-                <i class="iconImg"
-                  ><img src="@/assets/images/dianl.png" alt=""
-                /></i>
-                <span>30</span>
-                <label>正向有功总能<span>（kwh）</span></label>
-              </div>
-              <div class="item2">
-                <i class="iconImg"
-                  ><img src="@/assets/images/dianl.png" alt=""
-                /></i>
-                <span>30</span>
-                <label>正向无功总能<span>（kwh）</span></label>
-              </div>
-            </el-col>
-            <el-col :span="4">
-              <div class="item2">
-                <i class="iconImg"
-                  ><img src="@/assets/images/pl.png" alt=""
-                /></i>
-                <span>100</span>
-                <label>频率<span>（Hz）</span></label>
+            <el-col :span="item.colNum" v-for="(item, index) in list" :key="index">
+              <div class="item2" v-for="(row, j) in item.arr" :key="j">
+                <i class="iconImg">
+                  <img :src="row.iconUrl" alt=""/>
+                </i>
+                <span>
+                  {{row.value}}
+                  <span class="unit">{{row.unit}}</span>
+                </span>
+                <label>{{row.desc}}</label>
               </div>
             </el-col>
           </el-row>
@@ -114,6 +30,10 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import BasicInfo from "../components/basicInfo.vue";
+import service from "@/utils/request";
+import i18n from "@/language";
+import { handleArrDimension } from "@/utils";
+
 interface DataItem {
   label: string;
   value: string;
@@ -136,6 +56,167 @@ export default class PcsDetails extends Vue {
       value: "1.2",
     },
   ];
+  list: any = [
+    {
+      name: "current",
+      colNum: 5,
+      arr: [
+        {
+          lable: "Ia",
+          iconUrl: require("@/assets/images/dl.png"),
+        },
+        {
+          lable: "Ib",
+          iconUrl: require("@/assets/images/dl.png"),
+        },
+        {
+          lable: "Ic",
+          iconUrl: require("@/assets/images/dl.png"),
+        }
+      ]
+    },
+    {
+      name: "voltage",
+      colNum: 5,
+      arr: [
+        {
+          lable: "Uab",
+          iconUrl: require("@/assets/images/dy.png"),
+        },
+        {
+          lable: "Ubc",
+          iconUrl: require("@/assets/images/dy.png"),
+        },
+        {
+          lable: "Uca",
+          iconUrl: require("@/assets/images/dy.png"),
+        }
+      ]
+    },
+    {
+      name: "power",
+      colNum: 5,
+      arr: [
+        {
+          lable: "Ps",
+          iconUrl: require("@/assets/images/kw.png"),
+        },
+        {
+          lable: "Qs",
+          iconUrl: require("@/assets/images/kw.png"),
+        },
+        {
+          lable: "Pa",
+          iconUrl: require("@/assets/images/kw.png"),
+        }
+      ]
+    },
+        {
+      name: "energy",
+      colNum: 5,
+      arr: [
+        {
+          lable: "EpP",
+          iconUrl: require("@/assets/images/dianl.png"),
+        },
+        {
+          lable: "EpR",
+          iconUrl: require("@/assets/images/dianl.png"),
+        }
+      ]
+    },
+    {
+      name: "frequency",
+      colNum: 4,
+      arr: [
+        {
+          lable: "Pf",
+          iconUrl: require("@/assets/images/pl.png"),
+        },
+        {
+          lable: "Fre",
+          iconUrl: require("@/assets/images/pl.png"),
+        }
+      ]
+    }
+  ]
+
+  realTimeList: any = [];
+
+  created(): void {
+    this.getProperList();
+  }
+
+  getProperList(): void{
+    const paramsData = {
+      sn: "1065602052003",
+      code: ["Ia", "Ib", "Ic", "Uab", "Ubc", "Uca", "Ps", "Qs", "Pa", "Fre", "Pf", "EpP", "EpR"],
+      pageNum: 1,
+      pageSize: 100
+    };
+    service({
+      method: "post",
+      url: "/api2/api/Third/Rtd/ProperList",
+      data: paramsData
+    })
+      .then((res) => {
+        if (res && res.data.code === 200) {
+          // console.log(res.data.data, `拿到point点`);
+          let list = res.data.data.result || [];
+          for (let i = 0, len = list.length; i < len; i++) {
+            this.$set(list[i], 'desc', i18n.t(`electricityMeterDetails.${list[i].propertyKey}`));
+          }
+          this.realTimeList = list;
+          this.getEMSRealTimeData();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  getEMSRealTimeData(): void {
+    service({
+      method: "post",
+      url: "/api2/api/Third/Rtd/DeviceData",
+      data: {
+        sn: "1065602052003",
+        keys: ["Ia", "Ib", "Ic", "Uab", "Ubc", "Uca", "Ps", "Qs", "Pa", "Fre", "Pf", "EpP", "EpR"]
+      }
+    })
+      .then((res) => {
+        if (res && res.data.code === 200) {
+          let list = JSON.parse(res.data.data) || [];
+          if (!list.length) return;
+          let newList = handleArrDimension(list);
+          for (let i = 0, len = this.realTimeList.length; i < len; i++) {
+            for (let j = 0, len2 = newList.length; j < len2; j++) {
+              // 两个接口返回的值不一样，转为小写比较
+              if (this.realTimeList[i]["propertyKey"].toLowerCase() === newList[j]["key"].toLowerCase()) {
+                this.$set(this.realTimeList[i], 'value', newList[j]["value"]);
+              }
+            }
+          }
+        }
+        this.handleRealData();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  handleRealData(): void {
+    for (let i = 0, len = this.list.length; i < len; i++) {
+      for (let j = 0, len2 = this.list[i].arr.length; j < len2; j++) {
+        // console.log(this.list[i].arr[j], `jjjj`);
+        for(let z = 0, len3 = this.realTimeList.length; z < len3; z++) {
+          if (this.realTimeList[z]["propertyKey"].toLowerCase() === this.list[i].arr[j]["lable"].toLowerCase()) {
+            this.list[i].arr[j] = Object.assign({}, this.list[i].arr[j], this.realTimeList[z]);
+          }
+        }
+      }
+    }
+    console.log(this.list, `llllll`);
+    this.$forceUpdate();
+  }
 }
 </script>
 <style lang="scss" scoped>

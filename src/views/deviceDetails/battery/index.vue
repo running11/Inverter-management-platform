@@ -336,14 +336,22 @@ export default class batteryDetails extends Vue {
 @import "@/assets/styles/device.scss";
 .box {
   display: flex;
+  padding: 20px 0;
   .item-box {
     width: 20%;
     margin-right: 1%;
     &:last-child {
       margin-right: 0;
     }
+    ::v-deep.el-card__header{
+      padding: 15px 20px;
+    }
+    ::v-deep.el-card__body{
+      padding: 5px 20px 20px;
+    }
     .header-text {
       span {
+        font-size: 16px;
         font-weight: bold;
       }
     }
@@ -352,6 +360,7 @@ export default class batteryDetails extends Vue {
       justify-content: space-between;
       padding: 10px 0;
       border-bottom: 1px solid $border-color;
+      font-size: 15px;
       span {
         color: $main-color;
         span {

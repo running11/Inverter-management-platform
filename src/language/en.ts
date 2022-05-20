@@ -186,7 +186,25 @@ module.exports = {
     VAi34: "EMS version number",
     VAi35: "WebAPI version number",
     VAi36: "Web interface version number",
-    VAi86: "Total photovoltaic power"
+    VAi86: "Total photovoltaic power",
+    VAi87: "EMS start-stop status",
+    VAi41: "Energy storage off-grid state",
+    VAi22: "Energy storage charge and discharge power"
+  },
+  electricityMeterDetails: {
+    Ia: "A phase current",
+    Ib: "B phase current",
+    Ic: "C phase current",
+    Uab: "AB line voltage",
+    Ubc: "BC line voltage",
+    Uca: "CA line voltage",
+    Ps: "Active power",
+    Qs: "Reactive power",
+    Pa: "Inspecting power",
+    Fre: "Frequent",
+    Pf: "Power Factor",
+    EpP: "Positive total active energ",
+    EpR: "Reverse reactive total energy"
   },
   userManage:{
     title:"User management",
