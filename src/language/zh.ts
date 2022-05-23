@@ -227,7 +227,14 @@ module.exports = {
     StaVal2: "放空",
     StaVal3: "待机",
     StaVal4: "停机",
-    CapacityKwh:"电池堆额定容量"
+    CapacityKwh:"电池堆额定容量",
+    Current:"电池堆电流",
+    Status:"电池状态",
+    Power:"电池堆功率",
+    SOC:"电池堆SOC",
+    SOH:"电池堆SOH",
+    Voltage:"电池堆电压",
+    GroupNum:"接入的电池组组数"
   },
   userManage:{
     title:"用户管理",

@@ -143,8 +143,8 @@
           <div class="item2" v-for="(item,index) in realTimeList" :key="index">
               <i class="iconImg"> 
                 <img src="@/assets/images/dl.png" alt=""/></i>
-              <span>{{item.value}}</span>
-              <label>{{item.propertyName}}<span class="unit">{{item.unit}}</span></label>
+              <span>{{item.value}} <span class="unit">{{item.unit}}</span></span>
+              <label>{{item.propertyName}}</label>
           </div>
         </div>
       </div>

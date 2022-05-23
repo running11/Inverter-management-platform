@@ -109,8 +109,8 @@
                   ><img src="@/assets/images/sbzt.png" alt=""
                 /></i>
                 <span v-if=" item.propertyKey =='Status'">{{item.value | getStatusText}}</span>
-                <span v-else>{{item.value}}</span>
-                <label>{{item.desc}}<span class="unit">{{item.unit}}</span></label>
+                <span v-else>{{item.value}} <span class="unit">{{item.unit}}</span></span>
+                <label>{{item.desc}}</label>
             </div>
         </div>
       </div>
