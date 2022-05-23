@@ -97,7 +97,7 @@ export default class emsDetails extends Vue {
   getProperList(): void{
     const paramsData = {
       sn: "1065602052001",
-      code: ["VAi34", "VAi35", "VAi36", "VAi86"]
+      code: ["VAi87", "VAi41", "VAi22", "VAi86"]
     };
     service({
       method: "post",
@@ -126,7 +126,7 @@ export default class emsDetails extends Vue {
       url: "/api2/api/Third/Rtd/DeviceData",
       data: {
         sn: "1065602052001",
-        keys: ["VAi34", "VAi35", "VAi36", "VAi86"]
+        keys: ["VAi87", "VAi41", "VAi22", "VAi86"]
       }
     })
       .then((res) => {

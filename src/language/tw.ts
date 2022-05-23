@@ -186,7 +186,25 @@ module.exports = {
     VAi34: "EMS版本號",
     VAi35: "WebAPI版本號",
     VAi36: "Web界面版本號",
-    VAi86: "光伏發電總功率"
+    VAi86: "光伏發電總功率",
+    VAi87: "EMS啟停狀態",
+    VAi41: "儲能離並網狀態",
+    VAi22: "儲能充放電功率"
+  },
+  electricityMeterDetails: {
+    Ia: "A相電流",
+    Ib: "B相電流",
+    Ic: "C相電流",
+    Uab: "AB線電壓",
+    Ubc: "BC線電壓",
+    Uca: "CA線電壓",
+    Ps: "有功功率",
+    Qs: "無功功率",
+    Pa: "視在功率",
+    Fre: "頻率",
+    Pf: "功率因素",
+    EpP: "正向有功總電能",
+    EpR: "反向無功總電能"
   },
   userManage: {
     title: "用戶管理",

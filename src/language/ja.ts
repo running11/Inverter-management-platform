@@ -186,7 +186,25 @@ module.exports = {
     VAi34: "EMSバージョン番号",
     VAi35: "WebAPIバージョン番号",
     VAi36: "Webインターフェイスのバージョン番号",
-    VAi86: "総太陽光発電"
+    VAi86: "総太陽光発電",
+    VAi87: "EMSの開始-停止ステータス",
+    VAi41: "エネルギー貯蔵オフグリッド状態",
+    VAi22: "エネルギー貯蔵の充電および放電電力"
+  },
+  electricityMeterDetails: {
+    Ia: "A相電流",
+    Ib: "B相電流",
+    Ic: "C相電流",
+    Uab: "AB線間電圧",
+    Ubc: "BC線間電圧",
+    Uca: "CA線間電圧",
+    Ps: "有効電力",
+    Qs: "無効電力",
+    Pa: "電力を考慮する",
+    Fre: "周波数",
+    Pf: "力率",
+    EpP: "正の総有効エネルギー",
+    EpR: "逆無効総エネルギー"
   },
   userManage:{
     title:"ユーザー管理",

@@ -186,7 +186,25 @@ module.exports = {
     VAi34: "EMS版本号",
     VAi35: "WebAPI版本号",
     VAi36: "Web界面版本号",
-    VAi86: "光伏发电总功率"
+    VAi86: "光伏发电总功率",
+    VAi87: "EMS启停状态",
+    VAi41: "储能离并网状态",
+    VAi22: "储能充放电功率"
+  },
+  electricityMeterDetails: {
+    Ia: "A相电流",
+    Ib: "B相电流",
+    Ic: "C相电流",
+    Uab: "AB线电压",
+    Ubc: "BC线电压",
+    Uca: "CA线电压",
+    Ps: "有功功率",
+    Qs: "无功功率",
+    Pa: "视在功率",
+    Fre: "频率",
+    Pf: "功率因素",
+    EpP: "正向有功总电能",
+    EpR: "反向无功总电能"
   },
   pcsDetails:{
     Battery_current:"直流电流",
