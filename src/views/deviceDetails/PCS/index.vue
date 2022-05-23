@@ -8,7 +8,7 @@
       <div class="box-card">
         <span class="title"><b>实时数据</b></span>
         <div class="data-box">
-          <el-row :gutter="10">
+          <!-- <el-row :gutter="10">
             <el-col :span="5">
               <div class="item2">
                 <i class="iconImg"
@@ -139,7 +139,13 @@
                 <label>频率<span>（Hz）</span></label>
               </div>
             </el-col>
-          </el-row>
+          </el-row> -->
+          <div class="item2" v-for="(item,index) in realTimeList" :key="index">
+              <i class="iconImg" v-if="item.unit == 'A'"> 
+                <img src="@/assets/images/dl.png" alt=""/></i>
+              <span>{{item.value}}</span>
+              <label>{{item.propertyName}}<span class="unit">{{item.unit}}</span></label>
+          </div>
         </div>
       </div>
     </div>
@@ -148,6 +154,9 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import BasicInfo from "../components/basicInfo.vue";
+import service from "@/utils/request";
+import i18n from "@/language";
+import { handleArrDimension } from "@/utils";
 interface DataItem {
   label: string;
   value: string;
@@ -170,8 +179,76 @@ export default class PcsDetails extends Vue {
       value: "1.2",
     },
   ];
+   realTimeList: any = [];
+   created():void{
+     this.getProperList();
+   }
+   getProperList(): void{
+    const paramsData = {
+      sn: "1065602052002",
+      code: ["T_charPkwh", "T_discharPkwh", "D_discharPkwh", "D_discharPkwh","Ia","Ib","Ic","Uab","Ubc","Uca","Ps","Qs","Frequent","Pf","DC_power","Battery_current","Battery_voltage","Tmod","Tamb"]
+    };
+    service({
+      method: "post",
+      url: "/api2/api/Third/Rtd/ProperList",
+      data: paramsData
+    })
+      .then((res) => {
+        if (res && res.data.code === 200) {
+          // console.log(res.data.data, `拿到point点`);
+          let list = res.data.data.result || [];
+          
+          for (let i = 0, len = list.length; i < len; i++) {
+           
+            // console.log(list[i].propertyKey,"111111")
+            this.$set(list[i], 'desc', i18n.t(`EmsDetails.${list[i].propertyKey}`));
+          }
+          this.realTimeList = list;
+          this.getEMSRealTimeData();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  getEMSRealTimeData(): void {
+    service({
+      method: "post",
+      url: "/api2/api/Third/Rtd/DeviceData",
+      data: {
+        sn: "1065602052002",
+        keys: ["T_charPkwh", "T_discharPkwh", "D_discharPkwh", "D_discharPkwh","Ia","Ib","Ic","Uab","Ubc","Uca","Ps","Qs","Frequent","Pf","DC_power","Battery_current","Battery_voltage","Tmod","Tamb"]
+      }
+    })
+      .then((res) => {
+        if (res && res.data.code === 200) {
+          let list = JSON.parse(res.data.data) || [];
+          let newList = handleArrDimension(list);
+          console.log(newList ,"2222")
+          for (let i = 0, len = this.realTimeList.length; i < len; i++) {
+            for (let j = 0, len2 = newList.length; j < len2; j++) {
+              // 两个接口返回的值不一样，转为小写比较
+              if(this.realTimeList[i]["propertyKey"].toLowerCase() === newList[j]["key"].toLowerCase()) {
+                this.$set(this.realTimeList[i], 'value', newList[j]["value"]);
+              }
+            }
+          }
+        }
+        console.log(this.realTimeList, `最终的数据`);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
 }
 </script>
 <style lang="scss" scoped>
 @import "@/assets/styles/device.scss";
+.data-box{
+  .item2{
+    width:20% !important;
+  }
+}
 </style>

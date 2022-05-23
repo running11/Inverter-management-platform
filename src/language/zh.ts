@@ -188,6 +188,29 @@ module.exports = {
     VAi36: "Web界面版本号",
     VAi86: "光伏发电总功率"
   },
+  pcsDetails:{
+    Battery_current:"直流电流",
+    Battery_voltage:"直流电压"
+  },
+  BatteryDetails: {
+    status : "工作状态",
+    voltage : "总电压",
+    current : "电流",
+    VmaxNo : "电池号",
+    Vmax : "最大电压",
+    VminNo : "电池号",
+    Vmin : "最小电压",
+    TmaxNo : "电池号",
+    Tmax : "最高温度",
+    TminNo : "电池号",
+    Tmin : "最低温度",
+    StaVal0: "正常",
+    StaVal1: "充满",
+    StaVal2: "放空",
+    StaVal3: "待机",
+    StaVal4: "停机",
+    CapacityKwh:"电池堆额定容量"
+  },
   userManage:{
     title:"用户管理",
     userName:"用户名称",

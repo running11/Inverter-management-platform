@@ -188,6 +188,24 @@ module.exports = {
     VAi36: "Web interface version number",
     VAi86: "Total photovoltaic power"
   },
+  BatteryDetails: {
+    status : "status",
+    voltage : "voltage",
+    current : "current",
+    VmaxNo : "VmaxNo",
+    Vmax : "Vmax",
+    VminNo : "VminNo",
+    Vmin : "Vmin",
+    TmaxNo : "TmaxNo",
+    Tmax : "Tmax",
+    TminNo : "TminNo",
+    Tmin : "Tmin",
+    StaVal0: "normal",
+    StaVal1: "full",
+    StaVal2: "empty",
+    StaVal3: "Standby",
+    StaVal4: "downtime"
+  },
   userManage:{
     title:"User management",
     userName:"User Name",

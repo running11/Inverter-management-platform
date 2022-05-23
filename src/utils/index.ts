@@ -156,7 +156,7 @@ export function getLable(list: [], id: number | string, value: any, label: strin
  */
 export function handleArrDimension(list: any){
   const arr: any = [];
-  const reg = /[^(][a-zA-Z0-9]+(?=\))/g;
+  const reg = /[^(][a-zA-Z0-9_]+(?=\))/g;
   for(let i = 0; i < list.length; i++) {
     for(const j in list[i]){
       const key = j.match(reg)![0];
