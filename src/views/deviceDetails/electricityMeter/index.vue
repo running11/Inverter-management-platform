@@ -2,11 +2,11 @@
   <div class="main-wrapper">
     <div class="details-wrapper">
       <div class="box-card">
-        <span class="title"><b>基本信息</b></span>
+        <span class="title"><b>{{$t("EmsDetails.basicInfo")}}</b></span>
         <basic-info :List="basicData"></basic-info>
       </div>
       <div class="box-card">
-        <span class="title"><b>实时数据</b></span>
+        <span class="title"><b>{{$t("EmsDetails.realTimeData")}}</b></span>
         <div class="data-box">
           <el-row :gutter="10">
             <el-col :span="item.colNum" v-for="(item, index) in list" :key="index">
@@ -139,9 +139,12 @@ export default class PcsDetails extends Vue {
         }
       ]
     }
-  ]
-
+  ];
   realTimeList: any = [];
+  timer: any = null;
+  destroyed(): void {
+    clearTimeout(this.timer);
+  }
 
   created(): void {
     this.getProperList();
@@ -167,14 +170,15 @@ export default class PcsDetails extends Vue {
             this.$set(list[i], 'desc', i18n.t(`electricityMeterDetails.${list[i].propertyKey}`));
           }
           this.realTimeList = list;
-          this.getEMSRealTimeData();
+          clearTimeout(this.timer);
+          this.getRealTimeData();
         }
       })
       .catch((err) => {
         console.log(err);
       });
   }
-  getEMSRealTimeData(): void {
+  getRealTimeData(): void {
     service({
       method: "post",
       url: "/api2/api/Third/Rtd/DeviceData",
@@ -198,6 +202,10 @@ export default class PcsDetails extends Vue {
           }
         }
         this.handleRealData();
+        this.timer = setTimeout(() => {
+          clearTimeout(this.timer);
+          this.getRealTimeData();
+        }, 2 * 60 * 1000);
       })
       .catch((err) => {
         console.log(err);
@@ -206,7 +214,6 @@ export default class PcsDetails extends Vue {
   handleRealData(): void {
     for (let i = 0, len = this.list.length; i < len; i++) {
       for (let j = 0, len2 = this.list[i].arr.length; j < len2; j++) {
-        // console.log(this.list[i].arr[j], `jjjj`);
         for(let z = 0, len3 = this.realTimeList.length; z < len3; z++) {
           if (this.realTimeList[z]["propertyKey"].toLowerCase() === this.list[i].arr[j]["lable"].toLowerCase()) {
             this.list[i].arr[j] = Object.assign({}, this.list[i].arr[j], this.realTimeList[z]);
@@ -214,7 +221,7 @@ export default class PcsDetails extends Vue {
         }
       }
     }
-    console.log(this.list, `llllll`);
+    // console.log(this.list, `llllll`);
     this.$forceUpdate();
   }
 }

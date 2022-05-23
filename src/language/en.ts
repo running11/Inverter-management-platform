@@ -58,7 +58,9 @@ module.exports = {
     importBtn:"Import",
     exportSuccess:"Successfully export ",
     importSuccess:"Successfully import",
-    noData: "No data"
+    noData: "No data",
+    turnOn: "Turn on",
+    stop: "Stop"
   },
   login: {
     pleaseEnterUserName: "Please enter user name",
@@ -183,6 +185,8 @@ module.exports = {
     selectLngAndLat: "Select latitude and longitude"
   },
   EmsDetails: {
+    basicInfo: "Basic Information",
+    realTimeData: "Real-time data",
     VAi34: "EMS version number",
     VAi35: "WebAPI version number",
     VAi36: "Web interface version number",

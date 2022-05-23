@@ -74,7 +74,7 @@ module.exports = {
   },
   configureWebpack(config){
     config.externals = {
-      "AMap": "window.AMap", // // 高德地图配置
+      "AMap": "window.AMap", // 高德地图配置
       "AMapUI": "window.AMapUI"
     }
   }
