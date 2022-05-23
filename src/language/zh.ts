@@ -210,6 +210,36 @@ module.exports = {
     EpP: "正向有功总电能",
     EpR: "反向无功总电能"
   },
+  pcsDetails:{
+    Battery_current:"直流电流",
+    Battery_voltage:"直流电压"
+  },
+  BatteryDetails: {
+    status : "工作状态",
+    voltage : "总电压",
+    current : "电流",
+    VmaxNo : "电池号",
+    Vmax : "最大电压",
+    VminNo : "电池号",
+    Vmin : "最小电压",
+    TmaxNo : "电池号",
+    Tmax : "最高温度",
+    TminNo : "电池号",
+    Tmin : "最低温度",
+    StaVal0: "正常",
+    StaVal1: "充满",
+    StaVal2: "放空",
+    StaVal3: "待机",
+    StaVal4: "停机",
+    CapacityKwh:"电池堆额定容量",
+    Current:"电池堆电流",
+    Status:"电池状态",
+    Power:"电池堆功率",
+    SOC:"电池堆SOC",
+    SOH:"电池堆SOH",
+    Voltage:"电池堆电压",
+    GroupNum:"接入的电池组组数"
+  },
   userManage:{
     title:"用户管理",
     userName:"用户名称",
