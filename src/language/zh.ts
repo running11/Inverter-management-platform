@@ -206,9 +206,25 @@ module.exports = {
     EpP: "正向有功总电能",
     EpR: "反向无功总电能"
   },
-  pcsDetails:{
+  PcsDetails:{
     Battery_current:"直流电流",
-    Battery_voltage:"直流电压"
+    Battery_voltage:"直流电压",
+    D_discharPkwh:"日放电量",
+    DC_power:"直流功率",
+    Frequent:"频率",
+    Ia:"Ia",
+    Ib:"Ib",
+    Ic:"Ic",
+    Pf:"功率因数",
+    Ps:"有功功率",
+    Qs:"无功功率",
+    T_charPkwh:"总充电量",
+    T_discharPkwh:"总放电量",
+    Tamb:"环境温度",
+    Tmod:"模块温度",
+    Uab:"Uab",
+    Ubc:"Ubc",
+    Uca:"Uca"
   },
   BatteryDetails: {
     status : "工作状态",
