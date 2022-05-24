@@ -102,7 +102,7 @@ export default class emsDetails extends Vue {
     };
     service({
       method: "post",
-      url: "/api2/api/Third/Rtd/ProperList",
+      url: `/pmapi/Third/Rtd/ProperList`,
       data: paramsData
     })
       .then((res) => {
@@ -130,7 +130,7 @@ export default class emsDetails extends Vue {
   getRealTimeData(): void {
     service({
       method: "post",
-      url: "/api2/api/Third/Rtd/DeviceData",
+      url: `/pmapi/Third/Rtd/DeviceData`,
       data: {
         sn: "1065602052001",
         keys: ["VAi87", "VAi41", "VAi22", "VAi86"]

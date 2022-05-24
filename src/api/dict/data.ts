@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询字典数据列表
 export function listData(query:any) {
   return request({
-    url: '/api/system/dict/data/list',
+    url: '/dmapi/system/dict/data/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listData(query:any) {
 // 查询字典数据详细
 export function getData(dictCode:any) {
   return request({
-    url: '/api/system/dict/data/info/' + dictCode,
+    url: '/dmapi/system/dict/data/info/' + dictCode,
     method: 'get'
   })
 }
@@ -21,13 +21,13 @@ export function getData(dictCode:any) {
 export function getDicts(dictType:any) {
   if (typeof (dictType) === "object") {
     return request({
-      url: '/api/system/dict/data/types',
+      url: '/dmapi/system/dict/data/types',
       data: dictType,
       method: 'post'
     })
   } else {
     return request({
-      url: '/api/system/dict/data/type/' + dictType,
+      url: '/dmapi/system/dict/data/type/' + dictType,
       method: 'get'
     })
   }
@@ -36,7 +36,7 @@ export function getDicts(dictType:any) {
 // 新增字典数据
 export function addData(data:any) {
   return request({
-    url: '/api/system/dict/data',
+    url: '/dmapi/system/dict/data',
     method: 'post',
     data: data
   })
@@ -45,7 +45,7 @@ export function addData(data:any) {
 // 修改字典数据
 export function updateData(data:any) {
   return request({
-    url: '/api/system/dict/data',
+    url: '/dmapi/system/dict/data',
     method: 'put',
     data: data
   })
@@ -54,7 +54,7 @@ export function updateData(data:any) {
 // 删除字典数据
 export function delData(dictCode:any) {
   return request({
-    url: '/api/system/dict/data/' + dictCode,
+    url: '/dmapi/system/dict/data/' + dictCode,
     method: 'delete'
   })
 }
@@ -62,7 +62,7 @@ export function delData(dictCode:any) {
 // 导出字典数据
 export function exportData(query:any) {
   return request({
-    url: '/api/system/dict/data/export',
+    url: '/dmapi/system/dict/data/export',
     method: 'get',
     params: query
   })

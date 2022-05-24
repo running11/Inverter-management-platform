@@ -184,7 +184,7 @@ export default class DeviceDialog extends Vue {
           this.device.installTime = moment(this.device.installTime).valueOf();
           service({
             method: "put",
-            url: "/api/business/EmsDevice",
+            url: "/dmapi/business/EmsDevice",
             data: this.device,
           })
           .then((res) => {
@@ -209,7 +209,7 @@ export default class DeviceDialog extends Vue {
 					this.device.installTime = moment(this.device.installTime).valueOf();
 					service({
             method: "post",
-            url: "/api/business/EmsDevice",
+            url: "/dmapi/business/EmsDevice",
             data: this.device,
           })
           .then((res) => {

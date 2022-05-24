@@ -159,7 +159,7 @@ export default class PcsDetails extends Vue {
     };
     service({
       method: "post",
-      url: "/api2/api/Third/Rtd/ProperList",
+      url: "/pmapi/Third/Rtd/ProperList",
       data: paramsData
     })
       .then((res) => {
@@ -181,7 +181,7 @@ export default class PcsDetails extends Vue {
   getRealTimeData(): void {
     service({
       method: "post",
-      url: "/api2/api/Third/Rtd/DeviceData",
+      url: "/pmapi/Third/Rtd/DeviceData",
       data: {
         sn: "1065602052003",
         keys: ["Ia", "Ib", "Ic", "Uab", "Ubc", "Uca", "Ps", "Qs", "Pa", "Fre", "Pf", "EpP", "EpR"]

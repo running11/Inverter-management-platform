@@ -127,7 +127,7 @@ export default class basicInformation extends Vue {
   fetchData(): void {
     service({
       method: "get",
-      url: "/api/system/user/profile",
+      url: "/dmapi/system/user/profile",
     })
       .then((res) => {
         if (res && res.data.code === 200) {
@@ -166,7 +166,7 @@ export default class basicInformation extends Vue {
         //console.log(paramsData, "提交");
         service({
           method: "put",
-          url: "/api/system/user/profile",
+          url: "/dmapi/system/user/profile",
           params: {},
           data: paramsData,
         })
@@ -212,7 +212,7 @@ export default class basicInformation extends Vue {
     fileData.append("picture", file.file);
     service({
       method: "post",
-      url: "/api/system/user/profile/Avatar",
+      url: "/dmapi/system/user/profile/Avatar",
       data: fileData,
       headers: {
         "Content-Type": "multipart/form-data",

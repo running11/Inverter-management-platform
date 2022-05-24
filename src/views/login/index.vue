@@ -121,7 +121,7 @@ export default class Login extends Vue {
   // 获取验证码
   getCode(): void {
     service
-      .get("/api/captchaImage")
+      .get("/dmapi/captchaImage")
       .then((res) => {
         if (res && res.data.code === 200) {
           this.codeImgUrl = `data:image/png;base64,${res.data.data.img}`;
@@ -144,7 +144,7 @@ export default class Login extends Vue {
         this.loading = true;
         service({
           method: "post",
-          url: "/api/login",
+          url: "/dmapi/login",
           data: paramsData,
         })
           .then((res) => {
@@ -159,7 +159,7 @@ export default class Login extends Vue {
               window.localStorage.setItem("loginInfo", JSON.stringify(loginInfo));
               this.$router.push(this.redirect || "/home");
               this.loading = false;
-              service.get("/api/getInfo");
+              service.get("/dmapi/getInfo");
               this.getDeviceTypeList(); // 调获取当前用户所有设备类型的接口 侧边栏设备中心下的数据
             }
           })

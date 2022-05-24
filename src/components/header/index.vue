@@ -40,7 +40,7 @@ export default class Header extends Vue {
       }
     });
     // service
-    //   .post("/api/logout")
+    //   .post("/dmapi/logout")
     //   .then((res) => {
     //     console.log(res);
     //   })

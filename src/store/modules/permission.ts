@@ -42,7 +42,7 @@ const actions = {
   // 获取当前用户所有设备类型 侧边栏设备中心下的数据
   async getDeviceTypeList({ commit }: { commit: Commit }) {
     try {
-      const res = await service.get("/api/business/EmsDevice/deviceTypeList");
+      const res = await service.get("/dmapi/business/EmsDevice/deviceTypeList");
       const list = res.data.data || [];
       commit('setDeviceTypeList', list);
     } catch (err) {

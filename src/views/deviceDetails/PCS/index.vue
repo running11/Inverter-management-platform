@@ -190,7 +190,7 @@ export default class PcsDetails extends Vue {
     };
     service({
       method: "post",
-      url: "/api2/api/Third/Rtd/ProperList",
+      url: "/pmapi/Third/Rtd/ProperList",
       data: paramsData
     })
       .then((res) => {
@@ -215,7 +215,7 @@ export default class PcsDetails extends Vue {
   getEMSRealTimeData(): void {
     service({
       method: "post",
-      url: "/api2/api/Third/Rtd/DeviceData",
+      url: "/pmapi/Third/Rtd/DeviceData",
       data: {
         sn: "1065602052002",
         keys: ["T_charPkwh", "T_discharPkwh", "D_discharPkwh", "D_discharPkwh","Ia","Ib","Ic","Uab","Ubc","Uca","Ps","Qs","Frequent","Pf","DC_power","Battery_current","Battery_voltage","Tmod","Tamb"]
@@ -235,7 +235,7 @@ export default class PcsDetails extends Vue {
             }
           }
         }
-        console.log(this.realTimeList, `最终的数据`);
+        // console.log(this.realTimeList, `最终的数据`);
       })
       .catch((err) => {
         console.log(err);

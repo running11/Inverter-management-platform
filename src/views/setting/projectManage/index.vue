@@ -60,7 +60,7 @@ export default class projectManage extends Vue {
   getCompanyList(): void{
     service({
       method: "get",
-      url: "/api/business/EmsCompany/treeList",
+      url: "/dmapi/business/EmsCompany/treeList",
     })
       .then((res) => {
         if (res && res.data.code === 200) {

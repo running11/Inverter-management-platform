@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询角色列表
 export function listRole(query:any) {
   return request({
-    url: '/api/system/role/list',
+    url: '/dmapi/system/role/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listRole(query:any) {
 // 查询角色详细
 export function getRole(roleId:any) {
   return request({
-    url: '/api/system/role/' + roleId,
+    url: '/dmapi/system/role/' + roleId,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getRole(roleId:any) {
 // 新增角色
 export const addRole = (data:any) => {
   return request({
-    url: '/api/system/role/edit',
+    url: '/dmapi/system/role/edit',
     method: 'post',
     data: data,
   })
@@ -29,7 +29,7 @@ export const addRole = (data:any) => {
 // 修改角色
 export function updateRole(data:any) {
   return request({
-    url: '/api/system/role/edit',
+    url: '/dmapi/system/role/edit',
     method: 'put',
     data: data
   })
@@ -38,7 +38,7 @@ export function updateRole(data:any) {
 // 角色数据权限
 export function dataScope(data:any) {
   return request({
-    url: '/api/system/role/dataScope',
+    url: '/dmapi/system/role/dataScope',
     method: 'put',
     data: data
   })
@@ -51,7 +51,7 @@ export function changeRoleStatus(roleId:any, status:any) {
     status
   }
   return request({
-    url: '/api/system/role/changeStatus',
+    url: '/dmapi/system/role/changeStatus',
     method: 'put',
     data: data
   })
@@ -60,7 +60,7 @@ export function changeRoleStatus(roleId:any, status:any) {
 // 删除角色
 export function delRole(roleId:any) {
   return request({
-    url: '/api/system/role/' + roleId,
+    url: '/dmapi/system/role/' + roleId,
     method: 'delete'
   })
 }
@@ -68,7 +68,7 @@ export function delRole(roleId:any) {
 // 导出角色
 export function exportRole(query:any) {
   return request({
-    url: '/api/system/role/export',
+    url: '/dmapi/system/role/export',
     method: 'get',
     params: query
   })
@@ -76,5 +76,5 @@ export function exportRole(query:any) {
 //导出表格下载
 const baseURL = process.env.BASE_URL
 export function download(fileName:any) {
-  window.open(baseURL+'api' + fileName)
+  window.open(baseURL+'dmapi' + fileName)
 }

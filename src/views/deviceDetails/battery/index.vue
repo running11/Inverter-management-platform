@@ -327,7 +327,7 @@ export default class batteryDetails extends Vue {
     };
     service({
       method: "post",
-      url: "/api2/api/Third/Rtd/ProperList",
+      url: "/pmapi/Third/Rtd/ProperList",
       data: paramsData,
     })
       .then((res) => {
@@ -355,7 +355,7 @@ export default class batteryDetails extends Vue {
   getEMSRealTimeData(sn: string, code: any): void {
     service({
       method: "post",
-      url: "/api2/api/Third/Rtd/DeviceData",
+      url: "/pmapi/Third/Rtd/DeviceData",
       data: {
         sn: sn,
         keys: code,
@@ -414,7 +414,7 @@ export default class batteryDetails extends Vue {
     };
     service({
       method: "post",
-      url: "/api2/api/Third/Rtd/ProperList",
+      url: "/pmapi/Third/Rtd/ProperList",
       data: paramsData,
     })
       .then((res) => {
@@ -449,7 +449,7 @@ export default class batteryDetails extends Vue {
   getBatteryData(sn: string, code: any, btList: any): void {
     service({
       method: "post",
-      url: "/api2/api/Third/Rtd/DeviceData",
+      url: "/pmapi/Third/Rtd/DeviceData",
       data: {
         sn: sn,
         keys: code,
@@ -458,9 +458,9 @@ export default class batteryDetails extends Vue {
       .then((res) => {
         if (res && res.data.code === 200) {
           let list = JSON.parse(res.data.data) || [];
-          console.log(list, "电池222");
+          // console.log(list, "电池222");
           let newList = handleArrDimension(list);
-          console.log(newList, "电池2222");
+          // console.log(newList, "电池2222");
           for (let i = 0, len = btList.length; i < len; i++) {
             for (let j = 0, len2 = newList.length; j < len2; j++) {
               // 两个接口返回的值不一样，转为小写比较
@@ -475,7 +475,7 @@ export default class batteryDetails extends Vue {
         }
 
         this.batteryList = this.dataFormat(btList);
-        console.log(this.batteryList, `最终的数据电池数据`);
+        // console.log(this.batteryList, `最终的数据电池数据`);
       })
       .catch((err) => {
         console.log(err);
