@@ -114,7 +114,7 @@ export default class changePassword extends Vue {
 
         service({
           method: "put",
-          url: "/api/system/user/profile/updatePwd",
+          url: "/dmapi/system/user/profile/updatePwd",
           params: paramsData,
         })
           .then((res) => {

@@ -2,28 +2,29 @@
   <div class="main-wrapper">
     <div class="details-wrapper">
       <div class="box-card">
-        <span class="title"><b>基本信息</b></span>
+        <span class="title"><b>{{$t("EmsDetails.basicInfo")}}</b></span>
         <basic-info :List="basicData"></basic-info>
       </div>
 
       <div class="box-card">
-        <span class="title"><b>实时数据</b></span>
+        <span class="title"><b>{{$t("EmsDetails.realTimeData")}}</b></span>
         <div class="data-box">
           <div class="item-box">
             <div
               class="item2"
-              v-for="(item, index) in realtimeData"
+              v-for="(item, index) in realTimeList"
               :key="index"
             >
               <i class="iconImg"><img :src="item.iconUrl" alt="" /></i>
-              <span>
-                {{ item.value }}
-                <span class="unit">{{item.unitName ? item.unitName : ""}}</span>
+              <!-- EMS启停状态 0-开启 1停止 -->
+              <span v-if="item.propertyKey === 'VAi87'" style="fontSize: 18px;">
+                {{ item.value === 0 ? $t("common.turnOn") : item.value === 1 ? $t("common.stop") : "" }}
               </span>
-              <label
-                >{{ item.label
-                }}</label
-              >
+              <span v-else>
+                {{ item.value }}
+                <span class="unit">{{item.unit ? item.unit : ""}}</span>
+              </span>
+              <label>{{ item.desc }}</label>
             </div>
           </div>
         </div>
@@ -64,44 +65,44 @@ export default class emsDetails extends Vue {
       value: "1.2",
     },
   ];
-  realtimeData: DataItem[] = [
-    {
-      label: "EMS启停状态",
-      value: "停用",
-      iconUrl: require("@/assets/images/sbzt.png"),
-    },
-    {
-      label: "储能离并网状态",
-      value: "离网",
-      iconUrl: require("@/assets/images/sbzt.png"),
-    },
-    {
-      label: "储能充放电功率",
-      value: "30",
-      iconUrl: require("@/assets/images/kw.png"),
-      unitName: "kw",
-    },
-    {
-      label: "光伏发电功率",
-      value: "30",
-      iconUrl: require("@/assets/images/kw.png"),
-      unitName: "kw",
-    },
-  ];
   realTimeList: any = [];
+  list: any = [
+    {
+      label: "VAi87",
+      iconUrl: require("@/assets/images/sbzt.png"),
+    },
+    {
+      label: "VAi41",
+      iconUrl: require("@/assets/images/sbzt.png"),
+    },
+    {
+      label: "VAi22",
+      iconUrl: require("@/assets/images/kw.png"),
+    },
+    {
+      label: "VAi86",
+      iconUrl: require("@/assets/images/kw.png"),
+    }
+  ];
+  timer: any = null;
 
   created(): void {
     this.getProperList();
+  }
+  destroyed(): void {
+    clearTimeout(this.timer);
   }
 
   getProperList(): void{
     const paramsData = {
       sn: "1065602052001",
-      code: ["VAi87", "VAi41", "VAi22", "VAi86"]
+      code: ["VAi87", "VAi41", "VAi22", "VAi86"],
+      pageNum: 1,
+      pageSize: 100
     };
     service({
       method: "post",
-      url: "/api2/api/Third/Rtd/ProperList",
+      url: `/pmapi/Third/Rtd/ProperList`,
       data: paramsData
     })
       .then((res) => {
@@ -110,9 +111,15 @@ export default class emsDetails extends Vue {
           let list = res.data.data.result || [];
           for (let i = 0, len = list.length; i < len; i++) {
             this.$set(list[i], 'desc', i18n.t(`EmsDetails.${list[i].propertyKey}`));
+            for (let j = 0, len2 = this.list.length; j < len2; j++) {
+              if (list[i].propertyKey === this.list[j].label) {
+                this.$set(list[i], 'iconUrl', this.list[j].iconUrl);
+              }
+            }
           }
           this.realTimeList = list;
-          this.getEMSRealTimeData();
+          clearTimeout(this.timer);
+          this.getRealTimeData();
         }
       })
       .catch((err) => {
@@ -120,10 +127,10 @@ export default class emsDetails extends Vue {
       });
   }
 
-  getEMSRealTimeData(): void {
+  getRealTimeData(): void {
     service({
       method: "post",
-      url: "/api2/api/Third/Rtd/DeviceData",
+      url: `/pmapi/Third/Rtd/DeviceData`,
       data: {
         sn: "1065602052001",
         keys: ["VAi87", "VAi41", "VAi22", "VAi86"]
@@ -142,6 +149,10 @@ export default class emsDetails extends Vue {
             }
           }
         }
+        this.timer = setTimeout(() => {
+          clearTimeout(this.timer);
+          this.getRealTimeData();
+        }, 2 * 60 * 1000);
         console.log(this.realTimeList, `最终的数据`);
       })
       .catch((err) => {

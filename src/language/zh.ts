@@ -58,7 +58,9 @@ module.exports = {
     importBtn:"导入",
     exportSuccess:"导出成功",
     importSuccess:"导入成功",
-    noData: "暂无数据"
+    noData: "暂无数据",
+    turnOn: "开启",
+    stop: "停止"
   },
   login: {
     pleaseEnterUserName: "请输入用户名",
@@ -183,6 +185,8 @@ module.exports = {
     selectLngAndLat: "选择经纬度"
   },
   EmsDetails: {
+    basicInfo: "基本信息",
+    realTimeData: "实时数据",
     VAi34: "EMS版本号",
     VAi35: "WebAPI版本号",
     VAi36: "Web界面版本号",

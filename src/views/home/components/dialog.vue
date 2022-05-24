@@ -288,7 +288,7 @@ export default class HomeDialog extends Vue {
   getCompanyList(): void{
     service({
       method: "get",
-      url: "/api/business/EmsCompany/treeList",
+      url: "/dmapi/business/EmsCompany/treeList",
     })
       .then((res) => {
         if (res && res.data.code === 200) {
@@ -346,7 +346,7 @@ export default class HomeDialog extends Vue {
           console.log(this.currentProject, paramsData);
           service({
             method: "put",
-            url: "/api/business/EmsProject",
+            url: "/dmapi/business/EmsProject",
             data: paramsData,
           })
             .then((res) => {
@@ -383,7 +383,7 @@ export default class HomeDialog extends Vue {
           };
           service({
             method: "post",
-            url: "/api/business/EmsProject",
+            url: "/dmapi/business/EmsProject",
             data: paramsData,
           })
             .then((res) => {

@@ -169,7 +169,7 @@ export default class projectTable extends Vue {
     this.listLoading = true;
     service({
       method: "get",
-      url: "/api/business/EmsProject/childlist",
+      url: "/dmapi/business/EmsProject/childlist",
       params: paramsData,
     })
       .then((res) => {
@@ -228,7 +228,7 @@ export default class projectTable extends Vue {
     }).then(() => {
       service({
         method: "delete",
-        url: `/api/business/EmsProject/${row.projectId}`,
+        url: `/dmapi/business/EmsProject/${row.projectId}`,
       }).then((res) => {
         if (res && res.data.code === 200) {
           this.$message({

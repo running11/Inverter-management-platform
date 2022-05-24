@@ -222,7 +222,7 @@ export default class ProjectOverview extends Vue {
     this.projectId = this.$route.query.id; // projectId
     service({
       method: "get",
-      url: `/api/business/EmsProject/${this.projectId}`,
+      url: `/dmapi/business/EmsProject/${this.projectId}`,
     }).then((res) => {
       if (res && res.data.code === 200) {
         this.project = res.data.data;

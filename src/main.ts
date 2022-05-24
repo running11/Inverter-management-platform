@@ -26,7 +26,7 @@ window.setInterval(function(){
   if (new Date().getTime() - start > 25 * 60 * 1000) { // 每隔25分钟请求下登录接口
     service({
       method: "post",
-      url: "/api/login",
+      url: "/dmapi/login",
       data: loginInfo,
     })
       .then((res) => {

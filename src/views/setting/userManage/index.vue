@@ -835,7 +835,7 @@ export default class userManage extends Vue {
   /** 查询公司下拉树结构 */
   getTreeselect() {
     service({
-      url: "/api/business/EmsCompany/treeList",
+      url: "/dmapi/business/EmsCompany/treeList",
       method: "get",
     })
       .then((res) => {

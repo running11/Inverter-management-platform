@@ -69,7 +69,7 @@ export default class UserDialog extends Vue {
     // 设置上传的请求头部
     headers: { Authorization: "Bearer " + getToken() },
     // 上传的地址 
-    url: "/api/system/user/importData",
+    url: "/dmapi/system/user/importData",
   };
   /** 导入按钮操作 */
   handleImport() {

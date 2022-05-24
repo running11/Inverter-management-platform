@@ -107,7 +107,7 @@ export default class CompanyDialog extends Vue {
           // console.log("修改");
           service({
             method: "put",
-            url: "/api/business/EmsCompany",
+            url: "/dmapi/business/EmsCompany",
             data: this.currentCompany,
           })
           .then((res) => {
@@ -132,7 +132,7 @@ export default class CompanyDialog extends Vue {
           // console.log("新增");
           service({
             method: "post",
-            url: "/api/business/EmsCompany",
+            url: "/dmapi/business/EmsCompany",
             data: this.currentCompany,
           })
           .then((res) => {

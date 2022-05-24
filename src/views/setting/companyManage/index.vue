@@ -125,7 +125,7 @@ export default class CompanyManage extends Vue {
   getList(): void{
      service({
       method: "get",
-      url: "/api/business/EmsCompany/treeList",
+      url: "/dmapi/business/EmsCompany/treeList",
     })
       .then((res) => {
         if (res && res.data.code === 200) {
@@ -162,7 +162,7 @@ export default class CompanyManage extends Vue {
     }).then(() => {
       service({
         method: "delete",
-        url: `/api/business/EmsCompany/${row.compyId}`,
+        url: `/dmapi/business/EmsCompany/${row.compyId}`,
       }).then((res) => {
         if (res && res.data.code === 200) {
           this.$message({

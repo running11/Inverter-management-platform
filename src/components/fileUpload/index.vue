@@ -69,7 +69,7 @@ export default class FileUpload extends Vue {
     formData.append("uploadType", "2");
     let res: any = await service({
       method: "post",
-      url: "/api/Common/UploadFile",
+      url: "/dmapi/Common/UploadFile",
       data: formData,
       headers: {
         "Content-Type": "multipart/form-data"

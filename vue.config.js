@@ -56,25 +56,25 @@ module.exports = {
     open: false, //配置自动启动浏览器
     hotOnly: true, // 热更新
     proxy: {
-      '/api2': {
-        target: "http://52.131.236.19:8080",
+      '/pmapi': {
+        target: "http://47.103.108.152:8881/pmapi",
         changeOrigin: true,
         pathRewrite: {
-          "^/api2": ""
+          "^/pmapi": ""
         }
       },
-      "/api": {
-        target: "http://47.103.108.152:8886",
+      "/dmapi": {
+        target: "http://47.103.108.152:8881/dmapi",
         changeOrigin: true,
         pathRewrite: {
-          "^/api": ""
+          "^/dmapi": ""
         }
       }
     }
   },
   configureWebpack(config){
     config.externals = {
-      "AMap": "window.AMap", // // 高德地图配置
+      "AMap": "window.AMap", // 高德地图配置
       "AMapUI": "window.AMapUI"
     }
   }

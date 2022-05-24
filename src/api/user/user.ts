@@ -4,7 +4,7 @@ import { praseStrZero } from "@/api/user/ruoyi";
 // 查询用户列表
 export function listUser(query:any) {
   return request({
-    url: '/api/system/user/list',
+    url: '/dmapi/system/user/list',
     method: 'get',
     params: query
   })
@@ -13,7 +13,7 @@ export function listUser(query:any) {
 // 查询用户详细
 export function getUser(userId:any ) {
     return request({
-      url: '/api/system/user/' + praseStrZero(userId),
+      url: '/dmapi/system/user/' + praseStrZero(userId),
       method: 'get'
     })
   
@@ -23,7 +23,7 @@ export function getUser(userId:any ) {
 // 新增用户
 export function addUser(data:any) {
   return request({
-    url: '/api/system/user/edit',
+    url: '/dmapi/system/user/edit',
     method: 'post',
     data: data
   })
@@ -32,7 +32,7 @@ export function addUser(data:any) {
 // 修改用户
 export function updateUser(data:any) {
   return request({
-    url: '/api/system/user/edit',
+    url: '/dmapi/system/user/edit',
     method: 'put',
     data: data
   })
@@ -41,7 +41,7 @@ export function updateUser(data:any) {
 // 删除用户
 export function delUser(userId:any) {
   return request({
-    url: '/api/system/user/' + userId,
+    url: '/dmapi/system/user/' + userId,
     method: 'delete'
   })
 }
@@ -49,7 +49,7 @@ export function delUser(userId:any) {
 // 导出用户
 export function exportUser(query:any) {
   return request({
-    url: '/api/system/User/export',
+    url: '/dmapi/system/User/export',
     method: 'get',
     params: query
   })
@@ -62,7 +62,7 @@ export function resetUserPwd(userId:any, password:any) {
     password
   }
   return request({
-    url: '/api/system/user/resetPwd',
+    url: '/dmapi/system/user/resetPwd',
     method: 'put',
     data: data
   })
@@ -75,7 +75,7 @@ export function changeUserStatus(userId:any, status:any) {
     status
   }
   return request({
-    url: '/api/system/user/changeStatus',
+    url: '/dmapi/system/user/changeStatus',
     method: 'put',
     data: data
   })
@@ -84,7 +84,7 @@ export function changeUserStatus(userId:any, status:any) {
 // 查询用户个人信息
 export function getUserProfile() {
   return request({
-    url: '/api/system/user/Profile',
+    url: '/dmapi/system/user/Profile',
     method: 'get'
   })
 }
@@ -92,7 +92,7 @@ export function getUserProfile() {
 // 修改用户个人信息
 export function updateUserProfile(data:any) {
   return request({
-    url: '/api/system/user/profile',
+    url: '/dmapi/system/user/profile',
     method: 'put',
     data: data
   })
@@ -105,7 +105,7 @@ export function updateUserPwd(oldPassword:any, newPassword:any) {
     newPassword
   }
   return request({
-    url: '/api/system/user/profile/updatePwd',
+    url: '/dmapi/system/user/profile/updatePwd',
     method: 'put',
     params: data
   })
@@ -114,7 +114,7 @@ export function updateUserPwd(oldPassword:any, newPassword:any) {
 // 用户头像上传
 export function uploadAvatar(data:any) {
   return request({
-    url: '/api/system/user/profile/avatar',
+    url: '/dmapi/system/user/profile/avatar',
     method: 'post',
     data: data
   })
@@ -123,7 +123,7 @@ export function uploadAvatar(data:any) {
 // 下载用户导入模板
 export function importTemplate() {
   return request({
-    url: '/api/system/user/importTemplate',
+    url: '/dmapi/system/user/importTemplate',
     method: 'get',
     responseType: 'blob'//1.首先设置responseType对象格式为 blob:
   })
@@ -131,12 +131,12 @@ export function importTemplate() {
 // 根据参数键名查询参数值
 export function getConfigKey(configKey:any) {
   return request({
-    url: '/api/system/config/configKey/' + configKey,
+    url: '/dmapi/system/config/configKey/' + configKey,
     method: 'get'
   })
 }
 //导出表格下载
 const baseURL = process.env.BASE_URL
 export function download(fileName:any) {
-  window.open(baseURL+'api' + fileName)
+  window.open(baseURL+'dmapi' + fileName)
 }

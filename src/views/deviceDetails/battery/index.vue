@@ -429,7 +429,7 @@ export default class batteryDetails extends Vue {
     };
     service({
       method: "post",
-      url: "/api2/api/Third/Rtd/ProperList",
+      url: "/pmapi/Third/Rtd/ProperList",
       data: paramsData,
     })
       .then((res) => {
@@ -456,7 +456,7 @@ export default class batteryDetails extends Vue {
   getBtRealTimeData(sn: string, code: any): void {
     service({
       method: "post",
-      url: "/api2/api/Third/Rtd/DeviceData",
+      url: "/pmapi/Third/Rtd/DeviceData",
       data: {
         sn: sn,
         keys: code,
@@ -553,7 +553,7 @@ export default class batteryDetails extends Vue {
     };
     service({
       method: "post",
-      url: "/api2/api/Third/Rtd/ProperList",
+      url: "/pmapi/Third/Rtd/ProperList",
       data: paramsData,
     })
       .then((res) => {
@@ -585,7 +585,7 @@ export default class batteryDetails extends Vue {
   getBatteryData(sn: string, code: any, btList: any): void {
     service({
       method: "post",
-      url: "/api2/api/Third/Rtd/DeviceData",
+      url: "/pmapi/Third/Rtd/DeviceData",
       data: {
         sn: sn,
         keys: code,
@@ -617,7 +617,7 @@ export default class batteryDetails extends Vue {
         }
 
         this.batteryList = this.dataFormat(btList);
-        console.log(this.batteryList, `最终的数据电池数据`);
+        // console.log(this.batteryList, `最终的数据电池数据`);
       })
       .catch((err) => {
         console.log(err);

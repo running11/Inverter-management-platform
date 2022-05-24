@@ -183,7 +183,7 @@ export default class DeviceList extends Vue {
   async getDeviceType(){ // 获取设备类型
     await service({
       method: "get",
-      url: `/api/system/dict/data/type/device_type`
+      url: `/dmapi/system/dict/data/type/device_type`
     })
       .then((res) => {
         if (res && res.data.code === 200) {
@@ -225,7 +225,7 @@ export default class DeviceList extends Vue {
     this.listLoading = true;
     service({
       method: "get",
-      url: "/api/business/EmsDevice/list",
+      url: "/dmapi/business/EmsDevice/list",
       params: paramsData,
     })
       .then((res) => {
@@ -288,7 +288,7 @@ export default class DeviceList extends Vue {
     }).then(() => {
       service({
         method: "delete",
-        url: `/api/business/EmsDevice/${row.devId}`,
+        url: `/dmapi/business/EmsDevice/${row.devId}`,
       }).then((res) => {
         if (res && res.data.code === 200) {
           this.$message({

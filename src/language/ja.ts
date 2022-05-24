@@ -58,7 +58,9 @@ module.exports = {
     importBtn:"インポート",
     exportSuccess:"エクスポート成功",
     importSuccess:"インポート成功",
-    noData: "データなし"
+    noData: "データなし",
+    turnOn: "オンにする",
+    stop: "止まる"
   },
   login: {
     pleaseEnterUserName: "ユーザー名を入力してください",
@@ -183,6 +185,8 @@ module.exports = {
     selectLngAndLat: "緯度と経度を選択します"
   },
   EmsDetails: {
+    basicInfo: "基本情報",
+    realTimeData: "リアルタイムデータ",
     VAi34: "EMSバージョン番号",
     VAi35: "WebAPIバージョン番号",
     VAi36: "Webインターフェイスのバージョン番号",

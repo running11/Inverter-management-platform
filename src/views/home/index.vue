@@ -270,7 +270,7 @@ export default class Home extends Vue {
   getStatisticsData(): void{ // 获取首页统计数据
     service({
       method: "get",
-      url: "/api/business/Statistics/homeData",
+      url: "/dmapi/business/Statistics/homeData",
     })
       .then((res) => {
         if (res && res.data.code === 200) {
@@ -311,7 +311,7 @@ export default class Home extends Vue {
     this.listLoading = true;
     service({
       method: "get",
-      url: "/api/business/EmsProject/homelist",
+      url: "/dmapi/business/EmsProject/homelist",
       params: paramsData,
     })
       .then((res) => {
@@ -338,7 +338,7 @@ export default class Home extends Vue {
       }).then(() => {
         service({
           method: "delete",
-          url: `/api/business/EmsProject/${params.row.projectId}`,
+          url: `/dmapi/business/EmsProject/${params.row.projectId}`,
         }).then((res) => {
           if (res && res.data.code === 200) {
             this.$message({
