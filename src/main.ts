@@ -11,10 +11,13 @@ import echarts from "echarts";
 import { decrypt } from "@/utils";
 import service from "@/utils/request";
 import "@/assets/icons/index";//使用图标
+import dataV from "@jiaminghi/data-view";
+
 
 Vue.use(ElementUI);
 Vue.config.productionTip = false;
 Vue.prototype.$echarts = echarts;
+Vue.use(dataV);
 
 // token会过期，每隔 30分钟 会过期，再次请求登录接口
 window.setInterval(function(){
