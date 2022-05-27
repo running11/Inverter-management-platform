@@ -354,6 +354,11 @@ export const routes: Array<RouteConfig> = [
     name: "notFound",
     component: () => import("@/views/notFound/index.vue"),
   },
+  {
+    path:"/bigScreen",
+    name:"bigScreen",
+    component: () => import("@/views/bigScreen/index.vue")
+  }
 ];
 
 const router = new VueRouter({
