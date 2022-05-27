@@ -59,7 +59,7 @@ export default class LineChart extends Vue {
       },
       yAxis: {
         type: "value",
-        name:"kw",
+        name:this.unit,
         axisLine: {
           lineStyle: {
             color: "#c9d7f8",

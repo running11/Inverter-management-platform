@@ -1,441 +1,73 @@
 <template>
-  <div class="big_screen">
-    <div class="header_box">
-      <img src="@/assets/images/ztlogo.png" alt="" />
-      <span>{{ title }}</span>
+  <div class="screen-wrapper">
+    <div class="header-wrapper">
+      <div class="logo-box">
+        <img class="logo" src="@/assets/images/logo.png" alt="logo"/>
+      </div>
+      <div class="title">大数据监控平台</div>
+      <div class="time">2022-05-25 14:20:34</div>
     </div>
-    <div class="select_box">
-      <el-select v-model="projectVal" clearable placeholder="请选择项目">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        >
-        </el-option>
-      </el-select>
-    </div>
-    <div class="con_box">
-      <el-row :gutter="20">
-        <el-col :span="5">
-          <div class="flex_box">
-            <div class="box">
-              <div class="title">总览</div>
-              <div class="text_box">
-                <div class="v_flex t_text">
-                  <div class="zl_item">
-                    <p>储能部署容量：</p>
-                    <span>123</span>
-                  </div>
-                  <div class="zl_item">
-                    <p>光伏部署容量：</p>
-                    <span>123</span>
-                  </div>
-                </div>
-                <div class="v_flex b_text">
-                  <div class="zl_item">
-                    <p>累积收益：</p>
-                    <span>123 <b>元</b></span>
-                  </div>
-                  <div class="zl_item">
-                    <p>光伏累积发电量：</p>
-                    <span>123 <b>kwh</b></span>
-                  </div>
-                  <div class="zl_item">
-                    <p>储能累积吞吐量：</p>
-                    <span>123</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="box">
-              <div class="title">光伏日发电量</div>
-              <div class="text_box">
-                <histogram-chart :colors="colors1" :seriesData="seriesDataPower"></histogram-chart>
-              </div>
-            </div>
-            <div class="box">
-              <div class="title">
-                {{ projectVal ? "实时功率 " : "项目状态" }}
-              </div>
-              <div class="text_box">
-                <line-chart v-if="projectVal" :seriesData="seriesDataKw" :xAxisData="timeList" :legendData="legendDataKw"></line-chart>
-                <pie-chart v-else :seriesData="projrctStatus"></pie-chart>
-              </div>
-            </div>
-          </div>
-        </el-col>
-        <el-col :span="14">
-          <div class="center_box" id="container"></div>
-        </el-col>
-        <el-col :span="5">
-          <div class="flex_box">
-            <div class="box">
-              <div class="title">{{ projectVal ? "收益" : "实时功率" }}</div>
-              <div class="text_box">
-                <pie-chart v-if="projectVal" :seriesData="income" ></pie-chart>
-                <line-chart v-else :seriesData="seriesDataKw" :xAxisData="timeList" :legendData="legendDataKw"></line-chart>
-              </div>
-            </div>
-            <div class="box">
-              <div class="title">储能日吞吐量</div>
-              <div class="text_box">
-                <histogram-chart :colors="colors2" :seriesData="seriesDataStorage"></histogram-chart>
-              </div>
-            </div>
-            <div class="box">
-              <div class="title">{{ projectVal ? "电池SOC" : "环保收益" }}</div>
-              <div class="text_box">
-                <line-chart v-if="projectVal" :colors="colors1" :seriesData="seriesDataSoc" :xAxisData="timeList"></line-chart>
-                <div v-else class="h_flex wrap_box">
-                  <div class="v_flex col_box">
-                    <img src="@/assets/images/co2.png" alt="" />
-                    <b>666</b>
-                    <span>换算的碳排放量(吨)</span>
-                  </div>
-                  <div class="v_flex col_box">
-                    <img src="@/assets/images/tree.png" alt="" />
-                    <b>8888</b>
-                    <span>等效植树(棵)</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </el-col>
-      </el-row>
+    <div class="main-wrapper">
+      <screen-map></screen-map>
     </div>
   </div>
 </template>
+
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import AMapLoader from "@amap/amap-jsapi-loader";
-import LineChart from "./echartLine.vue";
-import histogramChart from "./histogramChart.vue";
-import pieChart from "./pieChart.vue";
+import ScreenMap from "@/components/screenMap/index.vue";
 
 @Component({
   components: {
-    LineChart,
-    histogramChart,
-    pieChart,
+    ScreenMap
   },
 })
-export default class NotFound extends Vue {
-  title = "大数据监控平台";
-  map = null;
-  colors1 = ["rgb(58,186,255)"];
-  colors2 = ["rgb(252,144,78)"];
-  projectVal = "";
-  options = [
-    { value: "1", label: "项目1" },
-    { value: "2", label: "项目2" },
-    { value: "3", label: "项目3" },
-  ];
-  locationList = [
-    { name: "乐清", longitude: 120.99761, latitude: 28.112589 },
-    { name: "温州", longitude: 120.693426, latitude: 27.998366 },
-    { name: "台州", longitude: 121.42951, latitude: 28.599316 },
-    { name: "杭州", longitude: 120.242986, latitude: 30.349495 },
-    { name: "松江", longitude: 121.250982, latitude: 31.025011 },
-  ];
-  projrctStatus = [
-    { value: "12", name: "正常" },
-    { value: "2", name: "故障" },
-    { value: "2", name: "EMS离线" },
-  ];
-  //收益
-  income = [
-    { value: "120", name: "光伏发电" },
-    { value: "200", name: "削峰填谷" },
-    { value: "305", name: "需量调节" },
-  ];
-  //光伏储能数据
-   legendDataKw= ["光伏", "储能"];
-   timeList:any= [];
-   seriesDataKw:any=  [
-        {
-          name: "光伏",
-          data: [],
-          type: "line",
-          smooth: true,
-        },
-        {
-          name: "储能",
-          data: [],
-          type: "line",
-          smooth: true,
-        },
-      ]
-  //电池SOC数据
-  seriesDataSoc:any =[
-      {
-          name: "电池SOC",
-          data: [],
-          type: "line",
-          smooth: true,
-        }
-  ]
-  //光伏日发电量
-  seriesDataPower:any= [
-        {
-          name: "光伏日发电量",
-          type: "bar",
-          barWidth: "60%",
-          data: [
-            330, 252, 200, 334, 390, 330, 220, 100, 152, 190, 234, 390, 330, 220, 290,
-          ],
-        },
-      ]
-//储能日吞吐量
-  seriesDataStorage:any= [
-        {
-          name: "储能日吞吐量",
-          type: "bar",
-          barWidth: "60%",
-          data: [
-            230, 252, 200, 334, 300, 330, 220, 320, 352, 290, 234, 390, 330, 220, 290,
-          ],
-        },
-      ]
-  mounted() {
-    //DOM初始化完成进行地图初始化
-    this.initMap();
-    this.initData()
-  }
-  initMap(): void {
-    (window as any)._AMapSecurityConfig = {
-      securityJsCode: "265793d1d10afca511bb65e9df68a9fe",
-    };
-    AMapLoader.load({
-      key: "bceca8051745424edbbc92707896613e", // 申请好的Web端开发者Key，首次调用 load 时必填
-      version: "2.0", // 指定要加载的 JSAPI 的版本，缺省时默认为 1.4.15
-      plugins: [""], // 需要使用的的插件列表，如比例尺'AMap.Scale'等
-    })
-      .then((AMap) => {
-        this.map = new AMap.Map("container", {
-          //设置地图容器id
-          // viewMode: "3D", //是否为3D地图模式
-          zoom: 5, //初始化地图级别
-          center: [105.602725, 37.076636], //初始化地图中心点位置
-          mapStyle: "amap://styles/a553025ba8c995afb0060776a83b1543",
-        });
-
-        if (this.map) {
-          let mkicon = new AMap.Icon({
-            size: new AMap.Size(32, 32), //图标大小
-            image: require("@/assets/images/location.png"), // Icon
-            imageOffset: new AMap.Pixel(0, 0), //用于雪碧图的偏移量控制
-            imageSize: new AMap.Size(32, 32), //图片大小
-          });
-
-          this.locationList.forEach((element) => {
-            // 创建一个 Marker 实例：
-            let marker = new AMap.Marker({
-              position: new AMap.LngLat(element.longitude, element.latitude), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
-              offset: new AMap.Pixel(-16, -32),
-              title: element.name,
-              icon: mkicon,
-            });
-
-            // 将创建的点标记添加到已有的地图实例：
-            (this.map as any).add(marker);
-          });
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }
-
-  initData(){
-      let guangfuDataList:any = [];
-      let chunengDataList :any= [];
-      let socList:any =[];
-      for(let i = 0; i < 12*24; i++) {  
-       guangfuDataList.push(Math.floor(Math.random() * 100) + 600);
-       chunengDataList.push(Math.floor(Math.random() * 200) + 800);
-       socList.push(Math.floor(Math.random() * 10) + 80);
-       this.timeList.push(Math.floor(i/12) + '');  
-    }
-   
-    this.$set(this.seriesDataKw[0], "data", guangfuDataList)
-    this.$set(this.seriesDataKw[1], "data", chunengDataList)
-    this.$set(this.seriesDataSoc[0], "data",socList)
-    
-  }
+export default class BigScreen extends Vue {
 }
 </script>
-<style lang="scss" scoped>
-.big_screen {
-  width: 100%;
-  height: 100%;
-  background: #151a59;
-  box-sizing: border-box;
-  .header_box {
-    height: 56px;
-    line-height: 56px;
-    background: #1d53ac;
-    border-bottom: 4px solid #2ac2ff;
-    color: #fff;
-    text-align: center;
-    position: relative;
-    img {
-      height: 27px;
-      position: absolute;
-      left: 20px;
-      top: 15px;
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped lang="scss">
+.screen-wrapper{
+  width: 100vw;
+  height: 100vh;
+  background-image: linear-gradient(180deg,#151b59 24%,#2a2d5a 88%);
+  .header-wrapper{
+    height: 54px;
+    background-color: #237ae4;
+    border-bottom: 5px solid #25c1ff;
+    display: flex;
+    padding: 0 30px;
+    .logo-box{
+      flex:0 0 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .logo{
+        width: 100px;
+        height: auto;
+      }
     }
-    span {
+    .title{
+      display:flex; 
+      flex:1;
+      align-items: center;
+      justify-content: center;
       font-size: 24px;
+      color: #fff;
       font-weight: bold;
     }
-  }
-  .select_box {
-    height: 50px;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 0 20px;
-    ::v-deep .el-input__inner {
-      background-color: transparent !important;
-      color: #d9d9d9;
-      height: 40px;
-    }
-    /**修改边框和字体颜色 */
-    ::v-deep .el-select {
-      position: relative;
-      width: 250px;
-      .el-input {
-        input {
-          height: 40px;
-          border-color: rgba(44, 137, 229, 0.5);
-          color: #fff;
-        }
-      }
-    }
-    /**修改下拉图标颜色 */
-    ::v-deep .el-input__suffix {
-      .el-input__suffix-inner {
-        .el-icon-arrow-up:before {
-          color: #2ac2ff;
-        }
-      }
-    }
-  }
-  .con_box {
-    padding: 0 20px 20px 20px;
-    height: calc(100% - 110px);
-    // background: #151a59;
-    box-sizing: border-box;
-    ::v-deep .el-row,
-    .el-col {
-      height: 100%;
-    }
-    .flex_box {
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .box {
-      height: 32%;
-      border: 1px solid #1e61bc;
-      background: -webkit-linear-gradient(
-        top,
-        rgb(27, 68, 150),
-        rgb(23, 29, 99)
-      );
-      .zl_item {
-        display: flex;
-        // justify-content: center;
-        align-items: center;
-        height: 28px;
-        p {
-          width: 70%;
-          color: #c9d7f8;
-          text-align: right;
-          font-size: 16px;
-        }
-        span {
-          width: 30%;
-          text-align: left;
-          font-size: 18px;
-          color: #1bcffc;
-          b {
-            color: #95b2f0;
-            font-size: 16px;
-          }
-        }
-      }
-      .text_box {
-        height: calc(100% - 36px);
-        .t_text {
-          height: 45%;
-          background: url("../../assets/images/zl_flash.png") no-repeat 20px
-            center;
-          background-size: 50px 50px;
-        }
-        .b_text {
-          height: 55%;
-          background: url("../../assets/images/zl_time.png") no-repeat 20px
-            center;
-          background-size: 50px 50px;
-        }
-        .wrap_box {
-            font-size: 20px;
-            color: #fff;
-            height: 100%;
-          .col_box {
-            width: 50%;
-            height: 100%;
-            align-items: center;
-            img{
-                width: 44px;
-            }
-            b{
-                margin: 10px 0;
-            }
-            span{
-                font-size:14px;
-                color:#95b2f0;
-            }
-          }
-         
-        }
-      }
-    }
-    .center_box {
-      border: 1px solid #1e61bc;
-      height: 100%;
-      background: -webkit-linear-gradient(
-        top,
-        rgb(27, 68, 150),
-        rgb(23, 29, 99)
-      );
-    }
-    .title {
-      height: 36px;
-      line-height: 36px;
-      padding-left: 10px;
-      // background: linear-gradient(to right, rgba(27,68,150,.1) 0%, rgba(30,97,188,.8) 50%, rgba(27,68,150,.1) 100%);
-      text-align: left;
+    .time{
+      flex:0 0 200px;
+      font-size: 15px;
       color: #fff;
-      background: linear-gradient(
-        to right,
-        rgba(30, 97, 188, 0.8) 0%,
-        rgba(27, 68, 150, 0.1) 100%
-      );
+      line-height: 54px;
+      text-align: right;
     }
   }
-  .h_flex {
-    display: flex;
-    align-items: center;
-  }
-  .v_flex {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  .main-wrapper{
+    height: calc(100vh - 59px);
   }
 }
+
 </style>

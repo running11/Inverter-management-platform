@@ -355,10 +355,15 @@ export const routes: Array<RouteConfig> = [
     component: () => import("@/views/notFound/index.vue"),
   },
   {
-    path:"/bigScreen",
-    name:"bigScreen",
-    component: () => import("@/views/bigScreen/index.vue")
-  }
+    path: "/bigScreen",
+    name: "bigScreen",
+    component: () => import("@/views/bigScreen/index.vue"),
+  },
+  {
+    path: "/largeScreen",
+    name: "largeScreen",
+    component: () => import("@/views/largeScreen/index.vue"),
+  },
 ];
 
 const router = new VueRouter({

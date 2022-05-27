@@ -7,6 +7,7 @@
       <div class="name">{{ $t("header.title") }}</div>
     </div>
     <div class="menu-box">
+      <div class="big-screen" @click="toBigScreen"></div>
       <div class="user">
         <i class="el-icon-user"></i>
         <label>admin</label>
@@ -47,6 +48,9 @@ export default class Header extends Vue {
     //   .catch((err) => {
     //     console.log(err);
     //   });
+  }
+  toBigScreen(): void {
+    this.$router.push("/bigScreen");
   }
 }
 </script>
@@ -95,6 +99,14 @@ export default class Header extends Vue {
         line-height: $header-height;
         vertical-align: top;
       }
+    }
+    .big-screen{
+      width: 40px;
+      height: $header-height;
+      background: url("./../../assets/images/icon_screen.png") center center no-repeat;
+      background-size: 22px 22px;
+      cursor: pointer;
+      margin-right: 5px;
     }
     .iconfont {
       font-size: 22px;
