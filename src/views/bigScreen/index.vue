@@ -5,7 +5,7 @@
         <img class="logo" src="@/assets/images/logo.png" alt="logo"/>
       </div>
       <div class="title">大数据监控平台</div>
-      <div class="time">2022-05-25 14:20:34</div>
+      <div class="time">{{currentTime}}</div>
     </div>
     <div class="main-wrapper">
       <screen-map></screen-map>
@@ -16,6 +16,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import ScreenMap from "@/components/screenMap/index.vue";
+import moment from "moment";
 
 @Component({
   components: {
@@ -23,6 +24,23 @@ import ScreenMap from "@/components/screenMap/index.vue";
   },
 })
 export default class BigScreen extends Vue {
+  currentTime: any = null;
+
+  mounted(): void {
+    this.$nextTick(function() {
+      this.currentTime = moment().format("YYYY/MM/DD HH:mm:ss");
+    });
+  }
+
+  created(): void {
+    this.handleTime();
+  }
+
+  handleTime() {
+    setInterval(() => {
+      this.currentTime = moment().format("YYYY/MM/DD HH:mm:ss");
+    }, 1000);
+  }
 }
 </script>
 

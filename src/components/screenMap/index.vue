@@ -161,8 +161,8 @@ export default class ScreenMap extends Vue {
 }
 .search-box{
   position: absolute;
-  top: 20px;
-  left: 20px;
+  top: 30px;
+  left: 30px;
   z-index: 99999;
 }
 </style>
