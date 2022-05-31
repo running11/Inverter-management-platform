@@ -76,7 +76,7 @@
         :rules="otherFormRules"
       >
         <el-form-item :label="$t('projectManage.plantImage')" prop="plantImage">
-          <file-upload @getImageUrl="getImageUrl"></file-upload>
+          <file-upload ref="fileUpload" :url="otherForm.plantImage" @getImageUrl="getImageUrl"></file-upload>
         </el-form-item>
         <el-form-item style="margin-top: -10px;" :label="$t('projectManage.region')" prop="region">
           <el-select v-model="otherForm.region" placeholder="">
@@ -93,7 +93,7 @@
           <el-input
             :placeholder="$t('projectManage.pleaseSelectLngAndLat')"
             v-model="computedLngAndLat"
-            @focus="innerVisible = true"
+            @focus="openMapDialog"
           />
         </el-form-item>
         <el-form-item :label="$t('projectManage.zone')" prop="zone">
@@ -126,12 +126,13 @@
     </new-dialog>
 
     <el-dialog
+      v-if="mapDialog"
       width="58%"
       :title="$t('projectManage.selectLngAndLat')"
       :visible.sync="innerVisible"
       append-to-body
       :before-close="closeMap">
-      <map-test @getLngAndLat="getLngAndLat"></map-test>
+      <map-test :lngandLat="lngAndLat" @getLngAndLat="getLngAndLat"></map-test>
       <span slot="footer" class="dialog-footer">
         <el-button @click="closeMap">{{$t("common.cancelButtonText")}}</el-button>
         <el-button type="primary" @click="getFinLngAndLat">{{$t("common.confirmButtonText")}}</el-button>
@@ -163,6 +164,7 @@ export default class HomeDialog extends Vue {
   @Prop(String) title!: string;
   @Prop(Object) currentProject!: any;
   innerVisible = false;
+  mapDialog = false;
   active = 0;
   isShow = false;
 
@@ -207,9 +209,6 @@ export default class HomeDialog extends Vue {
     ],
   }
   otherFormRules: any = {
-    plantImage: [
-      { required: false, message: i18n.t(`projectManage.pleaseSelectPlantImage`), trigger: "blur" }
-    ],
     region: [
       { required: false, message: i18n.t(`projectManage.pleaseSelectRegion`), trigger: "blur" },
     ],
@@ -243,6 +242,9 @@ export default class HomeDialog extends Vue {
       this.otherForm.zone = newVal.zone;
       this.otherForm.safeRunDate = newVal.safeRunDate;
       this.otherForm.remark = newVal.remark;
+      if (newVal.longitude && newVal.latitude) { // 经纬度
+        this.lngAndLat = [newVal.longitude, newVal.latitude];
+      }
     }
   }
 
@@ -270,6 +272,11 @@ export default class HomeDialog extends Vue {
   }
   closeMap(): void{
     this.innerVisible = false;
+    this.mapDialog = false;
+  }
+  openMapDialog(): void {
+    this.innerVisible = true;
+    this.mapDialog = true;
   }
   getImageUrl(url: string){
     // console.log(url, `父级收到的url`);
@@ -283,6 +290,7 @@ export default class HomeDialog extends Vue {
   }
   getFinLngAndLat(): void{
     this.innerVisible = false;
+    this.mapDialog = false;
   }
 
   getCompanyList(): void{
@@ -314,7 +322,22 @@ export default class HomeDialog extends Vue {
   closeDialog(): void {
     this.isShow = false;
     if(this.$refs["basicForm"]) (this.$refs["basicForm"] as any).resetFields();
-    if(this.$refs["otherForm"]) (this.$refs["otherForm"] as any).resetFields();
+    // console.log(this.$refs["otherForm"], `this.$refs["otherForm"]`);
+    if(this.$refs["otherForm"]) {
+      (this.$refs["fileUpload"] as any).resetUpload();
+      this.otherForm.plantImage = "";
+      this.otherForm.region = "";
+      this.otherForm.zone = "";
+      this.otherForm.safeRunDate = "";
+      this.otherForm.remark = "";
+      this.otherForm.longitude = 0;
+      this.otherForm.latitude = 0;
+      this.lngAndLat = [];
+      this.$nextTick(() => {
+        (this.$refs["otherForm"] as any).clearValidate();
+        // (this.$refs["otherForm"] as any).resetFields(["region", "safeRunDate"]);
+      });
+    };
   }
   showDialog(): void {
     this.isShow = true;

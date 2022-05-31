@@ -61,8 +61,10 @@ export default class Header extends Vue {
   width: 100%;
   height: $header-height !important;
   background-color: $main-color;
+  border-bottom: 4px solid #25c1ff;
   display: flex;
   justify-content: space-between;
+  box-sizing: content-box;
   .logo-box {
     display: flex;
     .img-box {

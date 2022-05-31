@@ -4,28 +4,13 @@
       <el-input placeholder="请输入电站名称"></el-input>
     </div>
     <div id="map"></div>
-    <!-- <div class="info-box" ref="infoBox">
-      <div class="title" v-if="info">{{info.name}}</div>
-      <div class="content">
-        <div class="img-box">
-          <img src="@/assets/images/icon_electricity.png"/>
-        </div>
-        <div class="list-box">
-          <div class="item">电站地址：22</div>
-          <div class="item">经纬度：</div>
-          <div class="item">并网时间：</div>
-          <div class="item">运行天数：</div>
-          <div class="item">电站时区：</div>
-        </div>
-      </div>
-    </div> -->
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import AMapLoader from '@amap/amap-jsapi-loader';
 import markIcon from "@/assets/images/icon_normal.png";
-import img from "@/assets/images/icon_electricity.png";
+import img from "@/assets/images/icon_station.png";
 
 @Component({
   components: {},
@@ -116,7 +101,7 @@ export default class ScreenMap extends Vue {
 
   createInfoWindow(AMap: any, info: any): void{
     let content = [
-      '<div class="info-box" style="background: #fff" ref="infoBox">',
+      '<div class="info-box" ref="infoBox">',
         '<div class="title">'+info.name+'',
           // '<i class="icon el-icon-close" @click="'+this.closeInfoWindow()+'"></i>',
         '</div>',
@@ -125,11 +110,11 @@ export default class ScreenMap extends Vue {
             '<img src="'+img+'"/>',
           '</div>',
           '<div class="list-box">',
-            '<div class="item">电站地址：'+info.address+'</div>',
-            '<div class="item">经纬度：</div>',
-            '<div class="item">并网时间：</div>',
-            '<div class="item">运行天数：</div>',
-            '<div class="item">电站时区：</div>',
+            '<div class="item">电站地址：<span>'+info.address+'</span></div>',
+            '<div class="item">经纬度：<span></span></div>',
+            '<div class="item">并网时间：<span></span></div>',
+            '<div class="item">运行天数：<span></span></div>',
+            '<div class="item">电站时区：<span></span></div>',
           '</div>',
         '</div>',
       '</div>',
@@ -150,34 +135,43 @@ export default class ScreenMap extends Vue {
 }
 </script>
 <style lang="scss" scoped>
+*{
+  box-sizing: border-box;
+}
 .map-wrapper{
-  position: relative;
-  height: calc(100vh - 59px);
-  position: relative;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 #map {
   width: 100%;
-  height: calc(100vh - 59px);
+  height: 100%;
 }
 .search-box{
+  width: 240px;
   position: absolute;
   top: 30px;
-  left: 30px;
+  right: 480px;
   z-index: 99999;
 }
 </style>
 <style lang="scss">
 .info-box{
-  width: 540px;
-  background-color: $white;
+  box-sizing: border-box;
+  min-width: 500px;
+  padding: 0 20px;
+  background-color: rgba(46, 124, 224, 0.85);
   border-radius: 2px;
   position: absolute;
   top: 0;
+  z-index: 99999;
   .title{
     line-height: 40px;
     font-size: 15px;
-    padding: 0 20px;
-    border-bottom: 1px solid $border-color;
+    color: $white;
+    border-bottom: 1px solid #67A2E8;
     .icon{
       float: right;
       font-size: 22px;
@@ -188,17 +182,16 @@ export default class ScreenMap extends Vue {
     }
   }
   .content{
-    padding: 20px;
+    padding: 20px 0;
     display: flex;
-    // justify-content: space-between;
     .img-box{
-      width: 200px;
+      width: 180px;
       height: 240px;
       display: flex;
       justify-content: center;
       align-items: center;
       img{
-        width: 180px;
+        width: 170px;
         height: auto;
       }
     }
@@ -208,6 +201,10 @@ export default class ScreenMap extends Vue {
       .item{
         line-height: 40px;
         font-size: 14px;
+        color: #84F1B7;
+        span{
+          color: $white;
+        }
       }
     }
   }

@@ -102,7 +102,7 @@ export default class emsDetails extends Vue {
     };
     service({
       method: "post",
-      url: `/pmapi/Third/Rtd/ProperList`,
+      url: `/dmapi/business/Proxy/ProperList`,
       data: paramsData
     })
       .then((res) => {
@@ -130,7 +130,7 @@ export default class emsDetails extends Vue {
   getRealTimeData(): void {
     service({
       method: "post",
-      url: `/pmapi/Third/Rtd/DeviceData`,
+      url: `/dmapi/business/Proxy/DeviceData`,
       data: {
         sn: "1065602052001",
         keys: ["VAi87", "VAi41", "VAi22", "VAi86"]
@@ -152,7 +152,7 @@ export default class emsDetails extends Vue {
         this.timer = setTimeout(() => {
           clearTimeout(this.timer);
           this.getRealTimeData();
-        }, 2 * 60 * 1000);
+        }, 60 * 1000);
         console.log(this.realTimeList, `最终的数据`);
       })
       .catch((err) => {

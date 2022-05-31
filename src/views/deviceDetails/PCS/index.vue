@@ -293,6 +293,11 @@ export default class PcsDetails extends Vue {
     },
   ];
   realTimeList: any = [];
+  timer: any = null;
+  destroyed(): void {
+    clearTimeout(this.timer);
+  }
+
   created(): void {
     this.getProperList();
   }
@@ -323,7 +328,7 @@ export default class PcsDetails extends Vue {
     };
     service({
       method: "post",
-      url: "/pmapi/Third/Rtd/ProperList",
+      url: "/dmapi/business/Proxy/ProperList",
       data: paramsData
     })
       .then((res) => {
@@ -351,7 +356,7 @@ export default class PcsDetails extends Vue {
   getPCSRealTimeData(): void {
     service({
       method: "post",
-      url: "/pmapi/Third/Rtd/DeviceData",
+      url: "/dmapi/business/Proxy/DeviceData",
       data: {
         sn: "1065602052002",
         keys: [
@@ -396,8 +401,12 @@ export default class PcsDetails extends Vue {
             }
           }
         }
-        console.log(this.realTimeList, `最终的数据`);
+        // console.log(this.realTimeList, `最终的数据`);
         this.handleRealData();
+        this.timer = setTimeout(() => {
+          clearTimeout(this.timer);
+          this.getPCSRealTimeData();
+        }, 60 * 1000);
       })
       .catch((err) => {
         console.log(err);
@@ -422,7 +431,7 @@ export default class PcsDetails extends Vue {
         }
       }
     }
-    console.log(this.UIConfigList, `xxxxxxxxxx`);
+    // console.log(this.UIConfigList, `xxxxxxxxxx`);
     this.$forceUpdate();
   }
  

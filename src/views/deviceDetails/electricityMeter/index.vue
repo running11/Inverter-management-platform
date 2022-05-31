@@ -159,7 +159,7 @@ export default class PcsDetails extends Vue {
     };
     service({
       method: "post",
-      url: "/pmapi/Third/Rtd/ProperList",
+      url: "/dmapi/business/Proxy/ProperList",
       data: paramsData
     })
       .then((res) => {
@@ -181,7 +181,7 @@ export default class PcsDetails extends Vue {
   getRealTimeData(): void {
     service({
       method: "post",
-      url: "/pmapi/Third/Rtd/DeviceData",
+      url: "/dmapi/business/Proxy/DeviceData",
       data: {
         sn: "1065602052003",
         keys: ["Ia", "Ib", "Ic", "Uab", "Ubc", "Uca", "Ps", "Qs", "Pa", "Fre", "Pf", "EpP", "EpR"]
@@ -205,7 +205,7 @@ export default class PcsDetails extends Vue {
         this.timer = setTimeout(() => {
           clearTimeout(this.timer);
           this.getRealTimeData();
-        }, 2 * 60 * 1000);
+        }, 60 * 1000);
       })
       .catch((err) => {
         console.log(err);

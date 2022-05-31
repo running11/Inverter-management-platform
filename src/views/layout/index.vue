@@ -36,7 +36,7 @@ export default class Layout extends Vue {
   overflow: hidden;
   .container {
     width: 100%;
-    height: calc(100% - 48px);
+    height: calc(100% - 52px);
     background: #f0f2f5;
   }
 }

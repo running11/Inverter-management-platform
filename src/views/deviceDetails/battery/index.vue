@@ -409,16 +409,19 @@ export default class batteryDetails extends Vue {
   //电池数据
   batteryList: any = [];
   timer: any = null;
+  batteryTimer: any = null;
+
+  destroyed(): void {
+    clearTimeout(this.timer);
+    clearInterval(this.batteryTimer);
+  }
   created() {
     this.getProperList("1065602052005", this.paramList);
     // this.timer= setInterval(()=>{
     // this.getProperList("1065602052005", this.paramList)
     //    }, 3000);
   }
-  beforeDestroy() {
-    clearInterval(this.timer);
-    this.timer = null;
-  }
+
   //获取实时数据
   getProperList(sn: string, code: any): void {
     const paramsData = {
@@ -429,7 +432,7 @@ export default class batteryDetails extends Vue {
     };
     service({
       method: "post",
-      url: "/pmapi/Third/Rtd/ProperList",
+      url: "/dmapi/business/Proxy/ProperList",
       data: paramsData,
     })
       .then((res) => {
@@ -456,7 +459,7 @@ export default class batteryDetails extends Vue {
   getBtRealTimeData(sn: string, code: any): void {
     service({
       method: "post",
-      url: "/pmapi/Third/Rtd/DeviceData",
+      url: "/dmapi/business/Proxy/DeviceData",
       data: {
         sn: sn,
         keys: code,
@@ -485,7 +488,7 @@ export default class batteryDetails extends Vue {
             }
           }
         }
-        console.log(this.realTimeList, `最终实时数据`);
+        // console.log(this.realTimeList, `最终实时数据`);
         let batteryNum = 0;
         this.realTimeList.forEach((item: any) => {
           if (item.propertyKey == "GroupNum") {
@@ -497,6 +500,10 @@ export default class batteryDetails extends Vue {
         }
 
         this.handleRealData();
+        this.timer = setTimeout(() => {
+          clearTimeout(this.timer);
+          this.getBtRealTimeData(sn, code);
+        }, 60 * 1000);
       })
       .catch((err) => {
         console.log(err);
@@ -553,7 +560,7 @@ export default class batteryDetails extends Vue {
     };
     service({
       method: "post",
-      url: "/pmapi/Third/Rtd/ProperList",
+      url: "/dmapi/business/Proxy/ProperList",
       data: paramsData,
     })
       .then((res) => {
@@ -583,9 +590,10 @@ export default class batteryDetails extends Vue {
   }
 
   getBatteryData(sn: string, code: any, btList: any): void {
+    const conpyBtList = JSON.parse(JSON.stringify(btList));
     service({
       method: "post",
-      url: "/pmapi/Third/Rtd/DeviceData",
+      url: "/dmapi/business/Proxy/DeviceData",
       data: {
         sn: sn,
         keys: code,
@@ -618,6 +626,10 @@ export default class batteryDetails extends Vue {
 
         this.batteryList = this.dataFormat(btList);
         // console.log(this.batteryList, `最终的数据电池数据`);
+        this.batteryTimer = setTimeout(() => {
+          clearTimeout(this.timer);
+          this.getBatteryData(sn, code, conpyBtList);
+        }, 60 * 1000);
       })
       .catch((err) => {
         console.log(err);

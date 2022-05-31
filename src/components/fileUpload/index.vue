@@ -17,7 +17,7 @@
 	</div>
 </template>
 <script lang="ts">
-import { Component, Vue, Emit } from "vue-property-decorator";
+import { Component, Vue, Emit, Prop } from "vue-property-decorator";
 import service from "@/utils/request";
 import myMessage from '@/utils/myMessage';
 
@@ -25,7 +25,8 @@ import myMessage from '@/utils/myMessage';
   components: {},
 })
 export default class FileUpload extends Vue {
-	imageUrl = "";
+  @Prop() url!: string;
+	imageUrl = this.url;
 	fileType:string[] = ['png', 'jpg', 'jpeg'];
 	fileSize = 5;
 	// 上传前校检格式和大小
@@ -84,6 +85,11 @@ export default class FileUpload extends Vue {
 			this.imageUrl = res.data.data.url;
 			return res.data.data.url;
 		}
+  }
+  // @Emit("resetUpload")
+  resetUpload(): void{
+    this.imageUrl = "";
+    // return this.imageUrl;
   }
 }
 </script>

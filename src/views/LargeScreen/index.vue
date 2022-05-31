@@ -51,7 +51,10 @@
             <div class="box">
               <div class="title">光伏日发电量</div>
               <div class="text_box">
-                <histogram-chart :colors="colors1" :seriesData="seriesDataPower"></histogram-chart>
+                <histogram-chart
+                  :colors="colors1"
+                  :seriesData="seriesDataPower"
+                ></histogram-chart>
               </div>
             </div>
             <div class="box">
@@ -59,7 +62,13 @@
                 {{ projectVal ? "实时功率 " : "项目状态" }}
               </div>
               <div class="text_box">
-                <line-chart v-if="projectVal" :seriesData="seriesDataKw" :xAxisData="timeList" :legendData="legendDataKw" unit="kw"></line-chart>
+                <line-chart
+                  v-if="projectVal"
+                  :seriesData="seriesDataKw"
+                  :xAxisData="timeList"
+                  :legendData="legendDataKw"
+                  unit="kw"
+                ></line-chart>
                 <pie-chart v-else :seriesData="projrctStatus"></pie-chart>
               </div>
             </div>
@@ -73,20 +82,35 @@
             <div class="box">
               <div class="title">{{ projectVal ? "收益" : "实时功率" }}</div>
               <div class="text_box">
-                <pie-chart v-if="projectVal" :seriesData="income" ></pie-chart>
-                <line-chart v-else :seriesData="seriesDataKw" :xAxisData="timeList" :legendData="legendDataKw" unit="kw"></line-chart>
+                <pie-chart v-if="projectVal" :seriesData="income"></pie-chart>
+                <line-chart
+                  v-else
+                  :seriesData="seriesDataKw"
+                  :xAxisData="timeList"
+                  :legendData="legendDataKw"
+                  unit="kw"
+                ></line-chart>
               </div>
             </div>
             <div class="box">
               <div class="title">储能日吞吐量</div>
               <div class="text_box">
-                <histogram-chart :colors="colors2" :seriesData="seriesDataStorage"></histogram-chart>
+                <histogram-chart
+                  :colors="colors2"
+                  :seriesData="seriesDataStorage"
+                ></histogram-chart>
               </div>
             </div>
             <div class="box">
               <div class="title">{{ projectVal ? "电池SOC" : "环保收益" }}</div>
               <div class="text_box">
-                <line-chart v-if="projectVal" :colors="colors1" :seriesData="seriesDataSoc" :xAxisData="timeList" unit="%"></line-chart>
+                <line-chart
+                  v-if="projectVal"
+                  :colors="colors1"
+                  :seriesData="seriesDataSoc"
+                  :xAxisData="timeList"
+                  unit="%"
+                ></line-chart>
                 <div v-else class="h_flex wrap_box">
                   <div class="v_flex col_box">
                     <img src="@/assets/images/co2.png" alt="" />
@@ -151,57 +175,59 @@ export default class largescreen extends Vue {
     { value: "105", name: "需量调节" },
   ];
   //光伏储能数据
-   legendDataKw= ["光伏", "储能"];
-   timeList:any= [];
-   seriesDataKw:any=  [
-        {
-          name: "光伏",
-          data: [],
-          type: "line",
-          smooth: true,
-        },
-        {
-          name: "储能",
-          data: [],
-          type: "line",
-          smooth: true,
-        },
-      ]
+  legendDataKw = ["光伏", "储能"];
+  timeList: any = [];
+  seriesDataKw: any = [
+    {
+      name: "光伏",
+      data: [],
+      type: "line",
+      smooth: true,
+    },
+    {
+      name: "储能",
+      data: [],
+      type: "line",
+      smooth: true,
+    },
+  ];
   //电池SOC数据
-  seriesDataSoc:any =[
-      {
-          name: "电池SOC",
-          data: [],
-          type: "line",
-          smooth: true,
-        }
-  ]
+  seriesDataSoc: any = [
+    {
+      name: "电池SOC",
+      data: [],
+      type: "line",
+      smooth: true,
+    },
+  ];
   //光伏日发电量
-  seriesDataPower:any= [
-        {
-          name: "光伏日发电量",
-          type: "bar",
-          barWidth: "60%",
-          data: [
-            330, 252, 200, 334, 390, 330, 220, 100, 152, 190, 234, 390, 330, 220, 290,
-          ],
-        },
-      ]
-//储能日吞吐量
-  seriesDataStorage:any= [
-        {
-          name: "储能日吞吐量",
-          type: "bar",
-          barWidth: "60%",
-          data: [
-            230, 252, 200, 334, 300, 330, 220, 320, 352, 290, 234, 390, 330, 220, 290,
-          ],
-        },
-      ]
+  seriesDataPower: any = [
+    {
+      name: "光伏日发电量",
+      type: "bar",
+      barWidth: "60%",
+      data: [
+        330, 252, 200, 334, 390, 330, 220, 100, 152, 190, 234, 390, 330, 220,
+        290,
+      ],
+    },
+  ];
+  //储能日吞吐量
+  seriesDataStorage: any = [
+    {
+      name: "储能日吞吐量",
+      type: "bar",
+      barWidth: "60%",
+      data: [
+        230, 252, 200, 334, 300, 330, 220, 320, 352, 290, 234, 390, 330, 220,
+        290,
+      ],
+    },
+  ];
   mounted() {
     //DOM初始化完成进行地图初始化
     this.initMap();
-    this.initData()
+    this.initData();
   }
   initMap(): void {
     (window as any)._AMapSecurityConfig = {
@@ -248,36 +274,36 @@ export default class largescreen extends Vue {
       });
   }
 
-  initData(){
-      let guangfuDataList:any = [];
-      let chunengDataList :any= [];
-      let socList:any =[];
-      for(let i = 0; i < 12*24; i++) {  
-       let hour = Math.floor(i/12);
-       if((hour < 8)|| (hour > 17))
-       {
-          guangfuDataList.push(0);
-          chunengDataList.push(0);
-       }
-       else
-       {
-          let rizhao = hour - 13;//日照强度 -5 -> 4
-          if(rizhao > 0) {rizhao *= (-1);}
-          rizhao += 6;
-          let guanfu = Math.floor(Math.random() * 80) + (80 * rizhao);
-          let chuneng = Math.floor(Math.random() * 70) + (60 * rizhao);
-          if(chuneng >= guanfu) { chuneng -= 30; }
-          guangfuDataList.push(guanfu);
-          chunengDataList.push(chuneng);
-       }
-       socList.push(Math.floor(Math.random() * 10) + 80);
-       this.timeList.push(hour + '');  
+  initData() {
+    let guangfuDataList: any = [];
+    let chunengDataList: any = [];
+    let socList: any = [];
+    for (let i = 0; i < 12 * 24; i++) {
+      let hour = Math.floor(i / 12);
+      if (hour < 8 || hour > 17) {
+        guangfuDataList.push(0);
+        chunengDataList.push(0);
+      } else {
+        let rizhao = hour - 13; //日照强度 -5 -> 4
+        if (rizhao > 0) {
+          rizhao *= -1;
+        }
+        rizhao += 6;
+        let guanfu = Math.floor(Math.random() * 80) + 80 * rizhao;
+        let chuneng = Math.floor(Math.random() * 70) + 60 * rizhao;
+        if (chuneng >= guanfu) {
+          chuneng -= 30;
+        }
+        guangfuDataList.push(guanfu);
+        chunengDataList.push(chuneng);
+      }
+      socList.push(Math.floor(Math.random() * 10) + 80);
+      this.timeList.push(hour + "");
     }
-   
-    this.$set(this.seriesDataKw[0], "data", guangfuDataList)
-    this.$set(this.seriesDataKw[1], "data", chunengDataList)
-    this.$set(this.seriesDataSoc[0], "data",socList)
-    
+
+    this.$set(this.seriesDataKw[0], "data", guangfuDataList);
+    this.$set(this.seriesDataKw[1], "data", chunengDataList);
+    this.$set(this.seriesDataSoc[0], "data", socList);
   }
 }
 </script>
@@ -331,8 +357,8 @@ export default class largescreen extends Vue {
     }
     /**修改下拉图标颜色 */
     ::v-deep .el-input__suffix {
-       display: flex;
-       align-items: center;
+      display: flex;
+      align-items: center;
       .el-input__suffix-inner {
         .el-icon-arrow-up:before {
           color: #2ac2ff;
@@ -400,26 +426,25 @@ export default class largescreen extends Vue {
           background-size: 50px 50px;
         }
         .wrap_box {
-            color: #fff;
-            height: 100%;
+          color: #fff;
+          height: 100%;
           .col_box {
             width: 50%;
             height: 100%;
             align-items: center;
-            img{
-                width: 44px;
-                height: 44px;
+            img {
+              width: 44px;
+              height: 44px;
             }
-            b{
-                margin: 10px 0;
-                font-size: 22px;
+            b {
+              margin: 10px 0;
+              font-size: 22px;
             }
-            span{
-                font-size:14px;
-                color:#95b2f0;
+            span {
+              font-size: 14px;
+              color: #95b2f0;
             }
           }
-         
         }
       }
     }
